@@ -153,6 +153,7 @@ locals {
       ["systemctl", "enable", "--now", "agent-desk", "agent-desk-proxy", "agent-desk-tls-issue", "agent-desk-tls-renew.timer"],
     ]
   }
+  user_data = base64gzip("#cloud-config\n${yamlencode(local.cloud_config)}")
 }
 resource "oci_core_network_security_group" "web" {
   compartment_id = var.compartment_ocid
@@ -205,7 +206,7 @@ resource "oci_core_instance" "desk" {
     assign_public_ip = true
     nsg_ids          = [oci_core_network_security_group.web.id]
   }
-  metadata = { user_data = base64encode("#cloud-config\n${yamlencode(local.cloud_config)}") }
+  metadata = { user_data = local.user_data }
   agent_config {
     are_all_plugins_disabled = false
     plugins_config {
@@ -215,6 +216,10 @@ resource "oci_core_instance" "desk" {
   }
   lifecycle {
     prevent_destroy = true
+    precondition {
+      condition     = length(jsonencode({ user_data = local.user_data })) <= 32000
+      error_message = "Compressed cloud-init exceeds the OCI metadata size limit."
+    }
     precondition {
       condition     = data.oci_core_image.target.operating_system == "Oracle Linux" && startswith(data.oci_core_image.target.operating_system_version, "9")
       error_message = "Use an Oracle Linux platform image with Run Command support."

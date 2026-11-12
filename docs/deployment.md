@@ -263,6 +263,8 @@ los agentes. La rotación operativa requiere actualizar la base y verificar el
 catálogo antes de retirar la copia anterior. Las credenciales nunca forman parte
 de la imagen ni de respuestas HTTP.
 
+Cloud-init viaja comprimido con gzip y Base64 para respetar el límite OCI de
+32.000 bytes de metadata; una precondición del PLAN impide superar ese límite.
 Cloud-init instala Podman desde Oracle Linux, arranca la imagen OCI Desk sin
 privilegios y con rootfs de solo lectura, y un contenedor Caddy separado por digest
 para TLS (2.10.2 amd64, digest verificado del registro oficial). Caddy termina TLS y entrega el stream sin buffering. La VM obtiene su IP con
