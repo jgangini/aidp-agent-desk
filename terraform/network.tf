@@ -55,55 +55,14 @@ resource "oci_core_security_list" "web" {
     }
   }
 
-  dynamic "egress_security_rules" {
-    for_each = toset(["80", "443"])
-    content {
-      protocol         = "6"
-      destination      = "0.0.0.0/0"
-      destination_type = "CIDR_BLOCK"
-      stateless        = false
-      tcp_options {
-        min = tonumber(egress_security_rules.value)
-        max = tonumber(egress_security_rules.value)
-      }
-    }
-  }
-
   egress_security_rules {
-    description      = "oci-public-ip STUN fallback for bootstrap IP discovery"
-    protocol         = "17"
+    description      = "Starter Kits outbound connectivity for OCI bootstrap and IP discovery"
+    protocol         = "all"
     destination      = "0.0.0.0/0"
     destination_type = "CIDR_BLOCK"
     stateless        = false
-    udp_options {
-      min = 3478
-      max = 3478
-    }
   }
 
-  egress_security_rules {
-    description      = "OCI Internet and VCN DNS resolver"
-    protocol         = "17"
-    destination      = "169.254.169.254/32"
-    destination_type = "CIDR_BLOCK"
-    stateless        = false
-    udp_options {
-      min = 53
-      max = 53
-    }
-  }
-
-  egress_security_rules {
-    description      = "OCI DNS resolver TCP fallback"
-    protocol         = "6"
-    destination      = "169.254.169.254/32"
-    destination_type = "CIDR_BLOCK"
-    stateless        = false
-    tcp_options {
-      min = 53
-      max = 53
-    }
-  }
 }
 
 resource "oci_core_subnet" "public" {

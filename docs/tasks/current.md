@@ -1,13 +1,9 @@
 # Release readiness
 
-Agent Desk 0.1.2 includes Oracle login, role-scoped Agent Flows and TEST access, task scheduling, saved reports and an inline report-template editor.
+Agent Desk includes Oracle login, role-scoped Agent Flows and TEST access, task scheduling, saved reports and an inline report-template editor.
 
-Validation uses scripts/arch-preflight.ps1 and scripts/arch-postflight.ps1. Local functional checks pass. The historical Sentrux regression gate is not passed; its baseline remains unchanged. See docs/deployment.md for deployment prerequisites and tenant acceptance.
+Version 0.1.4 aligns the bootstrap network with the working Starter Kits recipe: stateful outbound connectivity supports the Oracle public-IP helper and its STUN exchanges. Inbound access remains limited to HTTP/HTTPS; no SSH rule or key is installed. This is an infrastructure correction; application behavior is unchanged. Existing VMs can retain their pinned application image while applying the network correction.
 
-The Deploy Studio recipe targets OCI Resource Manager with public-IP HTTPS and encrypted one-use bootstrap. A manifest does not register this project in a Deploy Studio catalog. Actual VM acceptance is tracked separately from unit checks.
+Validation uses scripts/arch-preflight.ps1 and scripts/arch-postflight.ps1. Local functional checks pass. The historical Sentrux regression gate remains failed; its baseline is unchanged. See docs/deployment.md for prerequisites and tenant acceptance.
 
-The first OCI PLAN exposed an overly restrictive Oracle domain-origin validation. Version 0.1.1 accepts the default HTTPS port 443 when returned by Oracle and rejects alternate ports.
-
-Version 0.1.2 compresses cloud-init below the OCI metadata limit and enforces the size during PLAN. Version 0.1.1 remains unpublished; use the corrected release.
-
-Version 0.1.3 corrects the bootstrap network: oci-public-ip uses a UDP 3478 STUN fallback when the VM cannot read VNICs. This is an infrastructure correction; application behavior is unchanged. Existing installations can retain their pinned runtime image when applying this network-only correction.
+The recipe targets OCI Resource Manager, public-IP HTTPS and encrypted one-use bootstrap. Its manifest does not register a Deploy Studio catalog entry. Real VM acceptance is tracked separately from unit checks.
