@@ -1,0 +1,117 @@
+.agent-artifact-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin-block: 12px;
+  font-size: 11px;
+}
+.agent-artifact-table th,
+.agent-artifact-table td {
+  padding: 6px;
+  text-align: left;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border, #303136);
+}
+
+.finding-summary {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.75;
+  color: #b4b4b4;
+  margin-top: 7px;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  cursor: pointer;
+}
+.results-panel .findings {
+  grid-auto-rows: 1px;
+  row-gap: 0;
+  align-items: start;
+}
+.finding:not(.finding-analysis) {
+  max-height: none;
+  overflow: hidden;
+}
+.finding:not(.finding-analysis) .finding-summary,
+.finding:not(.finding-analysis) h2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 8;
+}
+.finding:not(.finding-analysis) h2 {
+  -webkit-line-clamp: 2;
+}
+.finding:not(.finding-analysis):has(.source-post-preview > img)
+  .finding-summary {
+  -webkit-line-clamp: 6;
+}
+.finding[data-expanded="true"] {
+  max-height: none;
+}
+.finding[data-expanded="true"] .finding-summary {
+  display: block;
+  overflow: visible;
+  -webkit-line-clamp: unset;
+}
+.finding[data-resizing="true"] .finding-summary {
+  display: block;
+  -webkit-line-clamp: unset;
+}
+.agent-bar-chart {
+  margin: 14px 0;
+}
+.agent-bar-chart > div {
+  display: grid;
+  gap: 12px;
+}
+.agent-bar-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(40px, 1.5fr) max-content;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.agent-bar-track {
+  height: 9px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #292a2f;
+}
+.agent-bar-track > i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #cacbd0;
+}
+.agent-bar-row strong {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.results-panel {
+  --resize-dur: 300ms;
+  --resize-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+.results-panel .finding-summary:hover,
+.results-panel .finding-summary:active {
+  background: transparent;
+  color: #b4b4b4;
+}
+.finding-summary:focus-visible {
+  outline: 2px solid var(--focus, #eeeef0);
+  outline-offset: 3px;
+}
+.results-panel .result-match {
+  background: #315f80;
+  color: #fff;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}

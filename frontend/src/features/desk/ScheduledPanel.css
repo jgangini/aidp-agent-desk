@@ -1,0 +1,318 @@
+.scheduled-panel {
+  color: #ddd;
+}
+.scheduled-tabs {
+  --config-tab-count: 3;
+}
+.scheduled-task-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 0;
+}
+.scheduled-card {
+  border: 1px solid #36383c;
+  border-radius: 12px;
+  padding: 16px;
+  background: #1b1c1f;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.scheduled-card h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+.scheduled-card p {
+  margin: 4px 0;
+  font-size: 11px;
+  color: #aeb0b5;
+  line-height: 1.7;
+}
+.scheduled-card-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 12px;
+  justify-content: flex-end;
+}
+.scheduled-card-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 6px;
+  color: #bbb;
+  border-radius: 6px;
+  font-size: 11px;
+}
+.scheduled-card-actions button:hover {
+  background: #2d2e32;
+  color: #fff;
+}
+.scheduled-card-actions .scheduled-delete {
+  color: #ff7461;
+}
+.scheduled-list-footer {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #323438;
+  margin-top: 24px;
+  padding-top: 20px;
+}
+.scheduled-list-footer button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.scheduled-undo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  font-size: 12px;
+}
+.scheduled-undo button,
+.scheduled-panel .config-feedback button {
+  text-decoration: underline;
+  padding: 8px;
+}
+.scheduled-panel button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.scheduled-task-form {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-color: #323438;
+}
+.scheduled-task-form .scheduled-full {
+  grid-column: 1/-1;
+}
+.scheduled-task-form textarea {
+  width: 100%;
+  height: 144px;
+  min-height: 112px;
+  max-height: 240px;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  resize: vertical;
+  padding: 10px;
+  border: 1px solid #44474e;
+  border-radius: 7px;
+  background: #17191d;
+  color: #eaeaea;
+  font: inherit;
+  line-height: 1.7;
+}
+.scheduled-task-form input {
+  color-scheme: dark;
+}
+.scheduled-task-form input[type="checkbox"],
+.scheduled-task-form input[type="radio"] {
+  width: auto;
+  accent-color: #ccc;
+}
+.scheduled-task-form fieldset {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+.scheduled-task-form legend {
+  font-size: 11px;
+  color: #c7c7c7;
+  margin-bottom: 10px;
+}
+.scheduled-task-form fieldset label {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+  margin: 4px 10px 4px 0;
+}
+.scheduled-task-form > footer {
+  justify-content: flex-end;
+  border-top: 1px solid #323438;
+  padding-top: 20px;
+}
+.agent-config-inline
+  .scheduled-task-form
+  .config-fields
+  > label:not(.scheduled-full) {
+  grid-column: auto;
+}
+.agent-config-inline .scheduled-task-form .scheduled-checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+.scheduled-task-form .config-fields input[type="checkbox"],
+.scheduled-task-form .config-fields input[type="radio"] {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.scheduled-reload {
+  font-size: 12px;
+  text-decoration: underline;
+  padding: 8px 0;
+  color: #bbb;
+}
+
+.scheduled-panel {
+  display: flex;
+  flex-direction: column;
+}
+.scheduled-panel .scheduled-list-footer {
+  margin-top: auto;
+}
+
+.scheduled-panel .scheduled-task-form {
+  margin: 0;
+  padding: 0;
+  border-top: 0;
+}
+
+.scheduled-instructions {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+.scheduled-instructions textarea {
+  display: block;
+  padding-bottom: 32px;
+}
+.scheduled-word-count {
+  position: absolute;
+  bottom: 8px;
+  right: 20px;
+  padding: 0 3px;
+  background: #17191d;
+  pointer-events: none;
+  color: var(--chat-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.scheduled-task-form .t-input.is-warning {
+  border-color: #f5cf73;
+}
+.scheduled-task-form .scheduled-field-warning {
+  margin: 6px 0 0;
+}
+.scheduled-task-form > .config-feedback {
+  margin-top: 16px;
+}
+
+.scheduled-day-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  font-size: 11px;
+  color: #c7c7c7;
+  anchor-scope: --scheduled-days;
+}
+.chat-panel .scheduled-day-trigger {
+  anchor-name: --scheduled-days;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  padding: 9px 10px;
+  border: 1px solid #505258;
+  border-radius: 8px;
+  background: var(--chat-surface);
+  color: #eaeaea;
+  text-align: left;
+  font: inherit;
+  font-size: 12px;
+}
+.scheduled-day-trigger > span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.chat-panel .scheduled-day-trigger:is(:hover, :focus-visible) {
+  border-color: #66686d;
+  background: var(--chat-surface);
+  box-shadow: none;
+}
+.scheduled-day-menu {
+  position: fixed;
+  position-anchor: --scheduled-days;
+  position-area: none;
+  position-try-fallbacks: none;
+  inset: auto;
+  top: calc(anchor(bottom) + 6px);
+  left: anchor(left);
+  margin: 0;
+  width: anchor-size(width);
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 5px;
+  border: 1px solid var(--chat-border);
+  border-radius: 12px;
+  background: #1b1c1f;
+  color: #b7b7bf;
+  box-shadow: 0 8px 24px #0005;
+}
+.scheduled-task-form .scheduled-day-menu fieldset {
+  margin: 0;
+}
+.scheduled-task-form .scheduled-day-menu label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  min-height: 38px;
+  margin: 3px 0;
+  padding: 8px 9px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.scheduled-day-menu label:is(:hover, :focus-within) {
+  color: #eeeeef;
+}
+.scheduled-day-check {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.scheduled-task-form .config-fields .scheduled-day-check input {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  min-height: 16px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #82828b;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+.scheduled-task-form .scheduled-day-check input:checked {
+  background: #eeeeef;
+  border-color: #eeeeef;
+}
+.scheduled-task-form .scheduled-day-check input:focus-visible {
+  outline: 1px solid #aaa;
+  outline-offset: 2px;
+  box-shadow: none;
+}
+.scheduled-day-check svg {
+  display: none;
+  position: absolute;
+  left: 2.5px;
+  pointer-events: none;
+  color: #222;
+}
+.scheduled-day-check input:checked + svg {
+  display: block;
+}
+
+.scheduled-task-form :is(input.t-input, select.t-input) {
+  height: 40px;
+  min-height: 40px;
+}

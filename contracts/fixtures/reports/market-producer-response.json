@@ -1,0 +1,516 @@
+{
+  "artifacts": [
+    {
+      "artifact_id": "31859684c1b0de75b4de654c591ce7ca386328ca253264b36063562b68613fab",
+      "caption": "Enlaces únicos de la evidencia citada; no mide el volumen total de conversación ni cuota de mercado.",
+      "currency": null,
+      "evidence_ids": [
+        "186da3d9091bd9a77d5339aa9dd9d6710ccfd55a5aa836468d64324dc2aca5a2",
+        "62f4223008a66b994058f55efab7e2b40614489dcf60173330648afa427cc57a"
+      ],
+      "kind": "bar",
+      "rows": [
+        {
+          "source": "facebook",
+          "value": 1
+        },
+        {
+          "source": "instagram",
+          "value": 1
+        }
+      ],
+      "status": "final",
+      "title": "Registros citados por fuente",
+      "unit": "enlaces",
+      "x_label": "Fuente",
+      "y_label": "Enlaces únicos"
+    }
+  ],
+  "blocks": [
+    {
+      "artifact_ids": [],
+      "block_id": "source-facebook",
+      "block_revision": 1,
+      "coverage": {
+        "evidence_coverage": {
+          "included": 1,
+          "included_by_stance": {
+            "context": 0,
+            "refutes": 0,
+            "supports": 0,
+            "unassessed": 1,
+            "unclear": 0
+          },
+          "omitted": 0,
+          "total": 1,
+          "total_by_stance": {
+            "context": 0,
+            "refutes": 0,
+            "supports": 0,
+            "unassessed": 1,
+            "unclear": 0
+          }
+        },
+        "presentation": {
+          "purpose": "result",
+          "schema_version": "1.0"
+        },
+        "representative": false,
+        "source": "facebook"
+      },
+      "discovery_channel": "facebook",
+      "emitted_at": "2026-11-12T03:04:41.842663+00:00",
+      "event_id": "0e31092443e468a2a0c10c54281f2d40d841c76eb4ca611714785c18a3de7dd9",
+      "evidence_ids": [
+        "186da3d9091bd9a77d5339aa9dd9d6710ccfd55a5aa836468d64324dc2aca5a2"
+      ],
+      "limitations": [
+        "Muestra acotada; no es representativa."
+      ],
+      "research_id": "3f132c26cd032cb6ef50b6087eca5b1da10ee3c70950a4cbe259939079eb006b",
+      "revision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "role_key": "market_analysis",
+      "run_id": "3f132c26cd032cb6ef50b6087eca5b1da10ee3c70950a4cbe259939079eb006b",
+      "schema_version": "1.0",
+      "sequence": 5,
+      "source_key": "facebook",
+      "source_keys": [
+        "facebook"
+      ],
+      "status": "provisional",
+      "supersedes": [],
+      "text": "La muestra contiene reclamaciones atribuidas.",
+      "turn_id": "request-1",
+      "type": "draft.upsert"
+    },
+    {
+      "artifact_ids": [],
+      "block_id": "source-instagram",
+      "block_revision": 1,
+      "coverage": {
+        "evidence_coverage": {
+          "included": 1,
+          "included_by_stance": {
+            "context": 0,
+            "refutes": 0,
+            "supports": 0,
+            "unassessed": 1,
+            "unclear": 0
+          },
+          "omitted": 0,
+          "total": 1,
+          "total_by_stance": {
+            "context": 0,
+            "refutes": 0,
+            "supports": 0,
+            "unassessed": 1,
+            "unclear": 0
+          }
+        },
+        "presentation": {
+          "purpose": "result",
+          "schema_version": "1.0"
+        },
+        "representative": false,
+        "source": "instagram"
+      },
+      "discovery_channel": "instagram",
+      "emitted_at": "2026-11-12T03:04:41.843675+00:00",
+      "event_id": "eae72a9ec6955bc635e0d0ac30e5d2d7caa4a10553ce9f3339c2367b37ad16e7",
+      "evidence_ids": [
+        "62f4223008a66b994058f55efab7e2b40614489dcf60173330648afa427cc57a"
+      ],
+      "limitations": [
+        "Muestra acotada; no es representativa."
+      ],
+      "research_id": "3f132c26cd032cb6ef50b6087eca5b1da10ee3c70950a4cbe259939079eb006b",
+      "revision": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "role_key": "market_analysis",
+      "run_id": "3f132c26cd032cb6ef50b6087eca5b1da10ee3c70950a4cbe259939079eb006b",
+      "schema_version": "1.0",
+      "sequence": 6,
+      "source_key": "instagram",
+      "source_keys": [
+        "instagram"
+      ],
+      "status": "provisional",
+      "supersedes": [],
+      "text": "La muestra contiene reclamaciones atribuidas.",
+      "turn_id": "request-1",
+      "type": "draft.upsert"
+    }
+  ],
+  "coverage": {
+    "domain_outcomes": {
+      "facebook": {
+        "context_limitations": [],
+        "evidence_coverage": {
+          "included": 1,
+          "included_by_stance": {
+            "context": 0,
+            "refutes": 0,
+            "supports": 0,
+            "unassessed": 1,
+            "unclear": 0
+          },
+          "omitted": 0,
+          "total": 1,
+          "total_by_stance": {
+            "context": 0,
+            "refutes": 0,
+            "supports": 0,
+            "unassessed": 1,
+            "unclear": 0
+          }
+        },
+        "gap": null,
+        "repair_unit_ids": [],
+        "status": "complete"
+      },
+      "instagram": {
+        "context_limitations": [],
+        "evidence_coverage": {
+          "included": 1,
+          "included_by_stance": {
+            "context": 0,
+            "refutes": 0,
+            "supports": 0,
+            "unassessed": 1,
+            "unclear": 0
+          },
+          "omitted": 0,
+          "total": 1,
+          "total_by_stance": {
+            "context": 0,
+            "refutes": 0,
+            "supports": 0,
+            "unassessed": 1,
+            "unclear": 0
+          }
+        },
+        "gap": null,
+        "repair_unit_ids": [],
+        "status": "complete"
+      }
+    },
+    "evidence_count": 2,
+    "read_progress": {
+      "attempted_destinations": 0,
+      "maximum_destinations": 10,
+      "retrieved_destinations": 0,
+      "unretrieved_destinations": 0
+    },
+    "representative": false,
+    "sources": [
+      "facebook",
+      "instagram"
+    ]
+  },
+  "kind": "research_report",
+  "limitations": [
+    "Muestra acotada; no es representativa.",
+    "Muestra acotada; no representa toda la conversación pública."
+  ],
+  "markdown": "# Informe de investigación de mercado\n\n**Estado:** complete\n\n**Tarea:** task-1; **ejecución:** task-run-1; **informe:** 19caa65ff56d147f8f86ec2653869496e69456e2bf0003223faaee1ee2c2d6c8.\n\n## Resumen\n\nLa muestra contiene reclamaciones atribuidas.\n\nPeriodo de publicaciones consultado: del 26 de octubre de 2026, 00:00:00 UTC al 2 de noviembre de 2026, 23:59:59 UTC. Fuentes con evidencia: Facebook, Instagram. Evidencias recuperadas: 2. El alcance se limita a estos resultados.\n\n## Alcance y método\n\n**Objetivo:** Describir reclamaciones\n\n**Entidad:** Fixture brand\n\n**Mercado:** Colombia\n\nMétodo: recopilación acotada, análisis por fuente y revisión de afirmaciones. La muestra recuperada no representa el universo del mercado.\n\n**Periodo:** 2026-10-26T00:00:00\\+00:00 → 2026-11-02T23:59:59\\+00:00; zona UTC; límites \\[start,end\\].\n\n## Hallazgos por fuente\n\nLa muestra contiene reclamaciones atribuidas.\n\nLa muestra contiene reclamaciones atribuidas.\n\n## Muestra observada\n\n**facebook:** available.\n\nConsultas: started: 1, completed: 1, failed: 0.\n\n- post: 1 unidades retenidas; 1 analizadas; available.\n\n- comment: desconocido unidades retenidas; desconocido analizadas; not\\_collected.\n\n- No se dispone de una muestra retenida verificable de esta unidad\\.\n\n**instagram:** available.\n\nConsultas: started: desconocido, completed: desconocido, failed: desconocido.\n\n- post: 1 unidades retenidas; 1 analizadas; available.\n\n- comment: desconocido unidades retenidas; desconocido analizadas; not\\_collected.\n\n- No se dispone de una muestra retenida verificable de esta unidad\\.\n\n- La contabilidad de consultas por fuente no está completamente identificada\\.\n\nLos conteos y etiquetas describen evidencia retenida, no el universo de publicaciones ni personas\\.\n\n## Sentimiento de la muestra\n\nEstado: insufficient. Clasificación no calibrada; describe sólo la muestra.\n\n- facebook / post\\_text; objetivo Fixture brand; aspecto general: positive: 0, negative: 0, neutral: 0, mixed: 0; elegibles: 1; clasificadas: 0; no clasificadas: 1.\n\n- instagram / post\\_text; objetivo Fixture brand; aspecto general: positive: 0, negative: 0, neutral: 0, mixed: 0; elegibles: 1; clasificadas: 0; no clasificadas: 1.\n\nLos conteos y etiquetas describen evidencia retenida, no el universo de publicaciones ni personas\\.\n\nNo se admitió una muestra suficiente para determinar polaridad; no equivale a neutralidad\\.\n\n## Limitaciones\n\n- Muestra acotada; no es representativa\\.\n- Muestra acotada; no representa toda la conversación pública\\.\n\n## Referencias\n\n- [186da3d9091bd9a77d5339aa9dd9d6710ccfd55a5aa836468d64324dc2aca5a2](<https://facebook.com/fixturebrand/posts/1>)\n- [62f4223008a66b994058f55efab7e2b40614489dcf60173330648afa427cc57a](<https://instagram.com/fixturebrand/posts/1>)",
+  "references": [
+    {
+      "author_name": null,
+      "author_url": null,
+      "content_basis": "post_text",
+      "data_last_updated": null,
+      "discovery_channel": "facebook",
+      "document_sha256": null,
+      "evidence_id": "186da3d9091bd9a77d5339aa9dd9d6710ccfd55a5aa836468d64324dc2aca5a2",
+      "locator": null,
+      "media": [],
+      "media_content_analyzed": false,
+      "media_omitted_count": 0,
+      "observed_at": "2026-11-02T12:00:00+00:00",
+      "published_at": "2026-11-01T12:00:00+00:00",
+      "requested_url": null,
+      "source": "facebook",
+      "source_relation": "unknown",
+      "source_title": null,
+      "url": "https://facebook.com/fixturebrand/posts/1"
+    },
+    {
+      "author_name": null,
+      "author_url": null,
+      "content_basis": "post_text",
+      "data_last_updated": null,
+      "discovery_channel": "instagram",
+      "document_sha256": null,
+      "evidence_id": "62f4223008a66b994058f55efab7e2b40614489dcf60173330648afa427cc57a",
+      "locator": null,
+      "media": [],
+      "media_content_analyzed": false,
+      "media_omitted_count": 0,
+      "observed_at": "2026-11-02T12:00:00+00:00",
+      "published_at": "2026-11-01T12:00:00+00:00",
+      "requested_url": null,
+      "source": "instagram",
+      "source_relation": "unknown",
+      "source_title": null,
+      "url": "https://instagram.com/fixturebrand/posts/1"
+    }
+  ],
+  "report": {
+    "extensions": {
+      "market.platform_metrics": {
+        "limitations": [
+          "Los conteos y etiquetas describen evidencia retenida, no el universo de publicaciones ni personas."
+        ],
+        "method": {
+          "method_id": "retained-evidence-counts",
+          "version": "1.0"
+        },
+        "platforms": [
+          {
+            "limitations": [],
+            "observations": [
+              {
+                "analyzed_count": 1,
+                "analyzed_evidence_ids": [
+                  "186da3d9091bd9a77d5339aa9dd9d6710ccfd55a5aa836468d64324dc2aca5a2"
+                ],
+                "evidence_ids": [
+                  "186da3d9091bd9a77d5339aa9dd9d6710ccfd55a5aa836468d64324dc2aca5a2"
+                ],
+                "limitations": [],
+                "population": "retained_evidence",
+                "retained_count": 1,
+                "status": "available",
+                "unit": "post"
+              },
+              {
+                "analyzed_count": null,
+                "analyzed_evidence_ids": [],
+                "evidence_ids": [],
+                "limitations": [
+                  "No se dispone de una muestra retenida verificable de esta unidad."
+                ],
+                "population": "retained_evidence",
+                "retained_count": null,
+                "status": "not_collected",
+                "unit": "comment"
+              }
+            ],
+            "query_operations": {
+              "completed": 1,
+              "failed": 0,
+              "started": 1
+            },
+            "retrieval_status": "available",
+            "source": "facebook"
+          },
+          {
+            "limitations": [
+              "La contabilidad de consultas por fuente no está completamente identificada."
+            ],
+            "observations": [
+              {
+                "analyzed_count": 1,
+                "analyzed_evidence_ids": [
+                  "62f4223008a66b994058f55efab7e2b40614489dcf60173330648afa427cc57a"
+                ],
+                "evidence_ids": [
+                  "62f4223008a66b994058f55efab7e2b40614489dcf60173330648afa427cc57a"
+                ],
+                "limitations": [],
+                "population": "retained_evidence",
+                "retained_count": 1,
+                "status": "available",
+                "unit": "post"
+              },
+              {
+                "analyzed_count": null,
+                "analyzed_evidence_ids": [],
+                "evidence_ids": [],
+                "limitations": [
+                  "No se dispone de una muestra retenida verificable de esta unidad."
+                ],
+                "population": "retained_evidence",
+                "retained_count": null,
+                "status": "not_collected",
+                "unit": "comment"
+              }
+            ],
+            "query_operations": {
+              "completed": null,
+              "failed": null,
+              "started": null
+            },
+            "retrieval_status": "available",
+            "source": "instagram"
+          }
+        ],
+        "schema_version": "1.0"
+      },
+      "market.sentiment": {
+        "groups": [
+          {
+            "annotations": [
+              {
+                "evidence_id": "186da3d9091bd9a77d5339aa9dd9d6710ccfd55a5aa836468d64324dc2aca5a2",
+                "label": "unclassified",
+                "limitations": [
+                  "La ficha contiene recuentos, no una opinión inequívoca hacia el objetivo."
+                ],
+                "supporting_text": "El producto tuvo 1 reclamaciones en la muestra revisada."
+              }
+            ],
+            "aspect": null,
+            "basis": "post_text",
+            "classified_count": 0,
+            "counts": {
+              "mixed": 0,
+              "negative": 0,
+              "neutral": 0,
+              "positive": 0
+            },
+            "eligible_count": 1,
+            "limitations": [],
+            "population": "retained_evidence",
+            "source": "facebook",
+            "target": "Fixture brand",
+            "unclassified_count": 1
+          },
+          {
+            "annotations": [
+              {
+                "evidence_id": "62f4223008a66b994058f55efab7e2b40614489dcf60173330648afa427cc57a",
+                "label": "unclassified",
+                "limitations": [
+                  "La ficha contiene recuentos, no una opinión inequívoca hacia el objetivo."
+                ],
+                "supporting_text": "El producto tuvo 1 reclamaciones en la muestra revisada."
+              }
+            ],
+            "aspect": null,
+            "basis": "post_text",
+            "classified_count": 0,
+            "counts": {
+              "mixed": 0,
+              "negative": 0,
+              "neutral": 0,
+              "positive": 0
+            },
+            "eligible_count": 1,
+            "limitations": [],
+            "population": "retained_evidence",
+            "source": "instagram",
+            "target": "Fixture brand",
+            "unclassified_count": 1
+          }
+        ],
+        "limitations": [
+          "Los conteos y etiquetas describen evidencia retenida, no el universo de publicaciones ni personas.",
+          "No se admitió una muestra suficiente para determinar polaridad; no equivale a neutralidad."
+        ],
+        "method": {
+          "calibration_status": "not_calibrated",
+          "method_id": "target-aspect-polarity",
+          "version": "1.0"
+        },
+        "schema_version": "1.0",
+        "status": "insufficient"
+      }
+    },
+    "limitations": [
+      "Muestra acotada; no es representativa.",
+      "Muestra acotada; no representa toda la conversación pública."
+    ],
+    "period": {
+      "bounds": "[start,end]",
+      "end": "2026-11-02T23:59:59+00:00",
+      "start": "2026-10-26T00:00:00+00:00",
+      "time_zone": "UTC"
+    },
+    "report_id": "19caa65ff56d147f8f86ec2653869496e69456e2bf0003223faaee1ee2c2d6c8",
+    "schema_version": "1.0",
+    "sections": [
+      {
+        "evidence_ids": [
+          "186da3d9091bd9a77d5339aa9dd9d6710ccfd55a5aa836468d64324dc2aca5a2",
+          "62f4223008a66b994058f55efab7e2b40614489dcf60173330648afa427cc57a"
+        ],
+        "markdown": "La muestra contiene reclamaciones atribuidas.\n\nPeriodo de publicaciones consultado: del 26 de octubre de 2026, 00:00:00 UTC al 2 de noviembre de 2026, 23:59:59 UTC. Fuentes con evidencia: Facebook, Instagram. Evidencias recuperadas: 2. El alcance se limita a estos resultados.",
+        "section_id": "summary"
+      },
+      {
+        "evidence_ids": [],
+        "markdown": "**Objetivo:** Describir reclamaciones\n\n**Entidad:** Fixture brand\n\n**Mercado:** Colombia\n\nMétodo: recopilación acotada, análisis por fuente y revisión de afirmaciones. La muestra recuperada no representa el universo del mercado.\n\n**Periodo:** 2026-10-26T00:00:00\\+00:00 → 2026-11-02T23:59:59\\+00:00; zona UTC; límites \\[start,end\\].",
+        "section_id": "scope"
+      },
+      {
+        "evidence_ids": [
+          "186da3d9091bd9a77d5339aa9dd9d6710ccfd55a5aa836468d64324dc2aca5a2",
+          "62f4223008a66b994058f55efab7e2b40614489dcf60173330648afa427cc57a"
+        ],
+        "markdown": "La muestra contiene reclamaciones atribuidas.\n\nLa muestra contiene reclamaciones atribuidas.",
+        "section_id": "findings"
+      },
+      {
+        "evidence_ids": [
+          "186da3d9091bd9a77d5339aa9dd9d6710ccfd55a5aa836468d64324dc2aca5a2",
+          "62f4223008a66b994058f55efab7e2b40614489dcf60173330648afa427cc57a"
+        ],
+        "markdown": "**facebook:** available.\n\nConsultas: started: 1, completed: 1, failed: 0.\n\n- post: 1 unidades retenidas; 1 analizadas; available.\n\n- comment: desconocido unidades retenidas; desconocido analizadas; not\\_collected.\n\n- No se dispone de una muestra retenida verificable de esta unidad\\.\n\n**instagram:** available.\n\nConsultas: started: desconocido, completed: desconocido, failed: desconocido.\n\n- post: 1 unidades retenidas; 1 analizadas; available.\n\n- comment: desconocido unidades retenidas; desconocido analizadas; not\\_collected.\n\n- No se dispone de una muestra retenida verificable de esta unidad\\.\n\n- La contabilidad de consultas por fuente no está completamente identificada\\.\n\nLos conteos y etiquetas describen evidencia retenida, no el universo de publicaciones ni personas\\.",
+        "section_id": "metrics"
+      },
+      {
+        "evidence_ids": [
+          "186da3d9091bd9a77d5339aa9dd9d6710ccfd55a5aa836468d64324dc2aca5a2",
+          "62f4223008a66b994058f55efab7e2b40614489dcf60173330648afa427cc57a"
+        ],
+        "markdown": "Estado: insufficient. Clasificación no calibrada; describe sólo la muestra.\n\n- facebook / post\\_text; objetivo Fixture brand; aspecto general: positive: 0, negative: 0, neutral: 0, mixed: 0; elegibles: 1; clasificadas: 0; no clasificadas: 1.\n\n- instagram / post\\_text; objetivo Fixture brand; aspecto general: positive: 0, negative: 0, neutral: 0, mixed: 0; elegibles: 1; clasificadas: 0; no clasificadas: 1.\n\nLos conteos y etiquetas describen evidencia retenida, no el universo de publicaciones ni personas\\.\n\nNo se admitió una muestra suficiente para determinar polaridad; no equivale a neutralidad\\.",
+        "section_id": "sentiment"
+      },
+      {
+        "evidence_ids": [],
+        "markdown": "- Muestra acotada; no es representativa\\.\n- Muestra acotada; no representa toda la conversación pública\\.",
+        "section_id": "limitations"
+      }
+    ],
+    "task_id": "task-1",
+    "task_run_id": "task-run-1",
+    "template": {
+      "sections": [
+        {
+          "section_id": "summary",
+          "title": "Resumen",
+          "visibility": "always"
+        },
+        {
+          "section_id": "scope",
+          "title": "Alcance y método",
+          "visibility": "always"
+        },
+        {
+          "section_id": "findings",
+          "title": "Hallazgos por fuente",
+          "visibility": "when_present"
+        },
+        {
+          "section_id": "metrics",
+          "title": "Muestra observada",
+          "visibility": "when_present"
+        },
+        {
+          "section_id": "sentiment",
+          "title": "Sentimiento de la muestra",
+          "visibility": "when_present"
+        },
+        {
+          "section_id": "limitations",
+          "title": "Limitaciones",
+          "visibility": "always"
+        }
+      ],
+      "template_id": "market-overview",
+      "version": 1
+    },
+    "title": "Informe de investigación de mercado"
+  },
+  "status": "complete"
+}

@@ -1,0 +1,10 @@
+.agent-picker .agent-picker-menu[data-placement="below"] {
+  top: var(--agent-picker-top);
+  bottom: auto;
+}
+
+.agent-picker .agent-picker-menu[data-placement="above"] {
+  top: auto;
+  bottom: var(--agent-picker-bottom);
+  transform-origin: bottom left;
+}

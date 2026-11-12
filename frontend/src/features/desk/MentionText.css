@@ -1,0 +1,7 @@
+.user-mention {
+  background: #ffffff15;
+  border-radius: 5px;
+  padding: 0 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}

@@ -1,0 +1,49 @@
+{
+  "status": "completed",
+  "markdown": "No se recuperaron publicaciones en el periodo consultado. Esto no demuestra ausencia de conversación pública.",
+  "references": [],
+  "artifacts": [],
+  "report": {
+    "schema_version": "1.0",
+    "report_id": "report-market-empty",
+    "task_id": "task-market",
+    "task_run_id": "run-market-empty",
+    "title": "Seguimiento de mercado — muestra vacía",
+    "template": {
+      "template_id": "market-monitoring",
+      "version": 1,
+      "sections": [
+        {
+          "section_id": "summary",
+          "title": "Resumen ejecutivo",
+          "visibility": "always"
+        },
+        {
+          "section_id": "findings",
+          "title": "Hallazgos de mercado",
+          "visibility": "when_present"
+        },
+        {
+          "section_id": "sentiment",
+          "title": "Sentimiento de la muestra",
+          "visibility": "when_present"
+        }
+      ]
+    },
+    "sections": [
+      {
+        "section_id": "summary",
+        "markdown": "No se recuperaron publicaciones en el periodo consultado.",
+        "evidence_ids": []
+      }
+    ],
+    "limitations": [
+      "La muestra vacía no permite analizar sentimiento ni concluir ausencia de conversación."
+    ],
+    "period": {
+      "start": "2026-11-10T14:00:00Z",
+      "end": "2026-11-10T15:00:00Z",
+      "time_zone": "America/Lima"
+    }
+  }
+}

@@ -1,0 +1,148 @@
+.markdown-text.t-stream {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.markdown-text > :first-child {
+  margin-top: 0;
+}
+.markdown-text > :last-child {
+  margin-bottom: 0;
+}
+.markdown-text p,
+.markdown-text ul,
+.markdown-text ol,
+.markdown-text blockquote,
+.markdown-text pre,
+.markdown-text table {
+  margin-block: 0 16px;
+}
+.markdown-text h1,
+.markdown-text h2,
+.markdown-text h3,
+.markdown-text h4,
+.markdown-text h5,
+.markdown-text h6 {
+  font-weight: 650;
+  line-height: 1.4;
+  margin-block: 22px 10px;
+}
+.markdown-text h1 {
+  font-size: 1.45em;
+}
+.markdown-text h2 {
+  font-size: 1.3em;
+}
+.markdown-text h3 {
+  font-size: 1.15em;
+}
+.markdown-text ul,
+.markdown-text ol {
+  padding-left: 24px;
+}
+.markdown-text li {
+  margin-block: 5px;
+}
+.markdown-text li > p {
+  margin-bottom: 6px;
+}
+.markdown-text li > :is(ul, ol) {
+  margin-block: 6px;
+}
+.markdown-text strong {
+  font-weight: 700;
+}
+.markdown-text a {
+  color: #a8cfff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.markdown-text blockquote {
+  padding-left: 14px;
+  border-left: 1px solid var(--chat-border);
+  color: var(--chat-muted);
+}
+.markdown-text code {
+  font-family: ui-monospace, monospace;
+  font-size: 0.9em;
+  border-radius: 4px;
+  background: #22252a;
+  padding: 2px 5px;
+}
+.markdown-text pre {
+  padding: 14px;
+  border: 1px solid var(--chat-border);
+  border-radius: 8px;
+  white-space: pre;
+  overflow-x: auto;
+}
+.markdown-text pre code {
+  padding: 0;
+  background: none;
+}
+.markdown-text table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+.markdown-text th,
+.markdown-text td {
+  padding: 8px 10px;
+  border: 1px solid var(--chat-border);
+  text-align: left;
+}
+.markdown-text hr {
+  border: 0;
+  border-top: 1px solid var(--chat-border);
+  margin-block: 18px;
+}
+.markdown-text-compact {
+  font-size: inherit;
+  line-height: 1.5;
+}
+.markdown-text-compact :is(p, ul, ol, blockquote, pre, table) {
+  margin-block: 0 8px;
+}
+.markdown-text-compact :is(h1, h2, h3, h4, h5, h6) {
+  font-size: 1em;
+  margin-block: 12px 6px;
+}
+.markdown-text-compact :is(ul, ol) {
+  padding-left: 20px;
+}
+.markdown-text-compact li {
+  margin-block: 3px;
+}
+.markdown-text-compact pre {
+  padding: 8px;
+}
+.markdown-text-compact :is(th, td) {
+  padding: 5px 7px;
+}
+.markdown-text-compact hr {
+  margin-block: 10px;
+}
+.markdown-text-compact > :first-child {
+  margin-top: 0;
+}
+.markdown-text-compact > :last-child {
+  margin-bottom: 0;
+}
+.tool-progress .markdown-text {
+  margin-top: 5px;
+}
+.tool-progress .markdown-text ol {
+  display: block;
+  list-style: decimal;
+  margin: 0 0 8px;
+  padding-left: 20px;
+  border: 0;
+}
+.tool-progress .markdown-text li {
+  display: list-item;
+}
+.tool-progress .markdown-text p {
+  margin-top: 0;
+  line-height: inherit;
+}

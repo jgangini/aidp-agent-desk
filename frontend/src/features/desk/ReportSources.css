@@ -1,0 +1,119 @@
+details.report-sources {
+  margin-top: 16px;
+  color: var(--ink, #eeeeef);
+  border: 1px solid var(--chat-border, #303236);
+  border-radius: 8px;
+  overflow: clip;
+}
+details.report-sources > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  width: auto;
+  padding: 8px 12px;
+  box-sizing: border-box;
+  list-style: none;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink, #eeeeef);
+  transition: background-color var(--motion-close, 150ms) ease-out;
+}
+.report-sources > summary::-webkit-details-marker {
+  display: none;
+}
+.report-sources > summary:hover,
+.report-citations a:hover {
+  background: var(--chat-hover, #24262c);
+}
+.report-source-count {
+  color: var(--chat-muted, #a4a4aa);
+}
+.report-sources-chevron {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--chat-muted, #a4a4aa);
+  transition: transform var(--motion-close, 150ms) var(--ease-surface, ease-out);
+}
+.report-sources[open] > summary .report-sources-chevron {
+  transform: rotate(180deg);
+}
+.report-sources > .report-citations {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 0;
+  border-top: 1px solid var(--chat-border, #303236);
+}
+.report-sources[open] > .report-citations {
+  animation: report-sources-enter var(--motion-close, 150ms)
+    var(--ease-surface, ease-out);
+}
+@keyframes report-sources-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.report-citations > li {
+  margin: 0;
+}
+.report-citations > li + li {
+  border-top: 1px solid var(--chat-border, #303236);
+}
+.report-sources .report-citations a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 10px 12px;
+  box-sizing: border-box;
+  color: var(--report-link, #bfc8f4);
+  text-decoration: none;
+  transition: background-color var(--motion-close, 150ms) ease-out;
+}
+.report-source-copy {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  gap: 3px;
+}
+.report-source-title {
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.report-source-domain {
+  color: var(--chat-muted, #a4a4aa);
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.report-citations a > svg {
+  flex-shrink: 0;
+}
+.report-sources > summary:focus-visible,
+.report-sources .report-citations a:focus-visible {
+  outline: 2px solid var(--focus, #89919d);
+  outline-offset: -3px;
+}
+@media (pointer: coarse) {
+  details.report-sources > summary {
+    min-height: 44px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  details.report-sources > summary,
+  .report-sources-chevron,
+  .report-sources .report-citations a {
+    transition: none;
+  }
+  .report-sources[open] > .report-citations {
+    animation: none;
+  }
+}

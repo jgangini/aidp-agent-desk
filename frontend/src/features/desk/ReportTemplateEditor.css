@@ -1,0 +1,214 @@
+.report-template-editor {
+  container-type: inline-size;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  color: var(--ink, #eeeeef);
+  animation: report-editor-enter var(--motion-open, 250ms)
+    var(--ease-surface, ease-out);
+}
+.report-template-editor h2 {
+  margin: 0 0 8px;
+  font-size: 19px;
+}
+.report-template-editor footer p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--chat-muted, #a4a4aa);
+  max-width: 65ch;
+}
+.report-template-editor form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+.report-format-body {
+  overflow: auto;
+  min-height: 0;
+  flex: 1;
+  padding: 24px;
+  background: var(--surface, #141618);
+}
+.report-format-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  min-height: 500px;
+  padding: clamp(16px, 3vw, 32px);
+  border: 1px solid var(--chat-border, #303236);
+  background: var(--chat-surface, #17181b);
+  overflow-wrap: anywhere;
+}
+.report-format-page > h1 {
+  margin: 0 0 28px;
+  font-size: 24px;
+}
+.report-format-sections {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.report-format-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+.report-format-row[data-columns="2"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.report-format-block {
+  min-width: 0;
+  border: 1px solid var(--chat-border, #303236);
+  border-radius: 8px;
+  padding: 12px;
+  transition: background-color var(--motion-close, 150ms) ease-out;
+}
+.report-format-block[data-drop-target="true"],
+.report-drop-column[data-drop-target="true"] {
+  outline: 2px dashed var(--focus, #89919d);
+  outline-offset: 2px;
+  background: var(--chat-hover, #232529);
+}
+.report-format-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--chat-muted, #a4a4aa);
+}
+.report-format-order-actions {
+  display: flex;
+  margin-left: auto;
+}
+.report-format-grip {
+  cursor: grab;
+}
+.report-format-grip:active {
+  cursor: grabbing;
+}
+.report-format-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(130px, 0.65fr);
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--chat-border, #303236);
+}
+.report-template-editor label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--chat-muted, #a4a4aa);
+}
+.report-template-editor :is(input, select) {
+  width: 100%;
+  min-width: 0;
+}
+.report-format-block-preview {
+  min-width: 0;
+  padding-top: 12px;
+}
+.report-format-block-preview .report-section {
+  border: 0;
+  padding: 0;
+}
+.report-format-block-preview h2 {
+  font-size: 18px;
+}
+.report-format-block-preview .report-table-scroll {
+  overflow: auto;
+  max-width: 100%;
+}
+.report-drop-column {
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px dashed var(--chat-border, #50545d);
+  color: var(--chat-muted, #a4a4aa);
+  font-size: 12px;
+  text-align: center;
+}
+.report-template-editor footer {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 14px 24px;
+  margin: 0;
+  border-top: 1px solid var(--chat-border, #303236);
+  background: var(--chat, #0d0e10);
+}
+.report-template-editor footer p {
+  margin-right: auto;
+}
+.report-format-error {
+  margin: 12px 24px;
+  color: var(--danger, #f2a79e);
+}
+.report-format-empty {
+  padding: 24px;
+}
+.report-template-editor :focus-visible {
+  outline: 2px solid var(--focus, #89919d);
+  outline-offset: 3px;
+}
+.report-template-editor button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+@keyframes report-editor-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 650px) {
+  .report-format-body {
+    padding: 12px;
+  }
+  .report-format-page {
+    padding: 12px;
+  }
+  .report-format-row[data-columns="2"],
+  .report-format-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .report-template-editor footer {
+    padding: 12px;
+    flex-wrap: wrap;
+  }
+  .report-template-editor footer p {
+    flex-basis: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .report-template-editor {
+    animation: none;
+  }
+  .report-format-block {
+    transition: none;
+  }
+}
+@container (max-width: 600px) {
+  .report-format-row[data-columns="2"],
+  .report-format-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .report-format-body {
+    padding: 12px;
+  }
+  .report-format-page {
+    padding: 12px;
+  }
+}

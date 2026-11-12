@@ -1,0 +1,86 @@
+{
+  "status": "partial",
+  "markdown": "La muestra sintética contiene dos publicaciones y dos comentarios. Una fuente no estuvo disponible; los hallazgos describen únicamente la evidencia recuperada.",
+  "references": [
+    {
+      "evidence_id": "post-1",
+      "url": "https://example.com/posts/1"
+    },
+    {
+      "evidence_id": "post-2",
+      "url": "https://example.com/posts/2"
+    },
+    {
+      "evidence_id": "comment-1",
+      "url": "https://example.com/posts/1#comment-1"
+    },
+    {
+      "evidence_id": "comment-2",
+      "url": "https://example.com/posts/2#comment-2"
+    }
+  ],
+  "artifacts": [],
+  "report": {
+    "schema_version": "1.0",
+    "report_id": "report-market-abundant",
+    "task_id": "task-market",
+    "task_run_id": "run-market-abundant",
+    "title": "Seguimiento de mercado — evidencia disponible",
+    "template": {
+      "template_id": "market-monitoring",
+      "version": 1,
+      "sections": [
+        {
+          "section_id": "summary",
+          "title": "Resumen ejecutivo",
+          "visibility": "always"
+        },
+        {
+          "section_id": "findings",
+          "title": "Hallazgos de mercado",
+          "visibility": "when_present"
+        },
+        {
+          "section_id": "sentiment",
+          "title": "Sentimiento de la muestra",
+          "visibility": "when_present"
+        }
+      ]
+    },
+    "sections": [
+      {
+        "section_id": "summary",
+        "markdown": "La muestra sintética destaca opiniones sobre precio y disponibilidad. La cobertura es parcial.",
+        "evidence_ids": [
+          "post-1",
+          "post-2"
+        ]
+      },
+      {
+        "section_id": "findings",
+        "markdown": "El precio y la disponibilidad aparecen como temas de interés. Son hallazgos de la muestra, sin representatividad poblacional acreditada.",
+        "evidence_ids": [
+          "post-1",
+          "post-2"
+        ]
+      },
+      {
+        "section_id": "sentiment",
+        "markdown": "En dos comentarios sintéticos sobre la marca objetivo, uno expresa una valoración positiva y otro negativa. No se extrapola esta distribución al mercado.",
+        "evidence_ids": [
+          "comment-1",
+          "comment-2"
+        ]
+      }
+    ],
+    "limitations": [
+      "Una fuente no estuvo disponible.",
+      "Las referencias y los datos son sintéticos; no acreditan precisión del clasificador."
+    ],
+    "period": {
+      "start": "2026-11-11T14:00:00Z",
+      "end": "2026-11-11T15:00:00Z",
+      "time_zone": "America/Lima"
+    }
+  }
+}

@@ -1,0 +1,47 @@
+.scheduled-inline-form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  gap: 16px;
+  padding: 0 2px 12px;
+}
+.scheduled-inline-form > .scheduled-help {
+  margin: 0;
+}
+.scheduled-inline-form .scheduled-task-form {
+  min-height: auto;
+}
+.scheduled-inline-form .scheduled-task-form > .scheduled-task-footer {
+  background: var(--chat-surface, #161719);
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 0 4px;
+}
+.scheduled-report-undo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--chat-muted, #a4a4aa);
+  font-size: 12px;
+}
+.scheduled-report-undo .report-back {
+  margin-left: auto;
+}
+.task-delete-dialog {
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+}
+.task-delete-dialog > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.task-delete-dialog > header .icon-button {
+  flex: none;
+  padding: 4px;
+  border: 0;
+}

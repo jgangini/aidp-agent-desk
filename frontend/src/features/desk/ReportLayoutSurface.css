@@ -1,0 +1,21 @@
+.report-layout-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+.report-layout-row[data-columns="2"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.report-layout-row > *,
+.report-layout-row .report-section {
+  min-width: 0;
+}
+.report-layout-row .report-table-scroll {
+  max-width: 100%;
+  overflow: auto;
+}
+@media (max-width: 600px) {
+  .report-layout-row[data-columns="2"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

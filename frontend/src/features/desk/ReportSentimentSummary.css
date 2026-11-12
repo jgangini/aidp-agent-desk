@@ -1,0 +1,48 @@
+.report-sentiment-summary figure {
+  margin: 20px 0;
+}
+.report-sentiment-summary figcaption {
+  display: grid;
+  gap: 6px;
+}
+.report-sentiment-summary figcaption > span {
+  color: var(--chat-muted, #a4a4aa);
+  font-size: 12px;
+}
+.report-sentiment-summary .report-sentiment-columns {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  height: auto;
+  padding: 0;
+  margin: 16px 0;
+  overflow: visible;
+  list-style: none;
+}
+.report-sentiment-columns li {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  text-align: center;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.sentiment-column-track {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 144px;
+  border-bottom: 1px solid #656974;
+  background: repeating-linear-gradient(
+    to top,
+    transparent 0,
+    transparent calc(25% - 1px),
+    #ffffff0a calc(25% - 1px),
+    #ffffff0a 25%
+  );
+}
+.sentiment-column-track > span {
+  display: block;
+  width: min(100%, 48px);
+  border-radius: 4px 4px 0 0;
+}

@@ -1,0 +1,118 @@
+.scheduled-date-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+.scheduled-date-control {
+  position: relative;
+  min-width: 0;
+}
+.scheduled-date-control input {
+  padding-right: 40px;
+}
+.scheduled-date-control input::-webkit-calendar-picker-indicator {
+  display: none;
+}
+.scheduled-date-control .scheduled-date-trigger {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 6px;
+  color: var(--chat-muted);
+}
+.scheduled-calendar {
+  position: fixed;
+  inset: auto;
+  top: var(--date-top);
+  left: var(--date-left);
+  margin: 0;
+  width: min(280px, calc(100vw - 16px));
+  max-height: var(--date-height);
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid var(--chat-border);
+  border-radius: 12px;
+  background: #1b1c1f;
+  color: #eeeeef;
+  font-size: 12px;
+}
+.scheduled-calendar header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.scheduled-calendar header strong {
+  text-transform: capitalize;
+}
+.scheduled-calendar header button {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 7px;
+}
+.scheduled-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 3px;
+}
+.scheduled-calendar-weekday {
+  padding: 4px 0 8px;
+  text-align: center;
+  color: #b7b7bf;
+  font-size: 11px;
+}
+.scheduled-calendar-grid .scheduled-calendar-day {
+  min-width: 0;
+  min-height: 32px;
+  padding: 0;
+  border-radius: 7px;
+  font-size: 12px;
+}
+.scheduled-calendar-day[aria-pressed="true"] {
+  background: #eeeeef;
+  color: #1b1c1f;
+  font-weight: 600;
+}
+.scheduled-calendar-day[aria-current="date"] {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.scheduled-calendar footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--chat-border);
+}
+.scheduled-calendar footer button {
+  min-height: 32px;
+  padding: 4px 8px;
+  border-radius: 7px;
+}
+.scheduled-calendar button:focus-visible,
+.scheduled-date-trigger:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+  box-shadow: none;
+}
+.scheduled-calendar button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+@media (forced-colors: active) {
+  .scheduled-calendar-day[aria-pressed="true"] {
+    outline: 2px solid Highlight;
+  }
+}
+
+.chat-panel
+  .scheduled-calendar-day[aria-pressed="true"]:is(:hover, :focus-visible) {
+  background: #eeeeef;
+  color: #1b1c1f;
+}

@@ -1,0 +1,113 @@
+.history-title {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  margin: 0;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+}
+.chat-options .history-new {
+  margin-top: 5px;
+  flex: none;
+}
+.history-row {
+  position: relative;
+  flex: none;
+}
+.chat-options .history-row .history-select {
+  padding-left: 10px;
+  padding-right: 36px;
+}
+.history-select > svg {
+  flex: none;
+}
+.chat-options .history-row .history-delete {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  width: 32px;
+  min-height: 36px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  justify-content: center;
+  color: #ff8f7e;
+  opacity: 0;
+  pointer-events: none;
+}
+.chat-options .history-row:hover .history-delete,
+.chat-options .history-row .history-delete:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.chat-panel .history-delete:hover:not(:disabled) {
+  background: transparent;
+  color: #ffb3a8;
+}
+.history-delete-dialog {
+  width: min(420px, calc(100vw - 32px));
+  box-sizing: border-box;
+  padding: 24px;
+  border: 1px solid #3b3c40;
+  border-radius: 14px;
+  background: #191a1c;
+  color: #ededed;
+}
+.history-delete-dialog::backdrop {
+  background: #0009;
+}
+.chat-panel .history-delete-dialog h2 {
+  margin: 0 0 12px;
+  font-size: 15px;
+  line-height: 24px;
+}
+.chat-panel .history-delete-dialog p {
+  display: block;
+  margin: 0;
+  color: #bfc0c4;
+  font-size: 15px;
+  line-height: 24px;
+  overflow-wrap: anywhere;
+  user-select: text;
+  cursor: text;
+}
+.history-delete-name {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: #343538;
+  color: #ededed;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.history-delete-dialog footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+.history-delete-dialog button {
+  padding: 9px 14px;
+  border-radius: 8px;
+  border: 1px solid #494a4f;
+  color: #ededed;
+}
+.chat-panel .history-delete-dialog .history-confirm-delete {
+  background: #552720;
+  border-color: #ac5141;
+  color: #ffd0c6;
+}
+.chat-panel
+  .history-delete-dialog
+  .history-confirm-delete:hover:not(:disabled) {
+  background: #70332a;
+}
+@media (hover: none) {
+  .chat-options .history-row .history-delete {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}

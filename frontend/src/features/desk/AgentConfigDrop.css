@@ -1,0 +1,791 @@
+/* Adapted landing from Transitions.dev Pro drag-drop-physics, fetched with the
+   authorized CLI on 2026-11-03. Used inside Agent Desk, not redistributed as a kit.
+   Native file drops replace the demo image/chip; credentials are never previewed. */
+.config-fields .file-field.credential-drop {
+  --drop-morph-squash: 0.97;
+  --drop-down-dur: 250ms;
+  --drop-up-dur: 450ms;
+  --drop-down-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --drop-up-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  padding: 0;
+  border: 0;
+  gap: 6px;
+  background: none;
+  cursor: pointer;
+}
+.credential-drop-surface {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  min-height: 96px;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 12px;
+  border: 1px dashed var(--line, #55575e);
+  border-radius: 12px;
+  background: var(--chat-surface, #17181b);
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease;
+  transform-origin: 50% 70%;
+}
+.credential-drop-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  width: 100%;
+}
+.credential-drop-heading > svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  color: var(--ink, #eeeeef);
+}
+.credential-drop-heading > strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink, #eeeeef);
+}
+.credential-drop.is-over .credential-drop-surface {
+  border-color: #f4f4f5;
+  background: #34363b;
+}
+.credential-drop.is-filled .credential-drop-surface {
+  border-style: solid;
+}
+.credential-drop:focus-within .credential-drop-surface {
+  outline: none;
+  box-shadow: inset 0 -2px 0 var(--focus);
+}
+.credential-drop-filename {
+  grid-column: 1 / -1;
+  color: var(--chat-muted, #a4a4aa);
+  overflow-wrap: anywhere;
+  max-width: 100%;
+  line-height: 1.5;
+}
+.credential-drop-action {
+  grid-column: 1 / -1;
+  color: var(--ink, #eeeeef);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.config-fields .credential-drop .credential-file-input {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.credential-drop[data-disabled="true"] {
+  opacity: 0.55;
+  cursor: wait;
+}
+.credential-drop[data-disabled="true"] input {
+  cursor: wait;
+}
+@keyframes credential-drop-down {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(var(--drop-morph-squash));
+  }
+}
+@keyframes credential-drop-up {
+  from {
+    transform: scale(var(--drop-morph-squash));
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes credential-drop-content {
+  from {
+    opacity: 0.35;
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+.credential-drop-surface.is-landing {
+  animation-name: credential-drop-down, credential-drop-up;
+  animation-duration: var(--drop-down-dur), var(--drop-up-dur);
+  animation-timing-function: var(--drop-down-ease), var(--drop-up-ease);
+  animation-delay: 0ms, var(--drop-down-dur);
+  animation-fill-mode: forwards, forwards;
+}
+.credential-drop-surface.is-landing .credential-drop-heading > svg,
+.credential-drop-surface.is-landing .credential-drop-filename {
+  animation: credential-drop-content 400ms ease-in-out;
+}
+.agent-config-inline > header > .config-aidp-icon {
+  display: block;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  filter: brightness(0) invert(1);
+}
+.agent-config-inline .agent-config-form {
+  margin-top: 20px;
+  padding-top: 0;
+  border-top: 0;
+}
+.agent-config-inline .config-upload-fields {
+  margin-top: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.config-details-divider {
+  margin: 20px 0;
+  border: 0;
+  border-top: 1px solid var(--line, #303236);
+}
+.agent-config-inline .config-profile-fields {
+  margin-top: 16px;
+}
+.agent-config-inline
+  .agent-config-form
+  .config-profile-fields
+  > label:nth-child(-n + 2) {
+  grid-column: auto;
+}
+.agent-config-inline .config-discovery-fields {
+  margin-top: 0;
+}
+.agent-config-inline
+  .agent-config-form
+  .config-discovery-fields
+  > label:not(.file-field) {
+  grid-column: auto;
+}
+.agent-config-inline .config-platform-fields .config-agent-choices {
+  margin: 0;
+  grid-column: 1 / -1;
+}
+.config-platform-fields .config-agent-choices legend {
+  padding: 0;
+  margin-bottom: 7px;
+}
+.config-fields select {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 9px 10px;
+  border: 1px solid #505258;
+  border-radius: 8px;
+  color: #eaeaea;
+  background: var(--chat-surface);
+  font: inherit;
+  font-size: 12px;
+  color-scheme: dark;
+  transition: border-color 150ms ease-out;
+}
+.config-fields select:hover:not(:disabled) {
+  border-color: #82828b;
+}
+.config-fields select:focus-visible {
+  outline: none;
+  box-shadow: inset 0 -2px 0 var(--focus);
+}
+.config-fields select:disabled,
+.config-fields input[readonly] {
+  color: var(--chat-muted);
+  cursor: default;
+}
+.config-agent-choices {
+  min-width: 0;
+  margin: 16px 0 0;
+  padding: 0;
+  border: 0;
+}
+.config-agent-choices legend {
+  margin-bottom: 8px;
+  font-size: 11px;
+  color: #c7c7c7;
+}
+.config-fields .config-agent-choice {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1.5;
+  transition: background-color var(--motion-close) var(--ease-surface);
+}
+.config-agent-choice:hover:not(:has(input:disabled)),
+.config-agent-choice:focus-within {
+  background: #ffffff08;
+}
+.config-agent-options {
+  max-height: 240px;
+  overflow-y: auto;
+  margin-top: 6px;
+  padding: 4px;
+  border: 1px solid var(--chat-line, #404044);
+  border-radius: 8px;
+  background: var(--chat-surface);
+}
+.config-fields .config-agent-choice input[type="checkbox"] {
+  appearance: none;
+  grid-area: 1 / 1;
+  width: 18px;
+  height: 18px;
+  min-height: 18px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--chat-line, #404044);
+  border-radius: 5px;
+  background: transparent;
+  cursor: inherit;
+  transition:
+    background-color 150ms var(--ease-surface),
+    border-color 150ms var(--ease-surface);
+}
+.config-fields .config-agent-choice input:checked {
+  background: var(--chat-ink, #eeeeef);
+  border-color: var(--chat-ink, #eeeeef);
+}
+.config-agent-check {
+  grid-area: 1 / 1;
+  justify-self: center;
+  pointer-events: none;
+  color: var(--chat-surface, #17181b);
+}
+.config-agent-check path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  transition: stroke-dashoffset 150ms var(--ease-surface);
+}
+input:checked + .config-agent-check path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 350ms var(--ease-surface) 50ms;
+}
+.config-agent-copy {
+  grid-area: 1 / 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.config-agent-copy strong {
+  flex: 1;
+  min-width: 0;
+}
+.config-agent-copy small {
+  flex-shrink: 0;
+}
+.config-agent-choice strong,
+.config-agent-choice small {
+  display: block;
+}
+.config-agent-choice small,
+.config-agent-choices > p,
+.config-discovery-status,
+.config-discovery-warning {
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--chat-muted);
+}
+.config-agent-choice:has(input:disabled) {
+  color: var(--chat-muted);
+  cursor: not-allowed;
+}
+@media (prefers-reduced-motion: reduce) {
+  .config-fields .config-agent-choice,
+  .config-fields .config-agent-choice input,
+  .config-agent-check path {
+    transition: none !important;
+  }
+}
+@media (forced-colors: active) {
+  .config-fields .config-agent-choice input:checked {
+    background: Highlight;
+    border-color: Highlight;
+  }
+  .config-agent-check {
+    color: HighlightText;
+  }
+}
+.config-discovery-status,
+.config-discovery-warning,
+.config-discovery-error {
+  margin-top: 12px;
+}
+.config-discovery-error button {
+  margin-top: 8px;
+  min-height: 32px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.config-discovery-error .form-error {
+  color: var(--config-error);
+}
+.agent-config-form > footer .save-profile {
+  margin-left: auto;
+}
+.agent-config-inline #agent-config-title {
+  font-size: 16px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+/* Adapted from transitions.dev Error state shake; errors remain until corrected. */
+.agent-config-form {
+  --config-error: #ff4d32;
+  --shake-distance: 6px;
+  --shake-overshoot: 4px;
+  --shake-dur-a: 80ms;
+  --shake-dur-b: 60ms;
+  --shake-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+.agent-config-form .t-input.is-error,
+.agent-config-form .credential-drop.is-error .credential-drop-surface {
+  border-color: var(--config-error);
+}
+.agent-config-form .t-input.is-shaking {
+  animation: agent-config-shake
+    calc(var(--shake-dur-a) * 2 + var(--shake-dur-b) * 2) linear;
+  will-change: transform;
+}
+.config-field-error,
+.credential-drop-error,
+.agent-config-form > .form-error {
+  color: var(--config-error);
+  line-height: 1.5;
+  animation: config-error-reveal 150ms ease-out;
+}
+.agent-config-form > footer .save-profile:hover:not(:disabled),
+.suggestions-editor footer .save-profile:hover:not(:disabled) {
+  color: #222222;
+  background: #eeeeef;
+}
+@keyframes agent-config-shake {
+  0% {
+    transform: translateX(0);
+    animation-timing-function: var(--shake-ease);
+  }
+  28.57% {
+    transform: translateX(var(--shake-distance));
+    animation-timing-function: var(--shake-ease);
+  }
+  57.14% {
+    transform: translateX(calc(var(--shake-distance) * -1));
+    animation-timing-function: var(--shake-ease);
+  }
+  78.57% {
+    transform: translateX(var(--shake-overshoot));
+    animation-timing-function: var(--shake-ease);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+@keyframes config-error-reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@container (max-width: 300px) {
+  .agent-config-inline .config-upload-fields {
+    grid-template-columns: 1fr;
+  }
+  .agent-config-inline
+    .agent-config-form
+    .config-profile-fields
+    > label:nth-child(-n + 2) {
+    grid-column: 1 / -1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .agent-config-form .t-input,
+  .config-field-error,
+  .credential-drop-error {
+    animation: none !important;
+    transform: none !important;
+  }
+  .credential-drop-surface,
+  .credential-drop-surface.is-landing,
+  .credential-drop-surface.is-landing .credential-drop-heading > svg,
+  .credential-drop-surface.is-landing .credential-drop-filename {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Segmented navigation adapted from transitions.dev Tabs sliding. */
+.config-step-tabs {
+  --tabs-bar-bg: #2d2d2d;
+  --tabs-pill-bg: #454545;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--config-tab-count, 4), minmax(0, 1fr));
+  padding: 3px;
+  margin-bottom: 24px;
+  border-radius: 48px;
+  background: var(--tabs-bar-bg);
+  isolation: isolate;
+}
+.config-step-tabs > button {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  height: 30px;
+  min-height: 30px;
+  padding: 4px 6px;
+  border: 0;
+  border-radius: 48px;
+  background: transparent;
+  color: var(--chat-muted);
+  font-size: 12px;
+  font-weight: 600;
+  transition: color var(--motion-open) var(--ease-surface);
+}
+.config-step-tabs > button[aria-selected="true"] {
+  color: var(--ink);
+}
+.chat-panel .config-step-tabs > button:hover:not(:disabled) {
+  background: transparent;
+}
+.config-step-tabs > button:focus-visible {
+  box-shadow: inset 0 -2px 0 var(--focus);
+}
+.config-step-pill {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  inset: 3px auto 3px 3px;
+  width: calc((100% - 6px) / var(--config-tab-count, 4));
+  border-radius: 48px;
+  background: var(--tabs-pill-bg);
+  transition: transform var(--motion-open) var(--ease-surface);
+}
+.config-step-panel {
+  min-width: 0;
+  animation: config-step-enter 250ms
+    var(--ease-smooth-out, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.config-step-panel[hidden] {
+  display: none;
+}
+.config-step-panel .config-upload-fields {
+  margin-bottom: 20px;
+}
+.agent-config-inline .config-step-panel .config-fields {
+  margin: 0;
+}
+.agent-config-inline .config-step-panel .config-upload-fields {
+  margin-bottom: 20px;
+}
+.agent-config-form > footer,
+.suggestions-editor footer {
+  gap: 10px;
+  border-top: 1px solid var(--chat-border);
+  padding-top: 20px;
+}
+.agent-config-form > footer .config-step-back,
+.agent-config-form > footer .config-step-next {
+  min-height: 40px;
+  padding: 9px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--chat-hover);
+  font-size: 12px;
+  color: var(--ink);
+}
+@keyframes config-step-enter {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .config-step-pill,
+  .config-step-tabs > button {
+    transition: none;
+  }
+  .config-step-panel {
+    animation: none;
+  }
+}
+
+.agent-config-form .config-feedback,
+.scheduled-server-panel .config-feedback {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.config-feedback > svg {
+  flex: none;
+  margin-top: 1px;
+}
+.agent-config-form .config-feedback-warning,
+.scheduled-server-panel .config-feedback-warning {
+  color: #f5cf73;
+  background: #292416;
+  border-color: #67552b;
+}
+.agent-config-form .config-feedback-success {
+  color: #9cdeb6;
+  background: #18291f;
+  border-color: #345b42;
+}
+
+.config-select-shell {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+.config-select-shell > select {
+  width: 100%;
+}
+.config-select-shell.is-loading > select {
+  padding-left: 34px;
+}
+.config-select-spinner {
+  position: absolute;
+  left: 11px;
+  top: calc(50% - 7.5px);
+  pointer-events: none;
+  animation: config-spin 1s linear infinite;
+}
+@keyframes config-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.agent-config-form select.is-warning,
+.agent-config-form select.is-warning:hover,
+.agent-config-form select.is-warning:focus {
+  border-color: #f5cf73;
+}
+.agent-config-form > footer .config-cancel {
+  background: #52231f;
+  border: 1px solid #ad4539;
+  color: #ffdad5;
+}
+.agent-config-form > footer .config-cancel {
+  min-height: 40px;
+  padding: 9px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+.chat-panel .config-cancel:hover:not(:disabled) {
+  background: #6b2d26;
+  color: #fff0ed;
+}
+.config-cancel-dialog {
+  width: min(440px, calc(100vw - 32px));
+  padding: 24px;
+  border: 1px solid var(--chat-border);
+  border-radius: 14px;
+  background: var(--chat-bg, #17181b);
+  color: var(--ink);
+}
+.config-cancel-dialog::backdrop {
+  background: #000b;
+}
+.config-cancel-dialog h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  line-height: 1.35;
+}
+.config-cancel-dialog p {
+  margin: 0;
+  color: var(--chat-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.config-cancel-dialog footer {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+.config-cancel-dialog button {
+  min-height: 40px;
+  padding: 9px 14px;
+  border-radius: 8px;
+  background: var(--chat-hover);
+  color: var(--ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  .config-select-spinner {
+    animation: none;
+  }
+}
+
+.agent-config-form > footer .save-profile {
+  margin-left: 0;
+}
+.agent-config-form > footer .config-cancel {
+  margin-left: auto;
+}
+
+.config-cancel-dialog .config-cancel-accept {
+  background: #eeeef0;
+  color: #17181b;
+}
+.config-cancel-dialog .config-cancel-accept:hover:not(:disabled) {
+  background: #fff;
+  color: #17181b;
+}
+
+.agent-config-form > footer .save-profile:only-child {
+  margin-left: auto;
+}
+
+.config-agent-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 10px 12px;
+  color: var(--chat-muted);
+  font-size: 12px;
+}
+.config-agent-loading .config-select-spinner {
+  position: static;
+  flex-shrink: 0;
+}
+.config-agent-placeholder {
+  margin: 0;
+  min-height: 48px;
+  padding: 14px 12px;
+  color: var(--chat-muted);
+  font-size: 12px;
+}
+
+.agent-config-form > footer[hidden] {
+  display: none;
+}
+.suggestions-editor,
+.suggestion-rows {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.agent-config-inline .suggestions-editor.config-fields {
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 0;
+}
+.suggestions-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 40px;
+  gap: 8px;
+  align-items: end;
+}
+.suggestion-rows {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.suggestion-row,
+.suggestion-columns {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) minmax(0, 2fr) 40px;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+}
+.suggestion-columns,
+.suggestion-number {
+  color: var(--chat-muted);
+  font-size: 11px;
+}
+.suggestions-editor label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.suggestions-editor input,
+.suggestions-editor select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  height: 40px;
+}
+.suggestions-editor footer {
+  display: flex;
+  justify-content: flex-end;
+}
+.suggestions-editor p {
+  margin: 0;
+}
+.chat-panel .suggestion-add,
+.chat-panel .suggestion-delete {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0;
+  border-radius: 8px;
+}
+.chat-panel .suggestion-delete,
+.chat-panel .suggestion-delete:hover:not(:disabled) {
+  color: #ff4d32;
+}
+.suggestions-editor .t-input:focus-visible,
+.suggestions-editor button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Forms share the search/composer border treatment; checkbox focus stays native. */
+.agent-config-form
+  .config-fields
+  :is(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+    textarea,
+    select
+  ):is(:hover, :focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+.agent-config-form
+  .config-fields
+  :is(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+    textarea,
+    select
+  ):not(.is-error):not(.is-warning):not([aria-invalid="true"]):is(
+    :hover,
+    :focus-visible
+  ) {
+  border-color: #66686d;
+}

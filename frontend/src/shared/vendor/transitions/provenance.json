@@ -1,0 +1,14 @@
+{
+  "source": "https://github.com/Jakubantalik/transitions.dev",
+  "recipe": "UI generation: ui/skeleton",
+  "obtained": "2026-11-03",
+  "local_source": "installed transitions-ui-generation skill runtime",
+  "adaptations": "Runtime and CSS unchanged; lifecycle and dark tokens integrated by application.",
+  "files": {
+    "LICENSE.txt": "785224dff134b664942ce00c158700d150102eaf219c076373071969d174634b",
+    "text-image-generation.css": "b7ec90fdb461565551513d4748a1f9ed8bb108bccc8d5da63e9c40798d804989",
+    "text-image-generation.js": "7bf643539851d90a101d10ecb559880de5c32c59f615c16a5255a4100a1cd236",
+    "ui-generation.css": "828c6055f8056f3f5b18da87a6ece167f7110f4c6d56b93d2092b3dbbd3ecdc9",
+    "ui-generation.js": "edbf6ccccbe8428a28a129a93ec43011a44b919caaf51c5cbe25acdfeffad126"
+  }
+}

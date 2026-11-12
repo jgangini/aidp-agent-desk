@@ -1,0 +1,56 @@
+name: Prepare image release
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing vMAJOR.MINOR.PATCH source tag
+        required: true
+permissions:
+  contents: write
+  packages: write
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+      - name: Validate release identity
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 1
+          echo "SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        id: build
+        with:
+          context: .
+          file: Dockerfile.web
+          platforms: linux/amd64
+          push: true
+          tags: ${{ env.IMAGE }}:${{ inputs.tag }}
+          labels: |
+            org.opencontainers.image.revision=${{ env.SOURCE_SHA }}
+            org.opencontainers.image.licenses=MIT
+      - name: Prepare verified descriptor and draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          Path('agent-desk-image.json').write_text(json.dumps({
+            'schema_version': 1, 'source_commit_sha': os.environ['SOURCE_SHA'],
+            'platform': 'linux/amd64', 'image': os.environ['IMAGE'] + '@' + os.environ['DIGEST']
+          }, indent=2))
+          PY
+          gh release create "$TAG" agent-desk-image.json --draft --verify-tag --title "$TAG" --notes "Agent Desk OCI image. Validate and make the GHCR package publicly pullable before publishing this release."

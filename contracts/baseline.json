@@ -1,0 +1,1277 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Agent Desk",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Health"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/desk/discovery/draft": {
+      "get": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Draft",
+        "operationId": "desk_discovery_draft",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscoveryDraft"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Save Draft",
+        "operationId": "desk_discovery_draft_save",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_desk_discovery_draft_save"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscoveryDraft"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Clear Draft",
+        "operationId": "desk_discovery_draft_delete",
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          }
+        }
+      }
+    },
+    "/api/desk/discovery/draft/read": {
+      "post": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Draft",
+        "operationId": "desk_discovery_draft_read",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscoveryDraft"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/desk/discovery/profiles": {
+      "post": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Profiles",
+        "operationId": "desk_discovery_profiles",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_desk_discovery_profiles"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscoveryProfiles"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/desk/discovery/options": {
+      "post": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Options",
+        "operationId": "desk_discovery_options",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_desk_discovery_options"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscoveryOptions"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/desk/discovery/import": {
+      "post": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Import Agents",
+        "operationId": "desk_discovery_import",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_desk_discovery_import"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AgentProfile"
+                  },
+                  "type": "array",
+                  "title": "Response Desk Discovery Import"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/desk/audio/transcribe": {
+      "post": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Transcribe",
+        "operationId": "desk_audio_transcribe",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_desk_audio_transcribe"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Desk Audio Transcribe"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/desk/audio/speech": {
+      "post": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Speech",
+        "operationId": "desk_audio_speech",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpeechRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/desk/connection": {
+      "get": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Connection",
+        "operationId": "desk_connection",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/desk/profiles": {
+      "get": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Profiles",
+        "operationId": "desk_profiles",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AgentProfile"
+                  },
+                  "type": "array",
+                  "title": "Response Desk Profiles"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Create Profile",
+        "operationId": "desk_profile_create",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_desk_profile_create"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentProfile"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/desk/profiles/{identity}": {
+      "delete": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Delete Profile",
+        "operationId": "desk_profile_delete",
+        "parameters": [
+          {
+            "name": "identity",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identity"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/desk/stream": {
+      "post": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Stream",
+        "operationId": "desk_stream",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvokeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Public agent packets",
+            "content": {
+              "application/x-ndjson": {}
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AgentProfile": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "endpoint_host": {
+            "type": "string",
+            "title": "Endpoint Host"
+          },
+          "flow_id": {
+            "type": "string",
+            "title": "Flow Id"
+          },
+          "region": {
+            "type": "string",
+            "title": "Region"
+          },
+          "profile": {
+            "type": "string",
+            "title": "Profile"
+          },
+          "ready": {
+            "type": "boolean",
+            "title": "Ready",
+            "default": false
+          },
+          "compartment_id": {
+            "type": "string",
+            "title": "Compartment Id",
+            "default": ""
+          },
+          "instance_id": {
+            "type": "string",
+            "title": "Instance Id",
+            "default": ""
+          },
+          "workspace_id": {
+            "type": "string",
+            "title": "Workspace Id",
+            "default": ""
+          },
+          "transcription_model": {
+            "type": "string",
+            "title": "Transcription Model",
+            "default": ""
+          },
+          "speech_model": {
+            "type": "string",
+            "title": "Speech Model",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "endpoint_host",
+          "flow_id",
+          "region",
+          "profile"
+        ],
+        "title": "AgentProfile"
+      },
+      "Body_desk_audio_transcribe": {
+        "properties": {
+          "profile_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{32}$",
+            "title": "Profile Id"
+          },
+          "audio": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "Audio"
+          }
+        },
+        "type": "object",
+        "required": [
+          "profile_id",
+          "audio"
+        ],
+        "title": "Body_desk_audio_transcribe"
+      },
+      "Body_desk_discovery_draft_save": {
+        "properties": {
+          "step": {
+            "type": "string",
+            "enum": [
+              "connection",
+              "agents",
+              "audio"
+            ],
+            "title": "Step"
+          },
+          "profile": {
+            "type": "string",
+            "maxLength": 80,
+            "title": "Profile",
+            "default": ""
+          },
+          "compartment_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 256
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Compartment Id"
+          },
+          "instance_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 256
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instance Id"
+          },
+          "workspace_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 256
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workspace Id"
+          },
+          "agent_ids": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 6000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agent Ids"
+          },
+          "transcription_model": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 256
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transcription Model"
+          },
+          "speech_model": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 256
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speech Model"
+          },
+          "config": {
+            "anyOf": [
+              {
+                "type": "string",
+                "contentMediaType": "application/octet-stream"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Config"
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string",
+                "contentMediaType": "application/octet-stream"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "step"
+        ],
+        "title": "Body_desk_discovery_draft_save"
+      },
+      "Body_desk_discovery_import": {
+        "properties": {
+          "compartment_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Compartment Id"
+          },
+          "instance_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Instance Id"
+          },
+          "workspace_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Workspace Id"
+          },
+          "agent_ids": {
+            "type": "string",
+            "maxLength": 6000,
+            "title": "Agent Ids"
+          },
+          "profile": {
+            "type": "string",
+            "maxLength": 80,
+            "title": "Profile",
+            "default": ""
+          },
+          "transcription_model": {
+            "type": "string",
+            "maxLength": 256,
+            "title": "Transcription Model",
+            "default": ""
+          },
+          "speech_model": {
+            "type": "string",
+            "maxLength": 256,
+            "title": "Speech Model",
+            "default": ""
+          },
+          "config": {
+            "anyOf": [
+              {
+                "type": "string",
+                "contentMediaType": "application/octet-stream"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Config"
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string",
+                "contentMediaType": "application/octet-stream"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "compartment_id",
+          "instance_id",
+          "workspace_id",
+          "agent_ids"
+        ],
+        "title": "Body_desk_discovery_import"
+      },
+      "Body_desk_discovery_options": {
+        "properties": {
+          "stage": {
+            "type": "string",
+            "enum": [
+              "compartments",
+              "resources",
+              "agents",
+              "audio"
+            ],
+            "title": "Stage"
+          },
+          "profile": {
+            "type": "string",
+            "maxLength": 80,
+            "title": "Profile",
+            "default": ""
+          },
+          "compartment_id": {
+            "type": "string",
+            "maxLength": 256,
+            "title": "Compartment Id",
+            "default": ""
+          },
+          "instance_id": {
+            "type": "string",
+            "maxLength": 256,
+            "title": "Instance Id",
+            "default": ""
+          },
+          "workspace_id": {
+            "type": "string",
+            "maxLength": 256,
+            "title": "Workspace Id",
+            "default": ""
+          },
+          "config": {
+            "anyOf": [
+              {
+                "type": "string",
+                "contentMediaType": "application/octet-stream"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Config"
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string",
+                "contentMediaType": "application/octet-stream"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "stage"
+        ],
+        "title": "Body_desk_discovery_options"
+      },
+      "Body_desk_discovery_profiles": {
+        "properties": {
+          "config": {
+            "anyOf": [
+              {
+                "type": "string",
+                "contentMediaType": "application/octet-stream"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Config"
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string",
+                "contentMediaType": "application/octet-stream"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key"
+          }
+        },
+        "type": "object",
+        "title": "Body_desk_discovery_profiles"
+      },
+      "Body_desk_profile_create": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "endpoint": {
+            "type": "string",
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Endpoint"
+          },
+          "flow_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Flow Id"
+          },
+          "config": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "Config"
+          },
+          "key": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "Key"
+          },
+          "profile": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Profile",
+            "default": "DEFAULT"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "endpoint",
+          "flow_id",
+          "config",
+          "key"
+        ],
+        "title": "Body_desk_profile_create"
+      },
+      "ConnectionStatus": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "title": "Mode",
+            "default": "simulation"
+          },
+          "ready": {
+            "type": "boolean",
+            "title": "Ready",
+            "default": false
+          },
+          "publication_configured": {
+            "type": "boolean",
+            "title": "Publication Configured"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "publication_configured",
+          "message"
+        ],
+        "title": "ConnectionStatus"
+      },
+      "DiscoveryAgent": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "default": ""
+          },
+          "available": {
+            "type": "boolean",
+            "title": "Available",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "DiscoveryAgent"
+      },
+      "DiscoveryDraft": {
+        "properties": {
+          "profile": {
+            "type": "string",
+            "title": "Profile",
+            "default": ""
+          },
+          "region": {
+            "type": "string",
+            "title": "Region",
+            "default": ""
+          },
+          "compartment_id": {
+            "type": "string",
+            "title": "Compartment Id",
+            "default": ""
+          },
+          "instance_id": {
+            "type": "string",
+            "title": "Instance Id",
+            "default": ""
+          },
+          "workspace_id": {
+            "type": "string",
+            "title": "Workspace Id",
+            "default": ""
+          },
+          "agent_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Agent Ids"
+          },
+          "transcription_model": {
+            "type": "string",
+            "title": "Transcription Model",
+            "default": ""
+          },
+          "speech_model": {
+            "type": "string",
+            "title": "Speech Model",
+            "default": ""
+          },
+          "has_credentials": {
+            "type": "boolean",
+            "title": "Has Credentials",
+            "default": false
+          },
+          "profiles": {
+            "items": {
+              "$ref": "#/components/schemas/AgentProfile"
+            },
+            "type": "array",
+            "title": "Profiles"
+          }
+        },
+        "type": "object",
+        "title": "DiscoveryDraft"
+      },
+      "DiscoveryItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "DiscoveryItem"
+      },
+      "DiscoveryOptions": {
+        "properties": {
+          "compartments": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryItem"
+            },
+            "type": "array",
+            "title": "Compartments"
+          },
+          "transcription_models": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryItem"
+            },
+            "type": "array",
+            "title": "Transcription Models"
+          },
+          "speech_models": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryItem"
+            },
+            "type": "array",
+            "title": "Speech Models"
+          },
+          "instances": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryItem"
+            },
+            "type": "array",
+            "title": "Instances"
+          },
+          "workspaces": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryItem"
+            },
+            "type": "array",
+            "title": "Workspaces"
+          },
+          "agents": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryAgent"
+            },
+            "type": "array",
+            "title": "Agents"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          }
+        },
+        "type": "object",
+        "title": "DiscoveryOptions"
+      },
+      "DiscoveryProfile": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "region": {
+            "type": "string",
+            "title": "Region"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "region"
+        ],
+        "title": "DiscoveryProfile"
+      },
+      "DiscoveryProfiles": {
+        "properties": {
+          "profiles": {
+            "items": {
+              "$ref": "#/components/schemas/DiscoveryProfile"
+            },
+            "type": "array",
+            "title": "Profiles"
+          }
+        },
+        "type": "object",
+        "required": [
+          "profiles"
+        ],
+        "title": "DiscoveryProfiles"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "InvokeRequest": {
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9_-]+$",
+            "title": "Request Id"
+          },
+          "question": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Question"
+          },
+          "profile_id": {
+            "type": "string",
+            "pattern": "^(?:[a-f0-9]{32})?$",
+            "title": "Profile Id",
+            "default": ""
+          },
+          "session_id": {
+            "type": "string",
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9_-]*$",
+            "title": "Session Id",
+            "default": ""
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "research",
+              "replay",
+              "cancel"
+            ],
+            "title": "Action",
+            "default": "research"
+          },
+          "after_sequence": {
+            "type": "integer",
+            "maximum": 1000000.0,
+            "minimum": 0.0,
+            "title": "After Sequence",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "request_id",
+          "question"
+        ],
+        "title": "InvokeRequest"
+      },
+      "SpeechRequest": {
+        "properties": {
+          "profile_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{32}$",
+            "title": "Profile Id"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 15000,
+            "minLength": 1,
+            "title": "Text"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "profile_id",
+          "text"
+        ],
+        "title": "SpeechRequest"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "icons": [
+    {
+      "file": "yahoo-finance.svg",
+      "label": "Yahoo Finance",
+      "library": "published-svg",
+      "source": "https://d1syadtv5cx0g6.cloudfront.net/website/3355167322_yahoo_finance.svg",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Yahoo!_Finance_logo.svg",
+      "retrieved_date": "2026-11-03",
+      "derivation": "original-svg",
+      "sha256": "93ff5017caff202be0523bc75e4f7af4229d53b5a4174db4c76e8be50d9a2a01",
+      "rights": "Yahoo Inc. trademark; Commons identifies the text logo as public-domain. Used only as a source identifier.",
+      "transformations": [],
+      "preparation": {
+        "profile": "monochrome-inline",
+        "derived_file": "frontend/src/features/desk/brandPaths.ts",
+        "changes": "Extract path d and inherited transforms, replace source fills with currentColor at render time; original SVG retained.",
+        "compact_variant": {
+          "consumer": "frontend/src/features/desk/ToolIcon.tsx",
+          "changes": "Reuse y and exclamation glyph paths 0,5,6 from retained Yahoo Finance SVG; reposition exclamation and use currentColor. Derived compact identifier, not an official standalone asset."
+        }
+      }
+    }
+  ],
+  "circular_presentation": {
+    "consumer": "frontend/src/features/desk/ToolIcon.tsx",
+    "requested_date": "2026-11-03",
+    "sources": "Installed Simple Icons and Lucide; retained Yahoo Finance paths. Local svg-icon-assets catalog searched; no complete matching circular set.",
+    "transformations": "Facebook path unchanged; other glyphs centered in a currentColor SVG circle using per-instance luminance masks. Transparent cutouts; no external SVG references or raster.",
+    "identity": "Derived UI presentation, not new official brand artwork."
+  }
+}

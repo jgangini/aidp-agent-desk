@@ -1,0 +1,293 @@
+{
+  "schema_version": 2,
+  "execution_source": "oci_resource_manager",
+  "project_id": "aidp-ai-agent-desk",
+  "terraform": {
+    "path": "terraform",
+    "package_oci_credentials": false
+  },
+  "capabilities": {
+    "compartment_modes": [
+      "existing"
+    ],
+    "region_selection": "subscribed_compatible"
+  },
+  "form": {
+    "fields": [
+      {
+        "name": "availability_domain",
+        "label": "Availability domain",
+        "type": "text",
+        "required": true,
+        "group": "runtime"
+      },
+      {
+        "name": "oracle_linux_image_ocid",
+        "label": "Oracle Linux 9 amd64 platform image OCID",
+        "type": "text",
+        "required": true,
+        "group": "runtime"
+      },
+      {
+        "name": "app_image",
+        "label": "Public container image @sha256",
+        "type": "text",
+        "required": true,
+        "group": "runtime"
+      },
+      {
+        "name": "oidc_domain",
+        "label": "Oracle Identity Domain URL",
+        "type": "text",
+        "required": true,
+        "group": "runtime"
+      },
+      {
+        "name": "identity_domain_id",
+        "label": "Oracle Identity Domain",
+        "type": "select",
+        "required": true,
+        "options_source": "oci_identity_domains",
+        "group": "runtime"
+      },
+      {
+        "name": "oidc_client_id",
+        "label": "Oracle OIDC client ID",
+        "type": "text",
+        "required": true,
+        "group": "runtime"
+      },
+      {
+        "name": "admin_user_ocid",
+        "label": "Administrador del portal",
+        "type": "select",
+        "required": true,
+        "group": "runtime",
+        "options_source": "oci_identity_domain_users"
+      },
+      {
+        "name": "oidc_client_secret",
+        "label": "Oracle OIDC client secret",
+        "type": "password",
+        "required": true,
+        "secret": true,
+        "transform": "none",
+        "min_length": 1,
+        "max_length": 4096,
+        "group": "runtime"
+      },
+      {
+        "name": "create_users",
+        "label": "Crear usuarios",
+        "type": "select",
+        "required": true,
+        "default": "disabled",
+        "options": [
+          {
+            "value": "disabled",
+            "label": "Deshabilitado"
+          },
+          {
+            "value": "enabled",
+            "label": "Habilitado"
+          }
+        ],
+        "group": "runtime"
+      }
+    ],
+    "groups": [
+      {
+        "id": "credentials",
+        "title": "OCI credentials",
+        "items": [
+          {
+            "kind": "control",
+            "name": "oci_config",
+            "label": "OCI config"
+          },
+          {
+            "kind": "control",
+            "name": "oci_key",
+            "label": "API private key"
+          }
+        ]
+      },
+      {
+        "id": "destination",
+        "title": "Destination",
+        "items": [
+          {
+            "kind": "control",
+            "name": "oci_region",
+            "label": "OCI Region"
+          },
+          {
+            "kind": "control",
+            "name": "compartment_mode",
+            "label": "Compartment",
+            "options": [
+              {
+                "value": "existing",
+                "label": "Existing compartment"
+              }
+            ]
+          },
+          {
+            "kind": "control",
+            "name": "new_compartment",
+            "label": "New compartment name"
+          },
+          {
+            "kind": "control",
+            "name": "existing_compartment",
+            "label": "Existing compartment"
+          }
+        ]
+      },
+      {
+        "id": "runtime",
+        "title": "Agent Desk and Oracle access",
+        "items": [
+          {
+            "kind": "field",
+            "name": "availability_domain"
+          },
+          {
+            "kind": "field",
+            "name": "oracle_linux_image_ocid"
+          },
+          {
+            "kind": "field",
+            "name": "app_image"
+          },
+          {
+            "kind": "field",
+            "name": "oidc_domain"
+          },
+          {
+            "kind": "field",
+            "name": "identity_domain_id"
+          },
+          {
+            "kind": "field",
+            "name": "oidc_client_id"
+          },
+          {
+            "kind": "field",
+            "name": "admin_user_ocid"
+          },
+          {
+            "kind": "field",
+            "name": "oidc_client_secret"
+          },
+          {
+            "kind": "field",
+            "name": "create_users"
+          }
+        ]
+      }
+    ]
+  },
+  "presentation": {
+    "title": "Agent Desk",
+    "summary": "Conversaciones y evidencias de Agent Flows con acceso Oracle y permisos por usuario.",
+    "tags": [
+      "AIDP",
+      "Oracle SSO",
+      "OCI Compute"
+    ],
+    "href": "https://docs.oracle.com/en-us/iaas/Content/Identity/api-getstarted/AuthCodeGT.htm"
+  },
+  "run_steps": [
+    {
+      "key": "queue",
+      "label": "Preparar despliegue"
+    },
+    {
+      "key": "credentials",
+      "label": "Validar credenciales"
+    },
+    {
+      "key": "compartment",
+      "label": "Seleccionar compartimento"
+    },
+    {
+      "key": "stack",
+      "label": "Preparar VM"
+    },
+    {
+      "key": "plan",
+      "label": "Revisar Terraform plan"
+    },
+    {
+      "key": "apply",
+      "label": "Crear infraestructura"
+    },
+    {
+      "key": "application",
+      "label": "Verificar acceso HTTPS"
+    },
+    {
+      "key": "complete",
+      "label": "Completar"
+    }
+  ],
+  "outputs": [
+    "public_ip",
+    "application_url",
+    "oidc_callback_url",
+    "instance_id",
+    "compartment_ocid",
+    "bootstrap_namespace",
+    "bootstrap_bucket"
+  ],
+  "preflight": {
+    "entrypoint": "terraform/preflight.py",
+    "release_assets": [
+      {
+        "name": "agent-desk-image.json",
+        "max_bytes": 65536
+      }
+    ],
+    "requires_oci_credentials": true,
+    "output_inputs": [
+      "operator_user_ocid",
+      "operator_fingerprint",
+      "admin_directory_id"
+    ],
+    "runtime_fields": [
+      {
+        "name": "admin_directory_id",
+        "label": "Verified Oracle administrator ID",
+        "type": "text",
+        "required": true,
+        "secret": false,
+        "transform": "none"
+      },
+      {
+        "name": "operator_user_ocid",
+        "label": "Verified OCI operator",
+        "type": "text",
+        "required": true,
+        "secret": false,
+        "transform": "none"
+      },
+      {
+        "name": "operator_fingerprint",
+        "label": "Verified OCI key fingerprint",
+        "type": "text",
+        "required": true,
+        "secret": false,
+        "transform": "none"
+      }
+    ]
+  },
+  "post_apply": {
+    "entrypoint": "terraform/post_apply.py",
+    "timeout_seconds": 3600,
+    "requires_oci_credentials": true,
+    "secret_inputs": [
+      "oidc_client_secret"
+    ]
+  }
+}

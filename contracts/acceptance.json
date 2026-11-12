@@ -1,0 +1,19 @@
+{
+  "reviews": [
+    {
+      "at": "2026-11-03T17:55:51.495218+00:00",
+      "reason": "Reviewed initial Agent Desk API: retain health; add read-only redacted connection status and authenticated fail-closed stream boundary; rename app metadata. No published AIDP invocation enabled.",
+      "sha256": "24f1436df2298bc3561e004da53110f7c33af4ab6e770ba408c2c4ab5854a0b4"
+    },
+    {
+      "at": "2026-11-03T18:22:18.803117+00:00",
+      "reason": "Reviewed local credential-profile create/list/delete API: bounded uploads, exact-Origin custom-header guard, RSA fingerprint verification, redacted metadata and fail-closed remote stream. Existing health contract retained.",
+      "sha256": "c44b7b7689df6921e6bc6d2af833c6bc7274378ddafabebd5a4fc512209eb1d1"
+    },
+    {
+      "at": "2026-11-09T05:30:23.436872+00:00",
+      "reason": "Implement signed saved-profile AIDP stream and bounded OCI STT/TTS endpoints",
+      "sha256": "71689e6021c2bdbc4e7c56a80248bf3f034086bd49b5177d05dc73594d8f25df"
+    }
+  ]
+}

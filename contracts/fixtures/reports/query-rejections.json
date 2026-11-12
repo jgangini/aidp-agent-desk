@@ -1,0 +1,55 @@
+{
+  "synthetic": true,
+  "cloud_calls": 0,
+  "extensions": {
+    "market.platform_metrics": {
+      "schema_version": "1.0",
+      "method": {
+        "method_id": "retained-evidence-counts",
+        "version": "1.0"
+      },
+      "platforms": [
+        {
+          "source": "x",
+          "retrieval_status": "provider_failed",
+          "query_operations": {
+            "started": 2,
+            "completed": 0,
+            "failed": 2
+          },
+          "observations": [
+            {
+              "unit": "post",
+              "status": "not_collected",
+              "population": "retained_evidence",
+              "retained_count": null,
+              "analyzed_count": null,
+              "evidence_ids": [],
+              "analyzed_evidence_ids": [],
+              "limitations": [
+                "No se dispone de una muestra retenida verificable de esta unidad."
+              ]
+            },
+            {
+              "unit": "comment",
+              "status": "not_collected",
+              "population": "retained_evidence",
+              "retained_count": null,
+              "analyzed_count": null,
+              "evidence_ids": [],
+              "analyzed_evidence_ids": [],
+              "limitations": [
+                "No se dispone de una muestra retenida verificable de esta unidad."
+              ]
+            }
+          ],
+          "limitations": []
+        }
+      ],
+      "limitations": [
+        "Los conteos y etiquetas describen evidencia retenida, no el universo de publicaciones ni personas."
+      ]
+    }
+  },
+  "evidence": []
+}

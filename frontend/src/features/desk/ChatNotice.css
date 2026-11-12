@@ -1,0 +1,78 @@
+.chat-panel .chat-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.chat-panel .chat-audio-warning {
+  border-color: #67552b;
+  background: #292416;
+  color: #f5cf73;
+}
+.chat-panel .chat-error-notice {
+  border-color: #7c3b32;
+  background: #2e1b18;
+  color: #ff8f7e;
+}
+.chat-notice > svg {
+  flex: none;
+  margin-top: 1px;
+}
+
+.chat-notice-content {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+.chat-panel .chat-recover {
+  color: inherit;
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: 6px;
+  padding: 5px 9px;
+  font: inherit;
+  cursor: pointer;
+}
+.chat-panel .chat-recover:hover:not(:disabled) {
+  background: transparent;
+  color: inherit;
+}
+.chat-panel .chat-recover:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+.chat-panel .chat-recover:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.chat-notice-message {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chat-panel .chat-recover-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+}
+@media (pointer: coarse) {
+  .chat-panel .chat-recover-icon {
+    width: 40px;
+    height: 40px;
+  }
+}

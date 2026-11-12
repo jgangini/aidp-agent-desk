@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-desk:report:1.0",
+  "title": "Agent Desk report capability v1.0",
+  "description": "Optional response.report payload. Domain extensions are retained as opaque data until their own contract is supported. Period bounds default to [start,end) when omitted; existing inclusive research must declare [start,end].",
+  "$comment": "Consumers must also enforce distinct section IDs, template ordering, presence of all always sections, section evidence membership in response.references, valid IANA time zone, and period.start < period.end. Report execution status is inherited from the enclosing response.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "report_id",
+    "task_id",
+    "task_run_id",
+    "title",
+    "template",
+    "sections",
+    "limitations"
+  ],
+  "properties": {
+    "source_request_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "\\S",
+      "description": "Original research request when this report transforms previously accepted evidence; provenance only, never authorization."
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "report_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "\\S"
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "\\S"
+    },
+    "task_run_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "\\S"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": "\\S"
+    },
+    "template": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "template_id",
+        "version",
+        "sections"
+      ],
+      "properties": {
+        "template_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "\\S"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sections": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 40,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "section_id",
+              "title",
+              "visibility"
+            ],
+            "properties": {
+              "section_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "\\S"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500,
+                "pattern": "\\S"
+              },
+              "visibility": {
+                "enum": [
+                  "always",
+                  "when_present"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "maxItems": 40,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "section_id",
+          "markdown",
+          "evidence_ids"
+        ],
+        "properties": {
+          "section_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "\\S"
+          },
+          "markdown": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100000,
+            "pattern": "\\S"
+          },
+          "evidence_ids": {
+            "type": "array",
+            "maxItems": 800,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "\\S"
+            }
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "maxItems": 40,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2000,
+        "pattern": "\\S"
+      }
+    },
+    "period": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end",
+        "time_zone"
+      ],
+      "properties": {
+        "bounds": {
+          "enum": ["[start,end)", "[start,end]"],
+          "default": "[start,end)"
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64,
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 64,
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"
+        },
+        "time_zone": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "pattern": "^[A-Za-z][A-Za-z0-9._+/-]*$",
+          "$comment": "Runtime must verify that this is a supported IANA time-zone identifier."
+        }
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "maxProperties": 20,
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128,
+        "pattern": "\\S"
+      },
+      "additionalProperties": {
+        "type": "object"
+      }
+    }
+  }
+}

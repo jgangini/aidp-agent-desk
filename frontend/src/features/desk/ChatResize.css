@@ -1,0 +1,95 @@
+.desk-layout.chat-resizable {
+  position: relative;
+  --chat-width-share: 0.4;
+  --chat-width-floor: 400px;
+  --chat-resize-allowed: 1;
+  --chat-width-maximum: max(
+    var(--chat-width-floor),
+    calc(100% * var(--chat-width-share))
+  );
+  --chat-width-current: clamp(
+    min(400px, var(--chat-width-maximum)),
+    calc(var(--chat-width-maximum) - var(--chat-narrow-by, 0px)),
+    var(--chat-width-maximum)
+  );
+  grid-template-columns: minmax(0, 1fr) var(--chat-width-current);
+}
+
+.chat-resize-handle {
+  position: absolute;
+  inset-block: 0;
+  left: calc(100% - var(--chat-width-current) - 6px);
+  width: 12px;
+  z-index: 8;
+  cursor: col-resize;
+  touch-action: none;
+  user-select: none;
+}
+
+.chat-resize-handle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  height: 40px;
+  transform: translateY(-50%);
+  left: 5px;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--focus);
+  opacity: 0;
+  transition: opacity var(--motion-close, 150ms) var(--ease-surface, ease);
+}
+
+.chat-resize-handle:hover::after {
+  opacity: 0.5;
+}
+
+.chat-resize-handle:focus-visible {
+  outline: none;
+}
+
+.chat-resize-handle:focus-visible::after,
+.chat-resize-handle[data-dragging]::after {
+  opacity: 0.65;
+}
+
+.chat-resize-handle[hidden] {
+  display: none;
+}
+
+@media (max-width: 1150px) {
+  .desk-layout.chat-resizable {
+    --chat-width-share: 0.45;
+    --chat-width-floor: 360px;
+  }
+}
+
+@media (max-width: 700px) {
+  .desk-layout.chat-resizable {
+    --chat-resize-allowed: 0;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .chat-resize-handle {
+    display: none;
+  }
+}
+
+@media (pointer: coarse) {
+  .chat-resize-handle {
+    left: calc(100% - var(--chat-width-current) - 12px);
+    width: 24px;
+  }
+
+  .chat-resize-handle::after {
+    left: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-resize-handle::after {
+    transition: none;
+  }
+}
+
+.chat-resize-handle:focus { outline: none; }

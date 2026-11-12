@@ -1,0 +1,31 @@
+name: agent-desk
+services:
+  desk:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    image: agent-desk:dev
+    network_mode: bridge
+    ports:
+      - "127.0.0.1:8317:8000"
+    environment:
+      ARKO_ALLOWED_HOSTS: localhost,127.0.0.1
+      AGENT_DESK_REPORT_PROFILES: ${AGENT_DESK_REPORT_PROFILES:-}
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=32m
+    volumes:
+      - desk-credentials:/data
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+volumes:
+  desk-credentials:

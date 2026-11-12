@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "icons": [
+    {
+      "file": "skill-icons-oracle-dark.svg",
+      "label": "oracle",
+      "category": "",
+      "aliases": [],
+      "status": "pinned",
+      "source": "https://raw.githubusercontent.com/LelouchFR/skill-icons/5401d691a2268d5a3ee6c3b3163c31b6a2a0be6d/assets/oracle-dark.svg",
+      "archive_member": "assets/oracle-dark.svg",
+      "archive_sha256": null,
+      "sha256": "1297d3d7f7a63b3b4db907ae3ba47c40a4dd6a63eab9de553660c91dbaa57e70",
+      "preparation": {
+        "profile": "skill-icons-plate",
+        "removed": [],
+        "metadata_removed": 0,
+        "rights_notices": [],
+        "styles_inlined": 0,
+        "viewbox_from_dimensions": false,
+        "contrast": "review-on-both",
+        "source_sha256": "932c450f3df6ccb22597661e9d76dd79b81cd6018f4524f506f95b8f2bebe345"
+      },
+      "library": "skill-icons",
+      "name": "oracle",
+      "theme": "dark",
+      "bundled_sha256": "03171480ad952df1fb6917c53e48fc1156b671ec59637ed139cbcd693a329bc4",
+      "color": null
+    }
+  ]
+}

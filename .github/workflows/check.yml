@@ -1,0 +1,29 @@
+name: Validate
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.9.7'
+          python-version: '3.12'
+      - run: uv sync --locked
+      - run: npm ci --ignore-scripts --prefix frontend
+      - run: uv run python scripts/check-publication.py
+      - run: uv run python tools/arko.py check --root .
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: '1.15.6'
+      - run: uv run --locked ruff check terraform
+      - run: terraform -chdir=terraform fmt -check
+      - run: terraform -chdir=terraform init -backend=false -input=false
+      - run: terraform -chdir=terraform validate

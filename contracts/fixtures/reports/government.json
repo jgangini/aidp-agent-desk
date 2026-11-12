@@ -1,0 +1,53 @@
+{
+  "status": "completed",
+  "markdown": "El informe sintético de gobierno resume una actuación pública y sus fuentes documentales, sin métricas de redes sociales ni sentimiento.",
+  "references": [
+    {
+      "evidence_id": "document-1",
+      "url": "https://example.com/government/document-1"
+    }
+  ],
+  "artifacts": [],
+  "report": {
+    "schema_version": "1.0",
+    "report_id": "report-government",
+    "task_id": "task-government",
+    "task_run_id": "run-government",
+    "title": "Seguimiento de actuaciones públicas",
+    "template": {
+      "template_id": "government-monitoring",
+      "version": 1,
+      "sections": [
+        {
+          "section_id": "summary",
+          "title": "Resumen",
+          "visibility": "always"
+        },
+        {
+          "section_id": "actions",
+          "title": "Actuaciones documentadas",
+          "visibility": "when_present"
+        }
+      ]
+    },
+    "sections": [
+      {
+        "section_id": "summary",
+        "markdown": "Se identificó una actuación en el documento sintético consultado.",
+        "evidence_ids": [
+          "document-1"
+        ]
+      },
+      {
+        "section_id": "actions",
+        "markdown": "El documento registra una actuación pública. La interpretación se limita al alcance documental disponible.",
+        "evidence_ids": [
+          "document-1"
+        ]
+      }
+    ],
+    "limitations": [
+      "Fixture de compatibilidad; no acredita integración con un agente de gobierno real."
+    ]
+  }
+}
