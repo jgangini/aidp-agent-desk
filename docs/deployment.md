@@ -16,6 +16,8 @@ nunca en Desk. Se usa Authlib para validar state, nonce, firma, issuer y audienc
 [integración Authlib](https://docs.authlib.org/en/latest/oauth2/client/web/).
 
 Configurar `AGENT_DESK_OIDC_DOMAIN` con la URL HTTPS del dominio del tenant.
+La receta admite el puerto HTTPS predeterminado `:443` cuando Oracle lo incluye
+en esa URL; rechaza puertos alternativos.
 Discovery se consulta en ese dominio; el `issuer` exacto se obtiene del documento
 verificado por HTTPS y se conserva, incluido su slash final. Oracle puede usar
 `https://identity.oraclecloud.com/` como emisor compartido: no usarlo como dominio

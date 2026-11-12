@@ -9,8 +9,8 @@ variable "identity_domain_id" { type = string }
 variable "oidc_domain" {
   type = string
   validation {
-    condition     = can(regex("^https://[A-Za-z0-9.-]+$", var.oidc_domain))
-    error_message = "Use the Oracle identity domain HTTPS origin without a trailing slash."
+    condition     = can(regex("^https://[A-Za-z0-9.-]+(:443)?$", var.oidc_domain))
+    error_message = "Use the Oracle identity domain HTTPS origin, optionally with port 443, without a trailing slash."
   }
 }
 variable "app_image" {

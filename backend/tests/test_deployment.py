@@ -136,6 +136,52 @@ def test_preflight_main_writes_the_deploy_studio_result_contract(tmp_path, monke
                                   "message": "Image descriptor matches pinned release source."}]
 
 
+@pytest.mark.parametrize(("port", "accepted"), [("", True), (":443", True), (":8443", False)])
+def test_selected_oracle_origin_and_terraform_agree_on_https_default_port(monkeypatch, port, accepted):
+    import re
+    from types import SimpleNamespace
+
+    setup = module("identity_setup")
+    origin = "https://tenant.identity.oraclecloud.com" + port
+    domain = SimpleNamespace(id="ocid1.domain.oc1..selected", lifecycle_state="ACTIVE", url=origin)
+    user = SimpleNamespace(id="immutable-scim-id", ocid="ocid1.user.oc1..selected", user_name="admin", active=True)
+    endpoints = []
+
+    def get_domain(domain_id):
+        assert domain_id == domain.id
+        return SimpleNamespace(data=domain)
+
+    def list_users(**kwargs):
+        assert kwargs["filter"] == 'ocid eq "ocid1.user.oc1..selected"'
+        return SimpleNamespace(data=SimpleNamespace(total_results=1, resources=[user]))
+
+    def directory_client(config, *, service_endpoint, timeout):
+        endpoints.append(service_endpoint)
+        assert service_endpoint == origin and timeout == (10, 15)
+        return SimpleNamespace(list_users=list_users)
+
+    monkeypatch.setattr(setup.oci.identity, "IdentityClient", lambda config: SimpleNamespace(get_domain=get_domain))
+    monkeypatch.setattr(setup.oci.identity_domains, "IdentityDomainsClient", directory_client)
+    inputs = {"identity_domain_id": domain.id, "admin_user_ocid": user.ocid, "oidc_domain": origin}
+    variables = (ROOT / "terraform/variables.tf").read_text()
+    block = variables.split('variable "oidc_domain" {', 1)[1].split('\nvariable "', 1)[0]
+    expression = re.search(r'regex\(\s*"([^"]+)"\s*,\s*var\.oidc_domain\s*\)', block)
+    assert expression is not None
+    assert bool(re.fullmatch(expression.group(1), origin)) is accepted
+    if accepted:
+        assert setup.selected_identity({}, inputs) == {"admin_directory_id": user.id}
+        assert endpoints == [origin]
+    else:
+        with pytest.raises(ValueError, match="Selected Oracle identity domain"):
+            setup.selected_identity({}, inputs)
+        assert endpoints == []
+    if accepted:
+        inputs["oidc_domain"] = "https://other.identity.oraclecloud.com" + port
+        with pytest.raises(ValueError, match="OIDC issuer must match"):
+            setup.selected_identity({}, inputs)
+        assert endpoints == [origin]
+
+
 @pytest.fixture
 def deployment(tmp_path, monkeypatch, credentials):
     import configparser
