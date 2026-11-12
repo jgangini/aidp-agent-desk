@@ -70,6 +70,18 @@ resource "oci_core_security_list" "web" {
   }
 
   egress_security_rules {
+    description      = "oci-public-ip STUN fallback for bootstrap IP discovery"
+    protocol         = "17"
+    destination      = "0.0.0.0/0"
+    destination_type = "CIDR_BLOCK"
+    stateless        = false
+    udp_options {
+      min = 3478
+      max = 3478
+    }
+  }
+
+  egress_security_rules {
     description      = "OCI Internet and VCN DNS resolver"
     protocol         = "17"
     destination      = "169.254.169.254/32"

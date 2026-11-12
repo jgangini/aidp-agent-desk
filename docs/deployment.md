@@ -213,7 +213,9 @@ acotada al objeto `.bootstrap/runtime.json` y a sus ejecuciones Run Command.
 Se necesitan permisos Compute/Networking, Object Storage e IAM para crear estos
 recursos, y `manage instance-agent-command-family` para el operador en ese
 compartimento. La subnet usa una security list explícita: entrada 80/443 e ICMP
-para PMTU; salida 80/443 y DNS al resolvedor OCI. No usa la security list
+para PMTU; salida 80/443, DNS al resolvedor OCI y UDP 3478 para el fallback
+STUN de `oci-public-ip`. Sin esa salida, el helper puede no descubrir la IP
+cuando la identidad de instancia carece de permisos de lectura de VNICs. No usa la security list
 predeterminada ni crea una regla o clave SSH. IAM se crea en la región principal
 del tenant. La receta admite Terraform 1.5, versión disponible en Resource Manager.
 

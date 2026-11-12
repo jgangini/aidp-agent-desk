@@ -9,3 +9,5 @@ The Deploy Studio recipe targets OCI Resource Manager with public-IP HTTPS and e
 The first OCI PLAN exposed an overly restrictive Oracle domain-origin validation. Version 0.1.1 accepts the default HTTPS port 443 when returned by Oracle and rejects alternate ports.
 
 Version 0.1.2 compresses cloud-init below the OCI metadata limit and enforces the size during PLAN. Version 0.1.1 remains unpublished; use the corrected release.
+
+Version 0.1.3 corrects the bootstrap network: oci-public-ip uses a UDP 3478 STUN fallback when the VM cannot read VNICs. This is an infrastructure correction; application behavior is unchanged. Existing installations can retain their pinned runtime image when applying this network-only correction.
