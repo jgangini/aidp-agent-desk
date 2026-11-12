@@ -14,7 +14,7 @@ TLS="$BASE/tls"
 CONFIG="$BASE/caddy"
 ACME="$BASE/acme"
 STATE="$BASE/letsencrypt"
-IMAGE=certbot/certbot@sha256:1dc5b4a99cce916f154c706569baf062600d7dea13e0711e7d7e1461d6230e39
+IMAGE=docker.io/certbot/certbot@sha256:1dc5b4a99cce916f154c706569baf062600d7dea13e0711e7d7e1461d6230e39
 install -d -m 0700 "$TLS" "$CONFIG" "$STATE" "$STATE/log"
 install -d -m 0755 "$ACME"
 exec 9>"$TLS/.renew.lock"

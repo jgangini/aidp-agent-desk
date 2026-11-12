@@ -36,7 +36,7 @@ def test_public_ip_tls_shell_syntax(bash):
 
 def test_public_ip_tls_uses_pinned_ip_certificates_and_safe_proxy_configuration():
     source = SCRIPT.read_text()
-    assert "certbot/certbot@sha256:1dc5b4a99cce916f154c706569baf062600d7dea13e0711e7d7e1461d6230e39" in source
+    assert "IMAGE=docker.io/certbot/certbot@sha256:1dc5b4a99cce916f154c706569baf062600d7dea13e0711e7d7e1461d6230e39" in source
     assert "--preferred-profile shortlived" in source and '--ip-address "$PUBLIC_IP"' in source
     assert "ipaddress.IPv4Address(sys.argv[1])" in source and "address.is_global and not address.is_multicast" in source
     assert '"$ACME:/var/lib/letsencrypt:z"' in source and '"$STATE:/etc/letsencrypt:Z"' in source
@@ -73,6 +73,17 @@ def shell_case(tmp_path, bash):
         "chcon": "#!/bin/bash\nexit 0\n",
         "podman": r'''#!/bin/bash
 printf 'podman %s\n' "$*" >>"$FAKE_LOG"
+if [[ "$1" == run ]]; then
+  image=''
+  for argument in "$@"; do
+    if [[ "$argument" == *@sha256:* ]]; then image="$argument"; break; fi
+  done
+  registry="${image%%/*}"
+  if [[ -z "$image" || ( "$registry" != *.* && "$registry" != *:* && "$registry" != localhost ) ]]; then
+    echo 'short-name resolution enforced but cannot prompt without a TTY' >&2
+    exit 125
+  fi
+fi
 fail() { echo "injected $TLS_FAIL" >&2; exit 17; }
 if [[ "$1" == run && "$TLS_FAIL" == certbot ]]; then fail; fi
 if [[ "$1" == exec && "$4" == validate && "$TLS_FAIL" == config ]]; then fail; fi
@@ -109,7 +120,8 @@ esac
         file.write_text(content)
         file.chmod(0o755)
 
-    def run(failure="", action="issue"):
+    def run(failure="", action="issue", *, short_name=False):
+        script.write_text(source.replace("IMAGE=docker.io/certbot/", "IMAGE=certbot/") if short_name else source)
         environment = {**os.environ, "TLS_FAIL": failure, "FAKE_LOG": bash_path(tmp_path / "commands.log"),
                        "FAIL_MARKER": bash_path(tmp_path / "reload-failed")}
         command = 'export PATH="$1:$PATH"; exec bash "$2" "$3"'
@@ -161,3 +173,17 @@ def test_first_certificate_activation_failure_restores_http_bootstrap_without_fa
     assert result.returncode != 0 and "injected reload" in result.stderr.decode()
     assert not (runtime / "tls/tls.crt").exists() and not (runtime / "tls/tls.key").exists()
     assert (runtime / "caddy/Caddyfile").read_text() == "previous proxy configuration"
+
+
+def test_certbot_image_is_fully_qualified_for_noninteractive_podman(shell_case):
+    runtime, run, log = shell_case
+    original = {name: (runtime / name).read_bytes() for name in ("tls/tls.crt", "tls/tls.key", "caddy/Caddyfile")}
+    failed = run(short_name=True)
+    assert failed.returncode == 125
+    assert "short-name resolution enforced but cannot prompt without a TTY" in failed.stderr.decode()
+    assert {name: (runtime / name).read_bytes() for name in original} == original
+    succeeded = run()
+    assert succeeded.returncode == 0, succeeded.stderr.decode()
+    calls = log.read_text()
+    assert "docker.io/certbot/certbot@sha256:" in calls
+    assert (runtime / "tls/tls.crt").read_text() == "new certificate"

@@ -272,6 +272,8 @@ Cloud-init instala Podman desde Oracle Linux, arranca la imagen OCI Desk sin
 privilegios y con rootfs de solo lectura, y un contenedor Caddy separado por digest
 para TLS (2.10.2 amd64, digest verificado del registro oficial). Caddy termina TLS y entrega el stream sin buffering. La VM obtiene su IP con
 `oci-public-ip -g`, sin crear un ciclo entre IP y cloud-init. Certbot 5.4 por digest
+usa el nombre completo `docker.io/certbot/certbot` para evitar la selección
+interactiva de registro de Podman durante el arranque. El contenedor
 solicita un certificado público de Let’s Encrypt para esa IP con el perfil
 shortlived; un timer lo renueva dos veces al día. Se comprueban cadena, SAN IP,
 vigencia y clave antes de activar; un fallo restaura la configuración anterior.
