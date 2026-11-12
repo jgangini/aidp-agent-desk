@@ -270,7 +270,7 @@ Cloud-init viaja comprimido con gzip y Base64 para respetar el límite OCI de
 32.000 bytes de metadata; una precondición del PLAN impide superar ese límite.
 Cloud-init instala Podman desde Oracle Linux, arranca la imagen OCI Desk sin
 privilegios y con rootfs de solo lectura, y un contenedor Caddy separado por digest
-para TLS (2.10.2 amd64, digest verificado del registro oficial). Caddy termina TLS y entrega el stream sin buffering. La VM obtiene su IP con
+para TLS (2.10.2 amd64, digest verificado del registro oficial). Caddy termina TLS y entrega el stream sin buffering. `default_sni` selecciona el certificado de la IP pública cuando el cliente no envía SNI, incluido el acceso del navegador por IP detrás del NAT de OCI. La VM obtiene su IP con
 `oci-public-ip -g`, sin crear un ciclo entre IP y cloud-init. Certbot 5.4 por digest
 usa el nombre completo `docker.io/certbot/certbot` para evitar la selección
 interactiva de registro de Podman durante el arranque. El contenedor

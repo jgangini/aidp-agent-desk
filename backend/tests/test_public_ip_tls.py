@@ -187,3 +187,15 @@ def test_certbot_image_is_fully_qualified_for_noninteractive_podman(shell_case):
     calls = log.read_text()
     assert "docker.io/certbot/certbot@sha256:" in calls
     assert (runtime / "tls/tls.crt").read_text() == "new certificate"
+
+
+def test_public_ip_tls_sets_default_sni_for_clients_without_an_ip_server_name(shell_case):
+    runtime, run, _ = shell_case
+    result = run()
+    assert result.returncode == 0, result.stderr.decode()
+    config = (runtime / "caddy/Caddyfile").read_text()
+    global_options = config.split("}\n", 1)[0]
+    assert global_options.startswith("{\n")
+    assert "  default_sni 1.1.1.1\n" in global_options
+    assert "tls /certs/tls.crt /certs/tls.key" in config
+    assert "tls_insecure_skip_verify" not in config

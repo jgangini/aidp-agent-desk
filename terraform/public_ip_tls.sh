@@ -83,6 +83,7 @@ install -m 0600 "$CERT/privkey.pem" "$WORK/tls.key"
 cat >"$WORK/Caddyfile" <<EOF
 {
   auto_https off
+  default_sni $PUBLIC_IP
 }
 http://$PUBLIC_IP {
   handle /.well-known/acme-challenge/* {
