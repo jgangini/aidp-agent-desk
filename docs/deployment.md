@@ -304,6 +304,22 @@ backup. La validacion local de Terraform y los dobles SDK no acreditan capacidad
 permisos ni un arranque real en OCI. No hay cuotas por usuario, auditoria
 administrativa completa ni HA en esta version.
 
+## Vista previa al compartir
+
+La portada pública se identifica como **AIDP Agent Desk**, con una descripción
+en inglés y metadatos Open Graph y Twitter disponibles sin ejecutar JavaScript.
+La imagen JPEG cuadrada de Oracle se sirve desde `/social/aidp-agent-desk-v1.jpg`;
+su procedencia y derechos están en `frontend/public/social/README.md`.
+En modo Oracle, el servidor construye sus URLs absolutas desde el origen validado
+`AGENT_DESK_PUBLIC_ORIGIN`, nunca desde `Host` o `X-Forwarded-Host`. La misma imagen
+funciona con HTTPS por IP o por dominio y no requiere otra variable de despliegue.
+En desarrollo local las URLs permanecen relativas. La portada y la imagen son
+públicas; las APIs de agentes siguen requiriendo la sesión y permisos existentes.
+Tras actualizar la imagen de la aplicación, comprobar la portada y el JPEG sin
+cookies usando el agente de usuario de Slack. Las vistas previas ya compartidas
+pueden seguir en la caché del cliente; un URL nuevo permite comprobar la nueva
+versión. Verificar metadatos HTTP no acredita la apariencia final dentro de Slack.
+
 ## Validacion local
 
 El scheduler requiere un único proceso de aplicación por directorio de datos;

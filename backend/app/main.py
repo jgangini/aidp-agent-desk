@@ -4,10 +4,10 @@ from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from fastapi.staticfiles import StaticFiles
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from app.core.access import install_identity
+from app.core.frontend import install_frontend
 from app.core.identity import IdentitySettings
 from app.features.desk.api import create_router
 from app.features.desk.credentials import profile_store
@@ -68,10 +68,10 @@ async def limit_configuration_body(request: Request, call_next):  # type: ignore
 store = profile_store()
 if store.connection_managed:
     store.draft()
-install_identity(app, IdentitySettings.load(), store.list)
+identity_settings = IdentitySettings.load()
+install_identity(app, identity_settings, store.list)
 scheduled = ScheduledRuntime(store, lambda: app.state.identity)
 app.state.scheduled = scheduled
 app.include_router(create_router(store, scheduled))
 static = Path(os.getenv("ARKO_STATIC_DIR", "frontend/dist"))
-if static.is_dir():
-    app.mount("/", StaticFiles(directory=static, html=True), name="frontend")
+install_frontend(app, static, identity_settings.origin if identity_settings else "")
