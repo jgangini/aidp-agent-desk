@@ -146,9 +146,21 @@ recopilaron comentarios, conserva ese estado y no declares una muestra analizada
 ### Capacidad de informe por tarea
 
 Desk persiste tareas, versiones, plantillas y ejecuciones en SQLite privada del
-servidor. El operador habilita destinos concretos con `AGENT_DESK_REPORT_PROFILES`:
-`<id>` para PROD y `test:<id>` para TEST. El nombre del agente y una prueba
-TEST no habilitan PROD. Otros agentes pueden continuar usando el chat sin informes.
+servidor. El administrador habilita informes por Agent Flow guardado y superficie
+en Configuración, o desde el aviso de Nueva tarea. Debe comprobar antes que el
+productor acepta `delivery.mode=report` y entrega el esquema 1.0; este ajuste es
+una declaración del administrador, no una prueba automática de compatibilidad.
+PROD y TEST se habilitan por separado. TEST sigue restringido a administradores.
+El ajuste se conserva en `<directorio privado>/<id>/reports.json`, sin reinicios.
+Los endpoints GET/PUT `/api/desk/profiles/{id}/reports` requieren administración;
+PUT recibe `{"prod":true,"test":false}`. Deshabilitar una superficie revoca su uso.
+
+`AGENT_DESK_REPORT_PROFILES` se conserva como configuración heredada: `<id>` para
+PROD y `test:<id>` para TEST. Un ajuste persistido prevalece, incluso si deshabilita
+ambas superficies. Los IDs se generan al guardar agentes y no pueden conocerse
+al desplegar una VM vacía. El nombre del agente, su disponibilidad o una prueba
+TEST no habilitan PROD. Cada resultado sigue pasando las validaciones del informe.
+Otros agentes pueden continuar usando el chat sin informes.
 
 Entrada de investigación (sin campos adicionales dentro de `delivery`):
 

@@ -1,0 +1,40 @@
+.report-settings {
+  margin-top: 20px;
+}
+.report-settings h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+.report-settings-profile {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 12px 0 0;
+  padding: 12px;
+  border: 1px solid var(--border, #34363a);
+  border-radius: 10px;
+}
+.report-settings-profile legend {
+  padding: 0 4px;
+  font-size: 12px;
+}
+.report-settings-profile label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.report-settings-profile input {
+  margin: 0;
+  accent-color: var(--text, #eee);
+}
+.report-settings-profile p {
+  flex-basis: 100%;
+  margin: 0;
+}
+.report-enable-action {
+  margin: 12px 0;
+}
+.report-enable-action p {
+  margin: 0 0 10px;
+}

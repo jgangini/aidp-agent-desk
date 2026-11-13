@@ -331,10 +331,15 @@ Al restaurar o reiniciar, las operaciones de resultado desconocido no se lanzan
 de nuevo automáticamente.
 
 Para habilitar informes, verificar primero el diagnóstico del productor y el
-candidato servido, y configurar `AGENT_DESK_REPORT_PROFILES` con los IDs guardados
-de destinos compatibles. Compose transmite esta variable. El prefijo `test:`
-selecciona únicamente TEST; con Oracle requiere un administrador habilitado. Un TEST nuevo no cambia
-la capacidad del PROD anterior. La demostración está disponible sólo en local y
+candidato servido. Después, un administrador habilita PROD y/o TEST del Agent Flow
+guardado desde Configuración de Desk o desde el aviso de Nueva tarea. Se conserva
+en el volumen privado y no necesita modificar variables ni reiniciar la VM. Esto
+funciona también con los IDs generados después del despliegue por Deploy Studio.
+La habilitación declara compatibilidad con informes 1.0; la validación de cada
+respuesta sigue activa. TEST requiere un administrador habilitado y no habilita
+PROD. `AGENT_DESK_REPORT_PROFILES` permanece como respaldo heredado cuando no hay
+ajuste persistido; un ajuste explícito, incluso deshabilitado, prevalece.
+La demostración está disponible sólo en local y
 no acredita investigación real. Un servidor detenido no ejecuta sus horarios;
 las ocurrencias antiguas se omiten según la política documentada en uso.
 

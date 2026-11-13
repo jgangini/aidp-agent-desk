@@ -3,6 +3,7 @@ import type { AgentProfile } from "./profiles";
 import { useDiscovery, type ConfigurationDraft } from "./discovery";
 import "./AgentConfigDrop.css";
 import { SuggestionsEditor } from "./SuggestionsEditor";
+import { ReportSettings } from "./ReportSettings";
 import type { ConfigurationFieldState } from "./ConfigurationField";
 import type { ConfigStep } from "./configurationDraft";
 import {
@@ -259,6 +260,7 @@ export function AgentConfig({
             setError("");
           }}
         />
+        {step === 1 && <ReportSettings profiles={profiles} />}
         <AudioPanel
           fieldId={fieldId}
           active={step === 2}

@@ -12,6 +12,7 @@ from .audio import audio_router
 from .credentials import ProfileStore
 from .discovery_api import discovery_router
 from .invocation_scope import invocation_scope
+from .report_settings import report_settings_router
 from .scheduled_api import scheduled_router
 from .scheduled_runtime import ScheduledRuntime
 from .schemas import AgentProfile, ConnectionStatus, InvokeRequest
@@ -25,6 +26,7 @@ def create_router(store: ProfileStore, scheduled: ScheduledRuntime | None = None
     router.include_router(discovery_router(store))
     router.include_router(audio_router(store))
     router.include_router(suggestions_router(store))
+    router.include_router(report_settings_router(store))
     if scheduled is not None:
         router.include_router(scheduled_router(scheduled))
 

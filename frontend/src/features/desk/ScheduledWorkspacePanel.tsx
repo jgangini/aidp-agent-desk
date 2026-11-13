@@ -3,6 +3,7 @@ import { Pencil, Pause, Play, Trash2, X } from "lucide-react";
 import { loadScheduledTasks, type ScheduledTask } from "./scheduledTasks";
 import { ScheduledTaskForm } from "./ScheduledTaskForm";
 import { CompletedTaskReports } from "./CompletedTaskReports";
+import { ReportEnableAction } from "./ReportSettings";
 import { taskSchedule } from "./ScheduledPanel";
 import { readChatStorage, writeChatStorage } from "./chatStorage";
 import {
@@ -29,6 +30,7 @@ export function ScheduledWorkspacePanel({
   onRemoveReport,
   onEditingChange,
   closeRequest = 0,
+  canManageReports = false,
 }: {
   agents: { id: string; name: string }[];
   selectedAgent: string;
@@ -42,6 +44,7 @@ export function ScheduledWorkspacePanel({
   onRemoveReport?: (taskId: string, runId: string) => void;
   onEditingChange?: (title: string | null) => void;
   closeRequest?: number;
+  canManageReports?: boolean;
 }) {
   const [listing, setListing] = useState<TaskListing>({
     tasks: [],
@@ -52,6 +55,7 @@ export function ScheduledWorkspacePanel({
   const [error, setError] = useState("");
   const [formError, setFormError] = useState("");
   const [formWarning, setFormWarning] = useState(false);
+  const [blockedAgent, setBlockedAgent] = useState("");
   const [busy, setBusy] = useState(false);
   const [tab, setTab] = useState<ScheduledTask["status"]>(() => {
     const saved = readChatStorage("tasks-tab");
@@ -195,8 +199,11 @@ export function ScheduledWorkspacePanel({
       )
     ) {
       setFormWarning(true);
+      setBlockedAgent(task.agentId);
       showSaveError(
-        "El Agent Flow seleccionado no tiene habilitada la entrega de informes. Selecciona otro Agent Flow.",
+        canManageReports
+          ? "El Agent Flow seleccionado no tiene habilitada la entrega de informes. Puedes habilitarla si el agente es compatible."
+          : "El Agent Flow seleccionado no tiene habilitada la entrega de informes. Selecciona otro Agent Flow.",
       );
       return;
     }
@@ -365,7 +372,28 @@ export function ScheduledWorkspacePanel({
             onSave={(task) => void save(task)}
             error={formError}
             warning={formWarning}
-            onAgentChange={() => setFormError("")}
+            onAgentChange={() => {
+              setFormError("");
+              setFormWarning(false);
+              setBlockedAgent("");
+            }}
+            noticeAction={
+              canManageReports &&
+              formWarning &&
+              blockedAgent &&
+              /^[a-f0-9]{32}$/.test(blockedAgent.replace(/^test:/, "")) ? (
+                <ReportEnableAction
+                  key={blockedAgent}
+                  agentId={blockedAgent}
+                  onEnabled={async () => {
+                    await refresh();
+                    setFormError("");
+                    setFormWarning(false);
+                    setBlockedAgent("");
+                  }}
+                />
+              ) : undefined
+            }
             onCancel={() => setDraft(null)}
             submitLabel={
               busy

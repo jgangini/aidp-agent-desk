@@ -11,6 +11,88 @@ import {
 import { ScheduledWorkspacePanel } from "./ScheduledWorkspacePanel";
 import { useState } from "react";
 import type { ServerTask } from "./scheduledApi";
+
+it.each([false, true])(
+  "keeps the task draft and requires saving after admin enrollment (admin=%s)",
+  async (admin) => {
+    const identity = "a".repeat(32);
+    let enabled = false;
+    let saved: Record<string, unknown> | undefined;
+    const fetcher = vi.fn(async (url: string, options?: RequestInit) => {
+      if (url.endsWith("/reports")) {
+        if (options?.method === "PUT") enabled = true;
+        return new Response(JSON.stringify({ prod: enabled, test: false }));
+      }
+      if (options?.method === "PUT") {
+        saved = { ...JSON.parse(String(options.body)), version: 1 };
+        return new Response(JSON.stringify(saved));
+      }
+      return new Response(
+        JSON.stringify({
+          tasks: saved ? [saved] : [],
+          capabilities: enabled
+            ? [{ agentId: identity, reportSchemaVersion: "1.0" }]
+            : [],
+        }),
+      );
+    });
+    vi.stubGlobal("fetch", fetcher);
+    render(
+      <ScheduledWorkspacePanel
+        agents={[{ id: identity, name: "Flow" }]}
+        selectedAgent={identity}
+        createRequest={1}
+        canManageReports={admin}
+        onClose={() => {}}
+        onSelectTask={() => {}}
+      />,
+    );
+    const form = await screen.findByRole("region", { name: "Nueva tarea" });
+    fireEvent.change(within(form).getByLabelText("Nombre de la tarea"), {
+      target: { value: "Informe conservado" },
+    });
+    fireEvent.change(within(form).getByLabelText(/Instrucciones/), {
+      target: { value: "Investigar novedades" },
+    });
+    fireEvent.click(
+      within(form).getByRole("button", { name: "Guardar y ejecutar" }),
+    );
+    await within(form).findByRole("alert");
+    expect(saved).toBeUndefined();
+    if (!admin) {
+      expect(
+        screen.queryByRole("button", { name: "Habilitar informes" }),
+      ).toBeNull();
+      expect(fetcher.mock.calls.some(([url]) => url.endsWith("/reports"))).toBe(
+        false,
+      );
+      return;
+    }
+    fireEvent.click(
+      within(form).getByRole("button", { name: "Habilitar informes" }),
+    );
+    await waitFor(() => expect(within(form).queryByRole("alert")).toBeNull());
+    expect(saved).toBeUndefined();
+    expect(
+      (within(form).getByLabelText("Nombre de la tarea") as HTMLInputElement)
+        .value,
+    ).toBe("Informe conservado");
+    expect(
+      (within(form).getByLabelText(/Instrucciones/) as HTMLTextAreaElement)
+        .value,
+    ).toBe("Investigar novedades");
+    fireEvent.click(
+      within(form).getByRole("button", { name: "Guardar y ejecutar" }),
+    );
+    await waitFor(() =>
+      expect(saved).toMatchObject({
+        name: "Informe conservado",
+        instructions: "Investigar novedades",
+        agentId: identity,
+      }),
+    );
+  },
+);
 beforeAll(() => {
   HTMLDialogElement.prototype.showModal = function () {
     this.setAttribute("open", "");

@@ -315,6 +315,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/desk/profiles/{identity}/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read */
+        get: operations["desk_report_settings"];
+        /** Save */
+        put: operations["desk_report_settings_save"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/desk/scheduled-tasks": {
         parameters: {
             query?: never;
@@ -963,6 +981,19 @@ export interface components {
             schema_version: "1.0";
             /** Rows */
             rows: components["schemas"]["PresentationRow"][];
+        };
+        /** ReportSettings */
+        ReportSettings: {
+            /**
+             * Prod
+             * @default false
+             */
+            prod: boolean;
+            /**
+             * Test
+             * @default false
+             */
+            test: boolean;
         };
         /** RunRequest */
         RunRequest: {
@@ -1834,6 +1865,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["QuerySuggestions"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    desk_report_settings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                identity: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportSettings"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    desk_report_settings_save: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                identity: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReportSettings"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportSettings"];
                 };
             };
             /** @description Validation Error */

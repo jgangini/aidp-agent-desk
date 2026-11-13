@@ -2,7 +2,6 @@
 
 import hashlib
 import json
-import os
 import sqlite3
 from collections.abc import Callable
 from datetime import UTC, datetime
@@ -10,6 +9,7 @@ from threading import Event, Thread
 from typing import Any
 
 from .credentials import ProfileStore
+from .report_settings import report_settings
 from .scheduled_lock import SchedulerLock
 from .scheduled_recovery import RecoveryRequired, canonical_response, continuation_safe
 from .scheduled_report import validate_response
@@ -42,13 +42,13 @@ class ScheduledRuntime:
     def supported(self, profile: str) -> bool:
         if profile == "demo":
             return self.identity() is None
-        configured = os.getenv("AGENT_DESK_REPORT_PROFILES", "").split(",")
-        if profile not in configured:
-            return False
         testing = profile.startswith("test:")
         saved_id = profile[5:] if testing else profile
         saved = next((item for item in self.profiles.list() if item.id == saved_id), None)
         if saved is None:
+            return False
+        settings = report_settings(self.profiles, saved_id)
+        if not (settings.test if testing else settings.prod):
             return False
         if testing:
             return bool(saved.instance_id and saved.workspace_id)

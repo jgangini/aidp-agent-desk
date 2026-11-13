@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { TriangleAlert } from "lucide-react";
 import { ScheduledDateField } from "./ScheduledDateField";
 import { ScheduledDayPicker } from "./ScheduledDayPicker";
@@ -43,6 +43,7 @@ export function ScheduledTaskForm({
   submitLabel = "Guardar",
   disabled = false,
   onCancel,
+  noticeAction,
 }: {
   task: ScheduledTask;
   agents: { id: string; name: string }[];
@@ -53,6 +54,7 @@ export function ScheduledTaskForm({
   submitLabel?: string;
   disabled?: boolean;
   onCancel?: () => void;
+  noticeAction?: ReactNode;
 }) {
   const [draft, setDraft] = useState<ScheduledTask>(() => ({
     ...task,
@@ -147,6 +149,7 @@ export function ScheduledTaskForm({
           <span>{notice}</span>
         </p>
       )}
+      {notice && !validationField && !validation && noticeAction}
       <footer className="scheduled-task-footer">
         {onCancel && (
           <button

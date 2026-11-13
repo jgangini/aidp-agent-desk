@@ -291,6 +291,9 @@ export function Desk() {
           configuration={
             scheduled ? (
               <ScheduledWorkspacePanel
+                canManageReports={
+                  identity.admin && (!identity.hosted || identity.authenticated)
+                }
                 createRequest={newTaskRequest}
                 closeRequest={closeTaskRequest}
                 onEditingChange={setScheduledEditorTitle}

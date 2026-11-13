@@ -2,6 +2,8 @@
 
 Agent Desk includes Oracle login, role-scoped Agent Flows and TEST access, task scheduling, saved reports and an inline report-template editor.
 
+Version 0.1.8 lets administrators persist report enrollment for each saved Agent Flow and surface. New tasks can enable a compatible target without restarting the VM; existing drafts are preserved. PROD and TEST remain independent, and every report still undergoes response validation.
+
 Version 0.1.7 adds crawler-readable Open Graph and Twitter metadata for AIDP Agent Desk, an English product description and a square Oracle share image. Hosted image URLs use the configured public origin; protected APIs remain authenticated.
 
 Version 0.1.6 completes public-IP HTTPS bootstrap corrections found on Oracle Linux: the network follows the working Starter Kits recipe, the pinned Certbot image uses its fully qualified registry name, and Caddy selects the IP certificate when a browser sends no SNI. Inbound access remains limited to HTTP/HTTPS; no SSH rule or key is installed. Application behavior is unchanged.

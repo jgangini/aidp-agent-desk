@@ -744,6 +744,98 @@
         }
       }
     },
+    "/api/desk/profiles/{identity}/reports": {
+      "get": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Read",
+        "operationId": "desk_report_settings",
+        "parameters": [
+          {
+            "name": "identity",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identity"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportSettings"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Save",
+        "operationId": "desk_report_settings_save",
+        "parameters": [
+          {
+            "name": "identity",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identity"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportSettings"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportSettings"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/desk/scheduled-tasks": {
       "get": {
         "tags": [
@@ -2409,6 +2501,23 @@
           "rows"
         ],
         "title": "ReportPresentation"
+      },
+      "ReportSettings": {
+        "properties": {
+          "prod": {
+            "type": "boolean",
+            "title": "Prod",
+            "default": false
+          },
+          "test": {
+            "type": "boolean",
+            "title": "Test",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ReportSettings"
       },
       "RunRequest": {
         "properties": {

@@ -443,3 +443,20 @@ def test_scheduled_test_permission_requires_current_admin_role(hosted, monkeypat
     member = next(user for user in identity.store.users() if user["subject"]=="member-test")
     assert not runtime.permitted(member["id"],target)
     assert not runtime.permitted(admin["id"],profile.id)  # TEST does not enable PROD reports
+
+
+def test_only_admin_can_configure_report_enrollment(hosted, tmp_path):
+    app, client = hosted
+    profile_id = "a" * 32
+    (tmp_path / profile_id).mkdir()
+    url = f"/api/desk/profiles/{profile_id}/reports"
+    headers = {"Origin": "https://desk.example", "X-Agent-Desk": "configure"}
+    assert client.put(url, json={"prod": True}, headers=headers).status_code == 401
+    sign_in(app, client)
+    assert client.put(url, json={"prod": True}, headers=headers).status_code == 200
+    identity = app.state.identity
+    identity.store.save_user("member", "m@example.com", True, [profile_id])
+    sign_in(app, client, "member")
+    assert client.get(url, headers=headers).status_code == 403
+    assert client.put(url, json={"prod": False}, headers=headers).status_code == 403
+    assert json.loads((tmp_path / profile_id / "reports.json").read_text())["prod"] is True
