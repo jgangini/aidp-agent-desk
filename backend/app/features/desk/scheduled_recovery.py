@@ -1,9 +1,11 @@
-"""Continue only explicitly safe native TEST work; replay never creates a new request."""
+"""Continue only explicitly safe native work; replay never creates a new request."""
 
 import json
 import re
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from typing import Any
+
+from .scheduled_progress import ReportProgress
 
 
 class RecoveryRequired(Exception):
@@ -30,8 +32,21 @@ def continuation_safe(response: dict[str, Any], request_id: str) -> bool:
     )
 
 
-def canonical_response(packets: Iterable[bytes], request_id: str) -> dict[str, Any]:
+def replay_control(packet: dict[str, Any]) -> dict[str, Any]:
+    control = pending_control(None)
+    execution = packet.get("execution")
+    if (isinstance(execution, dict) and execution.get("schema_version") == "1.0"
+            and execution.get("state") in ("interrupted", "waiting")
+            and execution.get("owner_held") is False and execution.get("continuation_safe") is True):
+        control["continuation_safe"] = True
+    return control
+
+
+def canonical_response(packets: Iterable[bytes], request_id: str,
+                       on_progress: Callable[[list[dict[str, Any]]], None] | None = None,
+                       *, projection: ReportProgress | None = None) -> dict[str, Any]:
     final: dict[str, Any] | None = None
+    progress = projection or ReportProgress(request_id, on_progress)
     try:
         for chunk in packets:
             for line in chunk.splitlines():
@@ -42,11 +57,13 @@ def canonical_response(packets: Iterable[bytes], request_id: str) -> dict[str, A
                     raise RecoveryRequired(final)
                 if packet.get("kind") == "transport_error":
                     raise RecoveryRequired(final)
-                # A snapshot needs the full consumer validator before its internal response can be accepted.
-                if packet.get("kind") == "response" and packet.get("request_id") == request_id:
+                progress.accept(packet)
+                if packet.get("kind") in ("response", "snapshot") and packet.get("request_id") == request_id:
                     value = packet.get("response")
                     if isinstance(value, dict):
                         final = value
+                    elif packet["kind"] == "snapshot" and value is None:
+                        final = replay_control(packet)
         if final is None:
             raise RecoveryRequired()
         return final

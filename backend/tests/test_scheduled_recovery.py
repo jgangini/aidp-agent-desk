@@ -57,8 +57,9 @@ def complete(request):
              "response": demo_response(task(request.surface == "TEST"), request.request_id, None)}]
 
 
-def test_safe_test_pending_continues_twice_with_same_identity_and_delivery(tmp_path, monkeypatch):
-    runtime, value, observed = setup_native(tmp_path, monkeypatch, [pending(), pending(), complete])
+@pytest.mark.parametrize("testing", [True, False])
+def test_safe_pending_continues_twice_with_same_identity_and_delivery(tmp_path, monkeypatch, testing):
+    runtime, value, observed = setup_native(tmp_path, monkeypatch, [pending(), pending(), complete], testing)
     runtime.tick()
     runs = runtime.store.runs("local", value.id)
     assert len(runs) == 1
@@ -79,7 +80,7 @@ def test_safe_test_continuations_stop_after_two_additional_attempts(tmp_path, mo
     assert run.recoverable
 
 
-@pytest.mark.parametrize(("safe", "foreign", "testing"), [(False, False, True), (True, True, True), (True, False, False)])
+@pytest.mark.parametrize(("safe", "foreign", "testing"), [(False, False, True), (True, True, True), (False, False, False), (True, True, False)])
 def test_pending_without_safe_test_authority_never_reinvokes(tmp_path, monkeypatch, safe, foreign, testing):
     runtime, value, observed = setup_native(tmp_path, monkeypatch, [pending(safe, foreign)], testing)
     runtime.tick()

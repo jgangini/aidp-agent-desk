@@ -154,34 +154,75 @@ it("keeps the A2UI surface stable when equivalent report objects are passed agai
   );
   expect(sources.isConnected && sources.open).toBe(true);
 });
-it("revalidates the same run after an explicit recovery without starting new research", async () => {
-  nextRefresh();
+it("reads the same run after recovery elsewhere without offering a second recovery action", async () => {
+  const refresh = nextRefresh();
   let recovered = false;
   const pending = {
     ...run(undefined),
     status: "interrupted",
     recoverable: true,
   };
-  const request = vi.fn(async (_url: string, options?: RequestInit) => {
-    if (options?.method === "POST") {
-      recovered = true;
-      return new Response(JSON.stringify({ ...pending, status: "queued" }));
-    }
+  const request = vi.fn(async (_url: string, _options?: RequestInit) => {
     return new Response(JSON.stringify(recovered ? run(fixture) : pending));
   });
   vi.stubGlobal("fetch", request);
   render(workspace());
-  fireEvent.click(
-    await screen.findByRole("button", { name: "Recuperar ejecución" }),
-  );
+  await screen.findByRole("heading", { name: "Actividad de la tarea" });
+  expect(screen.queryByRole("button", { name: /Recuperar/ })).toBeNull();
+  recovered = true;
+  await refresh();
   await screen.findByRole("heading", { name: "Resumen" });
   expect(
-    request.mock.calls
-      .filter(([, options]) => options?.method === "POST")
-      .map(([url]) => url),
-  ).toEqual([
-    `/api/desk/scheduled-tasks/${fixture.report.task_id}/runs/${fixture.report.task_run_id}/recover`,
-  ]);
+    request.mock.calls.every(([, options]) => options?.method === "GET"),
+  ).toBe(true);
+});
+it("updates the selected run activity in place and keeps it out of a finished report", async () => {
+  const refresh = nextRefresh();
+  const current: TaskRun = {
+    ...run(undefined),
+    status: "running",
+    activity: [
+      {
+        id: "facebook",
+        source: "Facebook",
+        text: "Revisando publicaciones.",
+        state: "running",
+      },
+      {
+        id: "web",
+        source: "Web",
+        text: "Fuentes recuperadas.",
+        state: "completed",
+      },
+    ],
+  };
+  let finished = false;
+  const request = vi.fn(
+    async () => new Response(JSON.stringify(finished ? run(fixture) : current)),
+  );
+  vi.stubGlobal("fetch", request);
+  render(workspace());
+  const activity = await screen.findByRole("list", {
+    name: "Actividad del agente",
+  });
+  const first = activity.querySelector("li");
+  current.activity![0] = {
+    ...current.activity![0],
+    text: "Publicaciones revisadas.",
+    state: "completed",
+  };
+  await refresh();
+  expect(activity.querySelector("li")).toBe(first);
+  expect(first?.getAttribute("data-activity-state")).toBe("completed");
+  expect(screen.getByText("Publicaciones revisadas.")).toBeTruthy();
+  expect(screen.queryByText("Revisando publicaciones.")).toBeNull();
+  finished = true;
+  await refresh();
+  await screen.findByRole("heading", { name: "Resumen" });
+  expect(
+    screen.queryByRole("list", { name: "Actividad del agente" }),
+  ).toBeNull();
+  expect(request.mock.calls).toHaveLength(3);
 });
 it("links page media instead of treating an HTML page as an embeddable image", async () => {
   const value = structuredClone(fixture);

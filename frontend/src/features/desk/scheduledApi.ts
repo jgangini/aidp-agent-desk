@@ -20,6 +20,12 @@ export interface TaskRun {
   error?: string | null;
   response?: unknown;
   recoverable?: boolean;
+  activity?: {
+    id: string;
+    text: string;
+    state: "running" | "pending" | "completed" | "failed";
+    source?: string;
+  }[];
   presentation?: ReportPresentation | null;
 }
 export interface TaskListing {

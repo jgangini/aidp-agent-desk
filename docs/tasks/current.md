@@ -2,6 +2,8 @@
 
 Agent Desk includes Oracle login, role-scoped Agent Flows and TEST access, task scheduling, saved reports and an inline report-template editor.
 
+Version 0.1.9 keeps task schedules in a single compact card, moves recovery into an icon action, and opens live task activity in the left workspace. Report deliveries allow up to 30 minutes; recovery accepts a validated final replay and safe pending continuations retain the same request in PROD and TEST. Unknown work is never restarted from a null response.
+
 Version 0.1.8 lets administrators persist report enrollment for each saved Agent Flow and surface. New tasks can enable a compatible target without restarting the VM; existing drafts are preserved. PROD and TEST remain independent, and every report still undergoes response validation.
 
 Version 0.1.7 adds crawler-readable Open Graph and Twitter metadata for AIDP Agent Desk, an English product description and a square Oracle share image. Hosted image URLs use the configured public origin; protected APIs remain authenticated.

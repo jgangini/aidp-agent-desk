@@ -11,6 +11,7 @@ from typing import Any
 from .credentials import ProfileStore
 from .report_settings import report_settings
 from .scheduled_lock import SchedulerLock
+from .scheduled_progress import ReportProgress
 from .scheduled_recovery import RecoveryRequired, canonical_response, continuation_safe
 from .scheduled_report import validate_response
 from .scheduled_schemas import ScheduledTask
@@ -160,11 +161,13 @@ class ScheduledRuntime:
                               question=task.instructions, delivery=ReportDelivery.model_validate({
                                   "mode": "report", "task_id": task.id, "task_run_id": job["id"],
                                   **({"template": template} if template else {})}))
+        progress = ReportProgress(job["id"], lambda activity: self.store.progress(job, activity))
         for continuations in range(3):
             transport = AgentTransport(self.profiles, value)
+            transport.deadline_seconds = 1800
             self.transport = transport
             try:
-                response = canonical_response(transport.packets(), job["id"])
+                response = canonical_response(transport.packets(), job["id"], projection=progress)
             finally:
                 transport.close()
                 self.transport = None
@@ -172,7 +175,7 @@ class ScheduledRuntime:
                 return response
             if self.stop_event.is_set():
                 raise RecoveryRequired(response)
-            if testing and continuations < 2 and continuation_safe(response, job["id"]):
+            if continuations < 2 and continuation_safe(response, job["id"]):
                 value = value.model_copy(update={"action": "research", "after_sequence": 0})
                 continue
             if response.get("status") == "pending" or response.get("resumable") is True:

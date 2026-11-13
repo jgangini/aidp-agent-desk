@@ -19,6 +19,27 @@ def public(kind: str, **values: Any) -> str:
                        **values}, ensure_ascii=False) + "\n"
 
 
+def test_report_deadline_allows_long_stream_without_changing_chat_default(monkeypatch) -> None:
+    from types import SimpleNamespace
+
+    from app.features.desk import transport as module
+
+    value = AgentTransport(cast(ProfileStore, SavedConnection()), request())
+    monkeypatch.setattr(module.time, "monotonic", lambda: 601)
+    event = public("event", event={"event_id": "e", "turn_id": "turn-1", "text": "Still working"})
+
+    def response():
+        chunks = iter([frame(event), b""])
+        return SimpleNamespace(raw=SimpleNamespace(read1=lambda *_args, **_kwargs: next(chunks)))
+
+    with pytest.raises(StreamFailure) as error:
+        list(value._read_packets(response(), NativeDecoder("turn-1"), 0))
+    assert error.value.code == "deadline"
+    value.deadline_seconds = 1800
+    packet = json.loads(list(value._read_packets(response(), NativeDecoder("turn-1"), 0))[0])
+    assert packet["event"]["text"] == "Still working"
+
+
 def test_fragmented_cumulative_stream_delivers_each_public_event_once() -> None:
     decoder = NativeDecoder("turn-1")
     event = public("event", event={"event_id": "event-1", "turn_id": "turn-1", "text": "Señal pública"})

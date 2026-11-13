@@ -2519,6 +2519,53 @@
         "type": "object",
         "title": "ReportSettings"
       },
+      "RunActivity": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Id"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Text"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "running",
+              "pending",
+              "completed",
+              "failed"
+            ],
+            "title": "State"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "text",
+          "state"
+        ],
+        "title": "RunActivity"
+      },
       "RunRequest": {
         "properties": {
           "idempotencyKey": {
@@ -2634,6 +2681,14 @@
                 "type": "null"
               }
             ]
+          },
+          "activity": {
+            "items": {
+              "$ref": "#/components/schemas/RunActivity"
+            },
+            "type": "array",
+            "maxItems": 200,
+            "title": "Activity"
           }
         },
         "type": "object",

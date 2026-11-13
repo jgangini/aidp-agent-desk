@@ -26,8 +26,10 @@ Botones: los fondos de hover se definen por componente. No aplicar un fondo gene
 
 Tareas: tarjetas con borde completo, radio de 12 px y superficie #191a1e;
 12 px entre pestañas y lista y entre tarjetas. Título y metadatos alineados a la
-izquierda, acciones de icono a la derecha. La tarjeta elegida despliega ejecuciones
-y la acción manual bajo un separador, sin otro contenedor anidado. El visor
+izquierda, acciones de icono a la derecha. Activadas y En pausa conservan una sola
+tarjeta compacta, sin desplegar ejecuciones bajo un separador. Seleccionar nombre
+u horario abre la ejecución más reciente a la izquierda; Recuperar usa un SVG
+junto a Editar/Pausar/Eliminar y conserva la misma solicitud. El visor
 izquierdo se reserva para una ejecución; no repite nombre de tarea, agente e
 historial. En móvil, elegir tarjeta conserva Tareas visible; sólo abrir una
 ejecución cambia al visor.
@@ -41,8 +43,9 @@ distingue una recurrencia futura del estado «En ejecución» de un trabajo conc
 Acciones de tarjeta: tooltips breves Editar, Pausar/Reanudar y Eliminar, conservando
 el nombre accesible completo con la tarea. Eliminar usa el token --danger.
 El botón de contenido de la tarjeta no muestra tooltip con su texto completo.
-El detalle de tarjeta muestra directamente las filas disponibles y sus descargas,
-sin cabecera adicional ni pie Cargando informes. Los errores siguen visibles.
+Completadas muestra las tarjetas de informes y sus descargas. La actividad de una
+ejecución sólo aparece a la izquierda, sin botón textual de recuperación ni
+tabla de historial. Los errores siguen visibles.
 El panel se llama Tareas en título, tooltip y navegación de retorno. La lista usa
 aria-busy durante la carga sin mostrar el texto Cargando tareas.
 
@@ -72,8 +75,7 @@ En pausa sólo muestra Play. Completadas omite agente, mantiene metadatos en una
 fila cuando cabe y dispone Eye/Download/Trash a la derecha. Eliminar informe
 ofrece confirmación y Deshacer sin borrar la programación.
 
-Una tarjeta sin ejecuciones pendientes, en curso o con errores no muestra el
-bloque Estado de ejecución ni el texto Sin ejecución en curso.
+Las tarjetas de programación no muestran bloque Estado de ejecución ni historial.
 ### Revisión de Tareas e informe ejecutivo (2026-11-12)
 
 Tareas y su pestaña se restauran por sesión/usuario al recargar. El pie del

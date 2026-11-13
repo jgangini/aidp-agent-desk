@@ -14,6 +14,7 @@ import { MarkdownText } from "./MarkdownText";
 import { ReportMedia } from "./ReportMedia";
 import { ReportLayoutSurface } from "./ReportLayoutSurface";
 import { ReportTemplateEditor } from "./ReportTemplateEditor";
+import { TaskRunActivity } from "./TaskRunActivity";
 import {
   taskRequest,
   TaskRequestError,
@@ -122,11 +123,9 @@ function ReportTask({ task, onClose, onBack, requestedRun }: WorkspaceProps) {
   };
   const [run, setRun] = useState<TaskRun | null>(null);
   const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState(false);
   const [templateSaving, setTemplateSaving] = useState(false);
   const [formatNotice, setFormatNotice] = useState("");
-  const [refreshVersion, setRefreshVersion] = useState(0);
   const closeTemplate = () => {
     setEditingTemplate(false);
     requestAnimationFrame(() => {
@@ -206,7 +205,7 @@ function ReportTask({ task, onClose, onBack, requestedRun }: WorkspaceProps) {
       clearTimeout(timer);
       window.removeEventListener("agent-desk-session-changed", sessionChanged);
     };
-  }, [task.id, selected, refreshVersion, requestedRun?.nonce]);
+  }, [task.id, selected, requestedRun?.nonce]);
   return (
     <section
       className="task-report-workspace"
@@ -251,34 +250,7 @@ function ReportTask({ task, onClose, onBack, requestedRun }: WorkspaceProps) {
           {selected ? (
             <>
               {run && run.id === selected ? (
-                <SavedReport
-                  run={run}
-                  timeZone={task.timeZone}
-                  recovering={busy}
-                  onRecover={async () => {
-                    if (busy) return;
-                    setBusy(true);
-                    setError("");
-                    try {
-                      setRun(
-                        await taskRequest<TaskRun>(
-                          `/${task.id}/runs/${run.id}/recover`,
-                          "POST",
-                          {},
-                        ),
-                      );
-                      setRefreshVersion((value) => value + 1);
-                    } catch (reason) {
-                      setError(
-                        reason instanceof Error
-                          ? reason.message
-                          : "No se pudo recuperar la ejecución.",
-                      );
-                    } finally {
-                      setBusy(false);
-                    }
-                  }}
-                />
+                <SavedReport run={run} timeZone={task.timeZone} />
               ) : !error ? (
                 <p role="status">Cargando informe…</p>
               ) : null}
@@ -293,13 +265,9 @@ function ReportTask({ task, onClose, onBack, requestedRun }: WorkspaceProps) {
 export function SavedReport({
   run,
   timeZone,
-  onRecover,
-  recovering = false,
 }: {
   run: TaskRun;
   timeZone: string;
-  onRecover?: () => void;
-  recovering?: boolean;
 }) {
   const accepted = useMemo(() => prepareSavedReport(run), [run]);
   const { report, reportIssue, references, markdown, extensions } = accepted;
@@ -307,7 +275,12 @@ export function SavedReport({
     <article className="saved-report" aria-label="Informe de ejecución">
       <header className="saved-report-header">
         <div>
-          <h2>{report?.title ?? "Resultado de ejecución"}</h2>
+          <h2>
+            {report?.title ??
+              (["completed", "partial"].includes(run.status)
+                ? "Resultado de ejecución"
+                : "Actividad de la tarea")}
+          </h2>
           <p>
             {formatTime(run.createdAt, timeZone)} · {runLabels[run.status]} ·
             Versión {run.taskVersion}
@@ -332,15 +305,8 @@ export function SavedReport({
           desconocido; no se reintentó automáticamente.
         </p>
       )}
-      {run.status === "interrupted" && run.recoverable && onRecover && (
-        <button
-          type="button"
-          className="report-action"
-          disabled={recovering}
-          onClick={onRecover}
-        >
-          {recovering ? "Recuperando…" : "Recuperar ejecución"}
-        </button>
+      {!["completed", "partial"].includes(run.status) && (
+        <TaskRunActivity activity={run.activity} />
       )}
       {reportIssue && (
         <p className="report-note" role="status">

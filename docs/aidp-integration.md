@@ -215,11 +215,30 @@ HTML, scripts, acciones ni catálogos remotos recibidos del productor. Markdown 
 los datos originales persisten para permitir abrir informes sin ese renderer.
 
 La recuperación manual conserva tarea, versión, sesión e IDs y empieza con replay.
-Un snapshot sin resultado no autoriza investigación. En TEST, únicamente pending
+Un snapshot se valida por identidad, cursor e inventarios antes de aceptar su
+respuesta final; un replay incremental desde cero requiere secuencias contiguas.
+El informe recuperado pasa la misma validación de informe, plantilla y evidencias
+que una entrega original. Un snapshot sin resultado no autoriza investigación
+por sí solo. La capacidad opcional `execution` sólo permite continuar si declara
+`schema_version:"1.0"`,
+estado `interrupted`/`waiting`, `owner_held:false` y `continuation_safe:true`, con
+booleanos estrictos y la identidad del replay validada. Un registro antiguo o
+`running`/`unknown` no aporta esa autorización. El productor es responsable del
+fence, conciliación de efectos y declaración; Desk nunca deduce elegibilidad.
+Tanto en PROD como en TEST, únicamente pending
 con `continuation_safe=true` e identidad pendiente ausente o igual a la propia
 permite repetir el mismo comando hasta dos veces. Se conserva incluso la ausencia
 de plantilla. Una identidad ajena, transporte fallido o estado incierto interrumpe
-la ejecución sin aceptar hechos ni fijar plantilla. El reinicio marca trabajos
+la ejecución sin aceptar hechos ni fijar plantilla. No existe un worker remoto
+implícito: `running` y `response:null` no demuestran que el grafo siga activo.
+La entrega de tareas admite hasta 30 minutos por transporte; el chat conserva
+su límite de 10 minutos. Una interrupción de transporte requiere recuperar la
+misma solicitud; no se crea otra investigación por recarga o selección de tarjeta.
+El progreso público se conserva como proyección acotada en el control JSON del
+run existente (hasta 200 actividades, texto de 2000 caracteres). Sólo el detalle
+autorizado lo expone; el listado omite el contenido. No cambia el esquema SQLite.
+Los fallos y paradas conservan actividad sin aceptar hechos de un informe inválido.
+El reinicio marca trabajos
 activos como interrumpidos; no los repite automáticamente.
 
 Verifica la entrada JSON, el texto simple si lo utilizas, Markdown, secuencias,

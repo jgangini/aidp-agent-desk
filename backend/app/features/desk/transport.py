@@ -256,6 +256,7 @@ class AgentTransport:
         self.stopped = Event()
         self.lock = Lock()
         self.response: Any = None
+        self.deadline_seconds = 600
 
     def close(self) -> None:
         self.stopped.set()
@@ -341,7 +342,7 @@ class AgentTransport:
         for chunk in iter(lambda: response.raw.read1(8192, decode_content=True), b""):
             if self.stopped.is_set():
                 return
-            if time.monotonic() - started > 600:
+            if time.monotonic() - started > self.deadline_seconds:
                 raise StreamFailure("deadline", "La respuesta superó el tiempo de entrega permitido.")
             for packet in decoder.feed(chunk):
                 yield self._line(packet)

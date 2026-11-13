@@ -104,6 +104,14 @@ class TemplateView(BaseModel):
     presentation: ReportPresentation | None = None
 
 
+class RunActivity(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    id: str = Field(min_length=1, max_length=128)
+    text: str = Field(min_length=1, max_length=2000)
+    state: Literal["running", "pending", "completed", "failed"]
+    source: str | None = Field(default=None, min_length=1, max_length=128)
+
+
 class ScheduledRun(BaseModel):
     id: str
     taskId: str
@@ -117,6 +125,7 @@ class ScheduledRun(BaseModel):
     response: dict[str, Any] | None = None
     recoverable: bool = False
     presentation: ReportPresentation | None = None
+    activity: list[RunActivity] = Field(default_factory=list, max_length=200)
 
 
 class ReportCapability(BaseModel):

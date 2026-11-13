@@ -111,12 +111,30 @@ class ScheduledStore:
 
     def interrupt(self, job: dict[str, Any], control: dict[str, Any], error: str) -> None:
         with self.connect() as db:
+            row = db.execute("SELECT response FROM runs WHERE owner=? AND task_id=? AND id=?",
+                             (job["owner"], job["task_id"], job["id"])).fetchone()
+            if row and row["response"] and (activity := json.loads(row["response"]).get("activity")):
+                control = {**control, "activity": activity}
             updated = db.execute("UPDATE runs SET status='interrupted',finished_at=?,error=?,response=? "
                        "WHERE owner=? AND task_id=? AND id=? AND status='running'",
                        (now_text(), error, json.dumps(control, ensure_ascii=False),
                         job["owner"], job["task_id"], job["id"]))
             if updated.rowcount:
                 self.pause_once(db, job)
+
+    def progress(self, job: dict[str, Any], activity: list[dict[str, Any]]) -> None:
+        control = {"status": "pending", "resumable": True, "activity": activity}
+        with self.connect() as db:
+            db.execute("UPDATE runs SET response=? WHERE owner=? AND task_id=? AND id=? AND status='running'",
+                       (json.dumps(control, ensure_ascii=False), job["owner"], job["task_id"], job["id"]))
+
+    @staticmethod
+    def retained_activity(db: sqlite3.Connection, job: dict[str, Any]) -> dict[str, Any] | None:
+        prior = db.execute("SELECT response FROM runs WHERE owner=? AND task_id=? AND id=?",
+                           (job["owner"], job["task_id"], job["id"])).fetchone()
+        if prior and prior["response"] and (activity := json.loads(prior["response"]).get("activity")):
+            return {"activity": activity}
+        return None
 
     @staticmethod
     def view(row: sqlite3.Row) -> ScheduledTaskView:
@@ -278,7 +296,7 @@ class ScheduledStore:
                              "ORDER BY r.created_at,r.id LIMIT 1").fetchone()
             if row is None:
                 return None
-            db.execute("UPDATE runs SET status='running',started_at=? WHERE owner=? AND task_id=? AND id=?",
+            db.execute("UPDATE runs SET status='running',started_at=COALESCE(started_at,?) WHERE owner=? AND task_id=? AND id=?",
                        (now_text(), row["owner"], row["task_id"], row["id"]))
             return dict(row)
 
@@ -304,6 +322,8 @@ class ScheduledStore:
                     if layout and self.compatible_presentation(layout[0], response["report"]["template"]) is None:
                         db.execute("DELETE FROM presentations WHERE owner=? AND task_id=? AND version=?",
                                    (job["owner"], job["task_id"], job["version"]))
+            if response is None:
+                response = self.retained_activity(db, job)
             updated = db.execute("UPDATE runs SET status=?,finished_at=?,error=?,response=? "
                        "WHERE owner=? AND task_id=? AND id=? AND status='running'",
                        (status, now_text(), error, json.dumps(response, ensure_ascii=False) if response else None,
@@ -329,10 +349,12 @@ class ScheduledStore:
 
     @staticmethod
     def run_view(row: sqlite3.Row, detail: bool) -> ScheduledRun:
+        response = json.loads(row["response"]) if detail and row["response"] else None
+        activity = (response or {}).get("activity", []) if row["status"] in ("queued", "running", "interrupted", "failed") else []
         return ScheduledRun(id=row["id"], taskId=row["task_id"], taskVersion=row["version"],
                             status=row["status"], trigger=row["trigger"], createdAt=row["created_at"],
                             startedAt=row["started_at"], finishedAt=row["finished_at"], error=row["error"],
-                            response=json.loads(row["response"]) if detail and row["response"] else None,
+                            response=response, activity=activity,
                             recoverable=row["status"] == "interrupted" and row["started_at"] is not None,
                             presentation=ScheduledStore.compatible_presentation(
                                 row["presentation"], json.loads(row["presentation_template"]))

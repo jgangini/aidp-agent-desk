@@ -995,6 +995,20 @@ export interface components {
              */
             test: boolean;
         };
+        /** RunActivity */
+        RunActivity: {
+            /** Id */
+            id: string;
+            /** Text */
+            text: string;
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "running" | "pending" | "completed" | "failed";
+            /** Source */
+            source?: string | null;
+        };
         /** RunRequest */
         RunRequest: {
             /** Idempotencykey */
@@ -1036,6 +1050,8 @@ export interface components {
              */
             recoverable: boolean;
             presentation?: components["schemas"]["ReportPresentation"] | null;
+            /** Activity */
+            activity?: components["schemas"]["RunActivity"][];
         };
         /** ScheduledRuns */
         ScheduledRuns: {

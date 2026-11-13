@@ -187,7 +187,11 @@ it("separates schedules from finished reports and hides manual execution while r
     );
   }
   render(<Panel />);
-  await screen.findByRole("button", { name: "Abrir ejecución running" });
+  await screen.findByRole("button", { name: /Activa con informe Diario/ });
+  expect(document.querySelector(".completed-task-reports")).toBeNull();
+  expect(
+    screen.queryByRole("button", { name: "Abrir ejecución running" }),
+  ).toBeNull();
   expect(
     screen
       .getByRole("button", { name: /Activa con informe Diario/ })

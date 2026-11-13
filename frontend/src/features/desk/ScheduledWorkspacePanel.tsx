@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Pencil, Pause, Play, Trash2, X } from "lucide-react";
+import { X } from "lucide-react";
 import { loadScheduledTasks, type ScheduledTask } from "./scheduledTasks";
 import { ScheduledTaskForm } from "./ScheduledTaskForm";
 import { CompletedTaskReports } from "./CompletedTaskReports";
+import { ScheduledTaskCard } from "./ScheduledTaskCard";
 import { ReportEnableAction } from "./ReportSettings";
-import { taskSchedule } from "./ScheduledPanel";
 import { readChatStorage, writeChatStorage } from "./chatStorage";
 import {
   taskRequest,
@@ -506,13 +506,13 @@ export function ScheduledWorkspacePanel({
                     refreshKey={reportRefresh}
                   />
                 ) : (
-                  <ScheduledTaskRow
+                  <ScheduledTaskCard
                     key={task.id}
                     task={task}
-                    reportsOnly={false}
                     selected={selectedTask?.id === task.id}
                     busy={busy}
                     onOpen={onSelectTask}
+                    onOpenRun={onSelectReport}
                     onEdit={(value) => {
                       setError("");
                       setFormError("");
@@ -520,16 +520,7 @@ export function ScheduledWorkspacePanel({
                     }}
                     onToggle={(value) => void change(value)}
                     onRemove={setRemove}
-                  >
-                    {selectedTask?.id === task.id && onSelectReport && (
-                      <CompletedTaskReports
-                        key={task.id}
-                        task={task}
-                        onOpen={onSelectReport}
-                        completedOnly={false}
-                      />
-                    )}
-                  </ScheduledTaskRow>
+                  />
                 ),
               )}
           </div>
@@ -721,106 +712,4 @@ function newServerTask(
     status: "active",
     createdAt: now.toISOString(),
   };
-}
-
-function ScheduledTaskRow({
-  task,
-  reportsOnly,
-  selected,
-  children,
-  busy,
-  onOpen,
-  onEdit,
-  onToggle,
-  onRemove,
-}: {
-  task: ServerTask;
-  reportsOnly: boolean;
-  selected: boolean;
-  children: React.ReactNode;
-  busy: boolean;
-  onOpen: (task: ServerTask) => void;
-  onEdit: (task: ServerTask) => void;
-  onToggle: (task: ServerTask) => void;
-  onRemove: (task: ServerTask) => void;
-}) {
-  return (
-    <article
-      className={`scheduled-server-card${selected ? " is-selected" : ""}`}
-    >
-      <button
-        type="button"
-        className="scheduled-task-open"
-        data-tooltip-disabled="true"
-        aria-expanded={selected}
-        onClick={() => onOpen(task)}
-      >
-        <strong>{task.name}</strong>
-        {!reportsOnly && (
-          <span>
-            {taskSchedule(task).split(" · ").slice(0, -2).join(" · ")} ·{" "}
-            {task.nextRunAt
-              ? `Próxima: ${new Date(task.nextRunAt).toLocaleString("es", {
-                  timeZone: task.timeZone,
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: false,
-                })}`
-              : task.time}
-            <span className="sr-only"> · Zona horaria: {task.timeZone}</span>
-          </span>
-        )}
-      </button>
-      {!reportsOnly && (
-        <div className="scheduled-server-actions">
-          {task.status !== "paused" && (
-            <button
-              type="button"
-              className="icon-button"
-              aria-label={`Editar ${task.name}`}
-              data-tooltip="Editar"
-              disabled={busy}
-              onClick={() => {
-                onEdit(task);
-              }}
-            >
-              <Pencil size={15} />
-            </button>
-          )}
-          {task.status !== "completed" && (
-            <button
-              type="button"
-              className="icon-button"
-              aria-label={`${task.status === "paused" ? "Reanudar" : "Pausar"} ${task.name}`}
-              data-tooltip={task.status === "paused" ? "Reanudar" : "Pausar"}
-              disabled={busy}
-              onClick={() => onToggle(task)}
-            >
-              {task.status === "paused" ? (
-                <Play size={15} />
-              ) : (
-                <Pause size={15} />
-              )}
-            </button>
-          )}
-          {task.status !== "paused" && (
-            <button
-              type="button"
-              className="icon-button scheduled-delete"
-              aria-label={`Eliminar ${task.name}`}
-              data-tooltip="Eliminar"
-              disabled={busy}
-              onClick={() => onRemove(task)}
-            >
-              <Trash2 size={15} />
-            </button>
-          )}
-        </div>
-      )}
-      {children}
-    </article>
-  );
 }

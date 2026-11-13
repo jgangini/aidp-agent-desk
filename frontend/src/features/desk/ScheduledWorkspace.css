@@ -84,6 +84,43 @@
 .scheduled-server-actions .scheduled-delete {
   color: var(--danger, #f2a79e);
 }
+.scheduled-task-error {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--danger, #f2a79e);
+  font-size: 12px;
+}
+.task-run-activity {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0;
+  display: grid;
+  gap: 18px;
+}
+.task-run-activity > li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.task-run-activity > li > svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--text-muted, #a4a4aa);
+}
+.task-run-activity > li[data-activity-state="failed"] > svg {
+  color: var(--danger, #f2a79e);
+}
+.task-run-activity > li > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.task-run-activity strong {
+  display: block;
+  margin-bottom: 4px;
+}
+.task-run-activity .markdown-text p {
+  margin: 0;
+}
 .scheduled-server-panel .config-step-tabs {
   --config-tab-count: 3;
   flex-shrink: 0;
