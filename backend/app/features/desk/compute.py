@@ -8,11 +8,12 @@ from typing import Any, Literal
 
 from oci._vendor import requests  # type: ignore[import-untyped]
 
-from .aidp_control import AidpControl, ControlError, safe_header
+from .aidp_control import AidpControl, ControlError, collection_page, safe_header
 from .compute_journal import ComputeConflict, ComputeJournal
 from .compute_schemas import ComputeInventory, ComputeSelection, ComputeStart, ComputeStatus, ComputeTarget
 from .credentials import ProfileStore, segment
 from .discovery import Discovery
+from .schemas import AgentProfile
 
 
 def catalog_name(value: Any) -> str:
@@ -25,6 +26,39 @@ def catalog_key(value: Any) -> str:
     if not isinstance(value, str):
         raise ControlError('comprobar la identidad del compute')
     return segment(value)
+
+
+def stopped_chat_compute(metadata: AgentProfile, endpoint: str, session: Any, signer: Any,
+                         test_compute: str | None) -> bool:
+    """Corroborate a gateway rejection using the saved invocation's live binding."""
+    if not metadata.instance_id or not metadata.workspace_id:
+        return False
+    control = AidpControl(metadata.region, metadata.instance_id, metadata.workspace_id, session, signer)
+    compute = test_compute if test_compute else published_chat_compute(control, metadata.flow_id, endpoint)
+    if not compute:
+        return False
+    value = control.request('GET', f'/clusters/{catalog_key(compute)}',
+                            operation='confirmar el estado del compute', timeout=(2, 3))
+    return value.get('key') == compute and value.get('state') == 'STOPPED'
+
+
+def published_chat_compute(control: AidpControl, agent: str, endpoint: str) -> str | None:
+    path = f'/agents/{catalog_key(agent)}/deployments'
+    operation = 'comprobar el destino publicado del chat'
+    data = control.request('GET', path, operation=operation, params={'limit': 100}, timeout=(2, 3))
+    rows, next_page = collection_page(data, control.headers)
+    if next_page:
+        return None
+    active = [row for row in rows if row.get('deploymentType') == 'PROD' and row.get('lifecycleState') == 'ACTIVE']
+    candidates = [row for row in active if row.get('endpointUrl') in (None, '', endpoint)]
+    if len(candidates) != 1:
+        return None
+    row = candidates[0]
+    if not all(row.get(field) for field in ('endpointUrl', 'agentKey', 'agentComputeKey')):
+        row = control.request('GET', f"{path}/{catalog_key(row.get('key'))}", operation=operation, timeout=(2, 3))
+    if Discovery.production_deployment(row, agent) and row.get('endpointUrl') == endpoint:
+        return catalog_key(row.get('agentComputeKey'))
+    return None
 
 
 class ComputeService(AbstractContextManager["ComputeService"]):

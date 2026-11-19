@@ -1,5 +1,13 @@
 import { useEffect, useId, useRef, useState } from "react";
-import { Power, RefreshCw, TriangleAlert, X } from "lucide-react";
+import {
+  CircleCheck,
+  CircleHelp,
+  LoaderCircle,
+  Power,
+  RefreshCw,
+  TriangleAlert,
+  X,
+} from "lucide-react";
 import {
   useComputeControl,
   type AgentCompute,
@@ -23,7 +31,16 @@ const stateLabels: Record<string, string> = {
   FAILED: "Error",
   DELETED: "Eliminado",
   DELETING: "Eliminando",
+  UNKNOWN: "Estado no disponible",
 };
+const stateIcons = new Map([
+  ["active", CircleCheck],
+  ["stopped", Power],
+  ["starting", LoaderCircle],
+  ["creating", LoaderCircle],
+  ["stopping", LoaderCircle],
+  ["failed", TriangleAlert],
+]);
 function controlsBlocked(compute: ComputeController, disabled: boolean) {
   return (
     disabled ||
@@ -98,13 +115,18 @@ export function ComputeControl({
       aria-label={`Compute de ${agentName}`}
     >
       {!compute.status && !compute.error && (
-        <small role="status">Consultando compute…</small>
+        <span
+          className="compute-icon"
+          role="status"
+          aria-label="Consultando compute…"
+        >
+          <LoaderCircle size={16} aria-hidden="true" />
+        </span>
       )}
       {compute.status?.computes.map((item) => (
         <ComputeItem
           key={item.id}
           item={item}
-          multiple={compute.status!.computes.length > 1}
           error={!!compute.error}
           submitted={compute.submitted}
           canStart={canConfirm(item, compute, disabled)}
@@ -132,14 +154,12 @@ export function ComputeControl({
 }
 function ComputeItem({
   item,
-  multiple,
   error,
   submitted,
   canStart,
   onChoose,
 }: {
   item: AgentCompute;
-  multiple: boolean;
   error: boolean;
   submitted: boolean;
   canStart: boolean;
@@ -147,23 +167,33 @@ function ComputeItem({
 }) {
   const label = error
     ? "Estado no disponible"
-    : (stateLabels[item.state] ?? item.state);
+    : `${stateLabels[item.state] ?? item.state}${qualifier(item, submitted)}`;
+  const state = error ? "unknown" : item.state.toLowerCase();
+  const Icon = stateIcons.get(state) ?? CircleHelp;
   return (
     <div className="compute-control-state">
-      <small aria-label={`Compute ${item.name}: ${label}`}>
-        {multiple && `${item.name}: `}
-        {label}
-        {!error && qualifier(item, submitted)}
-      </small>
-      {canStart && (
+      {canStart ? (
         <button
           type="button"
-          className="compute-start-button"
+          className="icon-button compute-icon"
+          data-state={state}
+          data-tooltip={`${item.name} · ${label} · Iniciar`}
           aria-label={`Iniciar compute ${item.name}`}
           onClick={(event) => onChoose(item, event.currentTarget)}
         >
-          <Power size={14} aria-hidden="true" /> Iniciar
+          <Power size={16} aria-hidden="true" />
         </button>
+      ) : (
+        <span
+          className="compute-icon"
+          data-state={state}
+          data-tooltip={`${item.name} · ${label}`}
+          role="img"
+          aria-label={`Compute ${item.name}: ${label}`}
+          tabIndex={0}
+        >
+          <Icon size={16} aria-hidden="true" />
+        </span>
       )}
       {item.message && (
         <small className="compute-message">{item.message}</small>

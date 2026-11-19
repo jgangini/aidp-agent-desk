@@ -2,6 +2,7 @@ import json
 from typing import Any, cast
 
 import pytest
+from oci._vendor import requests
 
 from app.features.desk.credentials import ProfileStore
 from app.features.desk.schemas import AgentProfile, InvokeRequest
@@ -160,6 +161,71 @@ class SavedConnection:
 def request(**values: Any) -> InvokeRequest:
     return InvokeRequest(request_id="turn-1", question="Pregunta", profile_id="a" * 32,
                          session_id="conversation-1", **values)
+
+
+@pytest.mark.parametrize("scenario,expected", [
+    ("stopped", "compute_stopped"),
+    ("detail", "compute_stopped"),
+    ("active", "gateway_rejected"),
+    ("wrong_endpoint", "gateway_rejected"),
+    ("wrong_agent", "gateway_rejected"),
+    ("wrong_compute", "gateway_rejected"),
+    ("incomplete_catalog", "gateway_rejected"),
+    ("timeout", "gateway_rejected"),
+    ("test_stopped", "compute_stopped"),
+])
+def test_gateway_rejection_reports_stopped_only_for_verified_compute(monkeypatch, scenario, expected) -> None:
+    from app.features.desk import transport as module
+
+    transport = AgentTransport(cast(ProfileStore, SavedConnection()), request())
+    transport.metadata.instance_id, transport.metadata.workspace_id = "platform", "workspace"
+    response = requests.Response()
+    response.status_code = 404
+    response._content = b'{"code":"NotAuthorizedOrNotFound","message":"private"}'
+    response._content_consumed = True
+    row = {"key": "deployment", "agentKey": "flow", "agentComputeKey": "compute",
+           "deploymentType": "PROD", "lifecycleState": "ACTIVE", "endpointUrl": transport.endpoint}
+    if scenario == "wrong_endpoint":
+        row["endpointUrl"] = transport.endpoint.replace("/flow/", "/other/")
+    if scenario == "wrong_agent":
+        row["agentKey"] = "other"
+    calls = []
+
+    class Session:
+        def request(self, method, url, **kwargs):
+            calls.append(url)
+            assert method == "GET" and kwargs["timeout"] == (2, 3)
+            assert kwargs["allow_redirects"] is False
+            reply = requests.Response()
+            reply.status_code = 200
+            if url.endswith("/deployments"):
+                body = {"items": [{**row, "endpointUrl": ""} if scenario == "detail" else row]}
+                if scenario == "incomplete_catalog":
+                    reply.headers["opc-next-page"] = "next"
+            elif url.endswith("/deployments/deployment"):
+                body = row
+            else:
+                assert url.endswith("/clusters/compute")
+                if scenario == "timeout":
+                    raise requests.Timeout()
+                body = {"key": "other" if scenario == "wrong_compute" else "compute",
+                        "state": "ACTIVE" if scenario == "active" else "STOPPED"}
+            reply._content = json.dumps(body).encode()
+            reply._content_consumed = True
+            reply.close = lambda: None
+            return reply
+
+    target = {"compute": "compute"} if scenario == "test_stopped" else None
+    with pytest.raises(module.StreamFailure) as error:
+        transport.verify_response(response, Session(), object(), target)
+    assert error.value.code == expected
+    if expected == "compute_stopped":
+        assert "está detenido en AIDP" in str(error.value)
+    else:
+        assert "HTTP 404 · NotAuthorizedOrNotFound" in str(error.value)
+    assert "private" not in str(error.value)
+    if target:
+        assert len(calls) == 1 and calls[0].endswith("/clusters/compute")
 
 
 @pytest.mark.parametrize("endpoint", ["https://evil.example/agentendpoint/flow/chat",

@@ -26,23 +26,31 @@
   flex-wrap: wrap;
   gap: 6px;
 }
-.compute-control-state small {
-  font-size: inherit;
+.compute-control .compute-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 7px;
+  color: var(--chat-muted, #a4a4aa);
 }
-.compute-start-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  min-height: 32px;
-  padding: 5px 8px;
-  border: 1px solid var(--chat-line, #404044);
-  border-radius: 6px;
-  color: var(--ink, #eeeeef);
-  background: transparent;
-  font: inherit;
+.compute-control .compute-icon[data-state="active"] {
+  color: #8ad5af;
 }
-.compute-start-button:hover:not(:disabled) {
-  background: var(--chat-hover, #303236);
+.compute-control .compute-icon[data-state="stopped"],
+.compute-control .compute-icon[data-state="failed"] {
+  color: var(--danger, #f2a79e);
+}
+button.compute-icon[data-state="stopped"] {
+  background: color-mix(in srgb, currentColor 9%, transparent);
+}
+button.compute-icon[data-state="stopped"]:hover {
+  background: color-mix(in srgb, currentColor 17%, transparent);
+}
+.compute-icon:focus-visible {
+  outline: 2px solid var(--focus, #89919d);
+  outline-offset: 2px;
 }
 .compute-message,
 .compute-error {
@@ -111,16 +119,4 @@
 }
 .compute-start-dialog .compute-cost-warning p {
   color: inherit;
-}
-@container (max-width: 380px) {
-  .config-agent-row {
-    flex-wrap: wrap;
-    gap: 0;
-  }
-  .compute-control {
-    flex-basis: 100%;
-    max-width: none;
-    padding: 0 0 8px 38px;
-    justify-content: flex-start;
-  }
 }

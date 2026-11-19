@@ -57,11 +57,12 @@ class AidpControl:
         self.status = 0
 
     def request(self, method: str, path: str, *, legacy: bool = False,
-                operation: str = "consultar TEST en AIDP", empty: bool = False, **kwargs: Any) -> dict[str, Any]:
+                operation: str = "consultar TEST en AIDP", empty: bool = False,
+                timeout: tuple[int, int] = (5, 20), **kwargs: Any) -> dict[str, Any]:
         version = "20240831" if legacy else "20260430"
         workspace = self.ws.replace("/aiDataPlatforms/", "/dataLakes/", 1) if legacy else self.ws
         with self.session.request(method, f"{self.base}/{version}{workspace}{path}", auth=self.signer,
-                                  timeout=(5, 20), allow_redirects=False, stream=True, **kwargs) as response:
+                                  timeout=timeout, allow_redirects=False, stream=True, **kwargs) as response:
             self.status, self.headers = response.status_code, response.headers
             content = bounded_content(response, 2 * 1024 * 1024 if 200 <= response.status_code < 300 else 65536)
             if not 200 <= response.status_code < 300:

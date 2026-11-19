@@ -39,6 +39,13 @@ TEST está disponible en modo local y para administradores autenticados con Orac
 
 ## Estado e inicio del compute
 
+Ante un 404 o 503 del gateway de chat, Desk intenta una consulta breve de sólo
+lectura con la conexión guardada de la invocación. En PROD requiere un despliegue
+activo del Agent Flow con el mismo endpoint. En TEST usa el compute del destino
+ya verificado. Sólo muestra `compute_stopped` si el cluster identificado devuelve
+`STOPPED`. Catálogos incompletos, vínculos ambiguos, errores de lectura y otros
+estados conservan el diagnóstico original. La comprobación no inicia recursos.
+
 Configuración → Agent Flow consulta los vínculos activos de los agentes CODE en
 el workspace seleccionado. PROD utiliza `agentComputeKey` de sus publicaciones
 GA; TEST utiliza `agentFlowComputeKey` del catálogo legado y exige que coincida

@@ -84,11 +84,12 @@ it.each(["Cancelar", "Cerrar confirmación de inicio"])(
     const request = vi.fn(async () => response(result()));
     vi.stubGlobal("fetch", request);
     render(<ComputeControl context={context} agentName="Mercado" />);
-    fireEvent.click(
-      await screen.findByRole("button", {
-        name: "Iniciar compute Mercado compartido",
-      }),
-    );
+    const start = await screen.findByRole("button", {
+      name: "Iniciar compute Mercado compartido",
+    });
+    expect(start.textContent).toBe("");
+    expect(start.getAttribute("data-state")).toBe("stopped");
+    fireEvent.click(start);
     const dialog = screen.getByRole("dialog", { name: "Iniciar compute" });
     expect(within(dialog).getByText("Mercado compartido")).toBeTruthy();
     expect(within(dialog).getByText("Mercado")).toBeTruthy();
@@ -118,7 +119,7 @@ it.each([
   );
   render(<ComputeControl context={context} agentName="Mercado" />);
   await waitFor(() =>
-    expect(screen.queryByText("Consultando compute…")).toBeNull(),
+    expect(screen.queryByLabelText("Consultando compute…")).toBeNull(),
   );
   expect(screen.queryByRole("button", { name: /Iniciar/ })).toBeNull();
 });
@@ -194,7 +195,7 @@ it("sends one confirmed start with its original snapshot revision and polls unti
   );
   expect(screen.queryByRole("dialog")).toBeNull();
   await nextPoll();
-  await screen.findByText("Activo");
+  await screen.findByRole("img", { name: "Compute Mercado compartido: Activo" });
   expect(startCalls(request)).toHaveLength(1);
   expect(screen.queryByRole("button", { name: /Iniciar/ })).toBeNull();
 });
@@ -453,7 +454,7 @@ it.each([409, 422])(
     expect(within(dialog).getByText("Nuevo destino")).toBeTruthy();
     expect(starts).toBe(1);
     fireEvent.click(within(dialog).getByRole("button", { name: "Iniciar" }));
-    await screen.findByText("Activo");
+    await screen.findByRole("img", { name: "Compute Mercado compartido: Activo" });
     const bodies = startCalls(request).map(([, init]) =>
       JSON.parse(String(init.body)),
     );
@@ -549,7 +550,7 @@ it("bounds automatic waiting to 15 minutes without sending another start", async
       name: "Iniciar",
     }),
   );
-  await screen.findByText("Iniciando");
+  await screen.findByRole("img", { name: "Compute Mercado compartido: Iniciando" });
   clock.mockReturnValue(1000 + 15 * 60_000);
   await nextPoll();
   await screen.findByText(/agotó los 15 minutos/);
@@ -575,7 +576,7 @@ it("aborts target reads and ignores delayed results after a workspace change", a
       agentName="Mercado"
     />,
   );
-  await screen.findByText("Activo");
+  await screen.findByRole("img", { name: "Compute Otro compute: Activo" });
   expect(request.mock.calls[0][1]?.signal?.aborted).toBe(true);
   await act(async () => complete(response(result())));
   expect(screen.queryByText("Detenido")).toBeNull();
@@ -649,7 +650,8 @@ it("mounts compute status only for the active, complete and loaded Agent Flow se
   );
   expect(request).not.toHaveBeenCalled();
   view.rerender(<AgentFlowPanel {...props} active={true} />);
-  await screen.findByText("Activo");
-  expect(screen.getByText("Publicado")).toBeTruthy();
+  const status = await screen.findByRole("img", { name: "Compute Mercado compartido: Activo" });
+  expect(status.getAttribute("data-state")).toBe("active");
+  expect(screen.queryByText("Publicado")).toBeNull();
   expect(request).toHaveBeenCalledOnce();
 });

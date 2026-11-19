@@ -71,6 +71,7 @@ function failureIssue(
     !(error instanceof RemoteTurnFailure) ||
     ![
       "gateway_rejected",
+      "compute_stopped",
       "unsupported_transport",
       "unsupported_output",
       "native_execution_error",

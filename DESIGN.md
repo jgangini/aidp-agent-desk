@@ -2,8 +2,10 @@
 
 Interfaz oscura y compacta: base #090a0c, chat #0d0e10, composer #17181b, texto #eeeeef, texto secundario #a4a4aa y bordes #303236. Manrope variable se aloja localmente. Usar los tokens existentes de foco, espaciado y movimiento; no añadir estilos de control independientes.
 
-Agent Flow conserva filas compactas con estado del compute junto a Publicado.
-Iniciar utiliza SVG Lucide y el diálogo nativo de confirmación existente; muestra
+Agent Flow muestra el estado del compute con un icono Lucide al final de la fila.
+El verde indica activo y el rojo detenido. El icono rojo abre la confirmación de
+inicio cuando está disponible. El nombre accesible y el tooltip describen el
+estado y la acción. Se conserva la etiqueta TEST cuando aplica. El diálogo muestra
 nombre, destinos compartidos y coste posible antes de la acción. Consultando,
 estado desconocido, inicio pendiente e inicio incierto tienen mensajes distintos.
 Actualizar sólo relee; cerrar o cancelar el diálogo no inicia recursos.

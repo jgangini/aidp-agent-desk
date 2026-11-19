@@ -171,7 +171,6 @@ export function AgentFlowPanel({
             role="group"
             aria-label="Agentes disponibles"
             className="config-agent-options"
-            data-tooltip-disabled="true"
           >
             {discovery.loading && discovery.stage === "agents" ? (
               <div className="config-agent-loading" role="status">
@@ -252,7 +251,9 @@ function AgentFlowChoice({
         <Check className="config-agent-check" size={12} aria-hidden="true" />
         <span className="config-agent-copy">
           <strong>{agent.name}</strong>
-          {agent.description && <small>{agent.description}</small>}
+          {agent.description && agent.description !== "Publicado" && (
+            <small>{agent.description}</small>
+          )}
           {!agent.available && <small>Publicación requerida</small>}
         </span>
       </label>

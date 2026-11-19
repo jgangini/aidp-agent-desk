@@ -12,7 +12,8 @@ from urllib.parse import urlsplit
 import oci  # type: ignore[import-untyped]
 from oci._vendor import requests  # type: ignore[import-untyped]
 
-from .aidp_control import AidpControl, bounded_content
+from .aidp_control import AidpControl, ControlError, bounded_content
+from .compute import stopped_chat_compute
 from .credentials import ProfileStore
 from .development import Development, DevelopmentError
 from .schemas import InvokeRequest
@@ -22,6 +23,13 @@ class StreamFailure(Exception):
     def __init__(self, code: str, message: str) -> None:
         super().__init__(message)
         self.code = code
+
+
+class GatewayRejection(StreamFailure):
+    def __init__(self, error: ControlError) -> None:
+        detail = f"HTTP {error.status}" + (f" · {error.code}" if error.code else '')
+        super().__init__("gateway_rejected", f"AIDP rechazó la solicitud ({detail}).")
+        self.status = error.status
 
 
 class NativeDecoder:
@@ -219,8 +227,7 @@ def verify_stream_response(response: Any) -> None:
     if response.status_code != 200:
         error = AidpControl.failure('invocar el agente en AIDP', 'POST', '/agentendpoint', response,
                                     bounded_content(response, 65536))
-        detail = f"HTTP {response.status_code}" + (f" · {error.code}" if error.code else '')
-        raise StreamFailure("gateway_rejected", f"AIDP rechazó la solicitud ({detail}).")
+        raise GatewayRejection(error)
     if "text/event-stream" not in response.headers.get("Content-Type", "").lower():
         raise StreamFailure("unsupported_transport", "El gateway AIDP no devolvió streaming SSE.")
 
@@ -303,7 +310,7 @@ class AgentTransport:
                     self.response = response
                 if self.stopped.is_set():
                     return
-                verify_stream_response(response)
+                self.verify_response(response, session, signer, target)
                 stage = "stream"
                 logging.getLogger("uvicorn.error").info("AIDP stream start %s", json.dumps({
                     "request_id": value.request_id,
@@ -350,6 +357,25 @@ class AgentTransport:
                 raise StreamFailure("deadline", "La respuesta superó el tiempo de entrega permitido.")
             for packet in decoder.feed(chunk):
                 yield self._line(packet)
+
+    def verify_response(self, response: Any, session: Any, signer: Any, target: dict[str, Any] | None) -> None:
+        try:
+            verify_stream_response(response)
+        except GatewayRejection as error:
+            if error.status in (404, 503):
+                test_compute = target.get('compute') if target else None
+                if (target is None or test_compute) and self.compute_stopped(session, signer, test_compute):
+                    raise StreamFailure("compute_stopped",
+                                        "El cómputo de este agente está detenido en AIDP. "
+                                        "Un administrador puede iniciarlo en Configuración → Agent Flow.") from error
+            raise
+
+    def compute_stopped(self, session: Any, signer: Any, test_compute: str | None) -> bool:
+        try:
+            return stopped_chat_compute(self.metadata, self.endpoint, session, signer, test_compute)
+        except (ValueError, requests.RequestException):
+            # This optional read must preserve the original gateway diagnostic when inconclusive.
+            return False
 
     def _line(self, packet: dict[str, Any]) -> bytes:
         return (json.dumps({**packet, "session_id": self.value.session_id}, ensure_ascii=False,

@@ -45,6 +45,22 @@ it.each([403, 404, 422, 429])(
   },
 );
 
+it("explains a verified stopped compute in the chat without offering replay", async () => {
+  const message = "El cómputo de este agente está detenido en AIDP. Un administrador puede iniciarlo en Configuración → Agent Flow.";
+  const fetcher = vi.fn(async () => new Response(
+    JSON.stringify({ kind: "transport_error", code: "compute_stopped", message }) + "\n",
+  ));
+  vi.stubGlobal("fetch", fetcher);
+  const hook = renderHook(() => useRemoteAgent("a".repeat(32), "stopped", () => {}));
+  await act(async () => {
+    await expect(hook.result.current.send("Hola")).rejects.toThrow(message);
+  });
+  expect(hook.result.current.snapshot.conversations[0].issue).toMatchObject({
+    kind: "error", recoverable: false, message,
+  });
+  expect(fetcher).toHaveBeenCalledTimes(1);
+});
+
 it("explains a structured validation rejection without echoing its request input", async () => {
   vi.stubGlobal(
     "fetch",
