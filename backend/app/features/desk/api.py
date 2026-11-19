@@ -9,6 +9,7 @@ from app.core.access import require_profile, visible_profiles
 from app.core.local_config import local_configuration
 
 from .audio import audio_router
+from .compute_api import compute_router
 from .credentials import ProfileStore
 from .discovery_api import discovery_router
 from .invocation_scope import invocation_scope
@@ -24,6 +25,7 @@ from .transport import AgentTransport
 def create_router(store: ProfileStore, scheduled: ScheduledRuntime | None = None) -> APIRouter:
     router = APIRouter(prefix="/api/desk", tags=["desk"])
     router.include_router(discovery_router(store))
+    router.include_router(compute_router(store))
     router.include_router(audio_router(store))
     router.include_router(suggestions_router(store))
     router.include_router(report_settings_router(store))

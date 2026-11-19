@@ -91,6 +91,12 @@ if [[ "$1" == exec && "$4" == reload && "$TLS_FAIL" == reload && ! -f "$FAIL_MAR
   touch "$FAIL_MARKER"
   fail
 fi
+if [[ "$1" == exec && "$4" == reload ]]; then
+  if [[ "$*" == *--force* ]] || ! cmp -s "$FAKE_RUNTIME/caddy/Caddyfile" "$FAKE_LOG.proxy-config"; then
+    cp "$FAKE_RUNTIME/tls/tls.crt" "$FAKE_LOG.proxy-cert"
+    cp "$FAKE_RUNTIME/caddy/Caddyfile" "$FAKE_LOG.proxy-config"
+  fi
+fi
 exit 0
 ''',
         "openssl": r'''#!/bin/bash
@@ -120,10 +126,11 @@ esac
         file.write_text(content)
         file.chmod(0o755)
 
-    def run(failure="", action="issue", *, short_name=False):
-        script.write_text(source.replace("IMAGE=docker.io/certbot/", "IMAGE=certbot/") if short_name else source)
+    def run(failure="", action="issue", *, short_name=False, force_reload=True):
+        candidate = source.replace("IMAGE=docker.io/certbot/", "IMAGE=certbot/") if short_name else source
+        script.write_text(candidate if force_reload else candidate.replace(' --force', ''))
         environment = {**os.environ, "TLS_FAIL": failure, "FAKE_LOG": bash_path(tmp_path / "commands.log"),
-                       "FAIL_MARKER": bash_path(tmp_path / "reload-failed")}
+                       "FAIL_MARKER": bash_path(tmp_path / "reload-failed"), "FAKE_RUNTIME": bash_path(runtime)}
         command = 'export PATH="$1:$PATH"; exec bash "$2" "$3"'
         return subprocess.run([bash, "--noprofile", "--norc", "-c", command, "tls-test", bash_path(bin_dir),
                                bash_path(script), action], env=environment, capture_output=True, timeout=30)
@@ -153,6 +160,20 @@ def test_public_ip_tls_installs_validated_pair_and_reloads_proxy(shell_case, act
     calls = log.read_text()
     assert "caddy validate --config /etc/caddy/Caddyfile" in calls
     assert calls.index("openssl verify") < calls.index("caddy validate") < calls.index("caddy reload")
+
+
+def test_renewal_reloads_manual_certificate_when_caddy_config_does_not_change(shell_case):
+    runtime, run, log = shell_case
+    assert run().returncode == 0
+    served = log.with_name(log.name + '.proxy-cert')
+    assert served.read_text() == 'new certificate'
+    (runtime / 'letsencrypt/live/agent-desk-ip/fullchain.pem').write_text('renewed certificate')
+    # Caddy accepts an identical config without reprovisioning certificate files.
+    assert run(action='renew', force_reload=False).returncode == 0
+    assert (runtime / 'tls/tls.crt').read_text() == 'renewed certificate'
+    assert served.read_text() == 'new certificate'
+    assert run(action='renew').returncode == 0
+    assert served.read_text() == 'renewed certificate'
 
 
 @pytest.mark.parametrize("address", ["127.0.0.1", "10.1.2.3", "224.0.0.1", "192.0.2.1", "example.com"])

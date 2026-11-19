@@ -35,3 +35,6 @@ Thumbs.db
 *.tfvars.json
 docs/tasks/agent-content-boundary.md
 graphify-out/
+
+# Locally generated report and narration deliverables are not source releases.
+artifacts/demo-informe-d1/

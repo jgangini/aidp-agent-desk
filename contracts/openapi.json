@@ -529,6 +529,88 @@
         }
       }
     },
+    "/api/desk/discovery/compute/status": {
+      "post": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Status",
+        "operationId": "desk_compute_status",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComputeSelection"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComputeInventory"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/desk/discovery/compute/start": {
+      "post": {
+        "tags": [
+          "desk"
+        ],
+        "summary": "Start",
+        "operationId": "desk_compute_start",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComputeStart"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComputeInventory"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/desk/audio/realtime-session": {
       "post": {
         "tags": [
@@ -1962,6 +2044,224 @@
           "step"
         ],
         "title": "ClearDraftRequest"
+      },
+      "ComputeInventory": {
+        "properties": {
+          "computes": {
+            "items": {
+              "$ref": "#/components/schemas/ComputeStatus"
+            },
+            "type": "array",
+            "title": "Computes"
+          },
+          "warning": {
+            "type": "string",
+            "title": "Warning",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "computes"
+        ],
+        "title": "ComputeInventory"
+      },
+      "ComputeSelection": {
+        "properties": {
+          "compartment_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9_.-]+$",
+            "title": "Compartment Id"
+          },
+          "instance_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9_.-]+$",
+            "title": "Instance Id"
+          },
+          "workspace_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9_.-]+$",
+            "title": "Workspace Id"
+          },
+          "agent_id": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9_.-]+$",
+            "title": "Agent Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "compartment_id",
+          "instance_id",
+          "workspace_id",
+          "agent_id"
+        ],
+        "title": "ComputeSelection"
+      },
+      "ComputeStart": {
+        "properties": {
+          "compartment_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9_.-]+$",
+            "title": "Compartment Id"
+          },
+          "instance_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9_.-]+$",
+            "title": "Instance Id"
+          },
+          "workspace_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9_.-]+$",
+            "title": "Workspace Id"
+          },
+          "agent_id": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9_.-]+$",
+            "title": "Agent Id"
+          },
+          "compute_id": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9_.-]+$",
+            "title": "Compute Id"
+          },
+          "compute_name": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Compute Name"
+          },
+          "request_id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{32}$",
+            "title": "Request Id"
+          },
+          "confirmation": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Confirmation"
+          },
+          "confirmed": {
+            "type": "boolean",
+            "title": "Confirmed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "compartment_id",
+          "instance_id",
+          "workspace_id",
+          "agent_id",
+          "compute_id",
+          "compute_name",
+          "request_id",
+          "confirmation",
+          "confirmed"
+        ],
+        "title": "ComputeStart"
+      },
+      "ComputeStatus": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "state": {
+            "type": "string",
+            "title": "State"
+          },
+          "targets": {
+            "items": {
+              "$ref": "#/components/schemas/ComputeTarget"
+            },
+            "type": "array",
+            "title": "Targets"
+          },
+          "can_start": {
+            "type": "boolean",
+            "title": "Can Start",
+            "default": false
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "idle",
+              "starting",
+              "uncertain"
+            ],
+            "title": "Operation",
+            "default": "idle"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "default": ""
+          },
+          "confirmation": {
+            "type": "string",
+            "title": "Confirmation",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "state",
+          "targets"
+        ],
+        "title": "ComputeStatus"
+      },
+      "ComputeTarget": {
+        "properties": {
+          "agent_id": {
+            "type": "string",
+            "title": "Agent Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "surface": {
+            "type": "string",
+            "enum": [
+              "PROD",
+              "TEST"
+            ],
+            "title": "Surface"
+          }
+        },
+        "type": "object",
+        "required": [
+          "agent_id",
+          "name",
+          "surface"
+        ],
+        "title": "ComputeTarget"
       },
       "ConnectionStatus": {
         "properties": {

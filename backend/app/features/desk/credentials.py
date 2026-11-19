@@ -21,7 +21,7 @@ from .schemas import AgentProfile, DiscoveryDraft
 
 
 def segment(value: str) -> str:
-    if not value or len(value) > 256 or not re.fullmatch(r"[a-zA-Z0-9_.-]+", value):
+    if not isinstance(value, str) or not value or len(value) > 256 or not re.fullmatch(r"[a-zA-Z0-9_.-]+", value):
         raise ValueError("Selecciona un identificador válido del catálogo.")
     return quote(value, safe="")
 

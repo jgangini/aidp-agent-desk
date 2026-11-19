@@ -101,3 +101,24 @@ clave antes de recargar Caddy y restaura la configuración anterior si falla.
 El callback Oracle debe coincidir exactamente con el output de la VM; no se
 relaja MFA, validación TLS ni el control de sesiones. Las credenciales del operador
 siguen fuera del ZIP Terraform, user-data y state; se entregan cifradas una vez.
+## Compute administrativo
+
+El inicio de compute añade una acción con posible coste al límite administrativo
+existente. Sólo un administrador autenticado (o el operador local desde el origen
+permitido) puede leer o iniciar; miembros y orígenes ajenos se rechazan antes de
+consultar OCI. La selección del cliente no es autoridad: se verifican conexión
+guardada, compartimento, plataforma, workspace, agente CODE y publicaciones vivas.
+El ID del cluster se deriva de esos vínculos; no se aceptan URLs ni credenciales
+del navegador. Nombre y revisión de destinos protegen la confirmación de cambios
+entre lectura y envío. Manipular el DOM no concede acceso a otros recursos.
+
+Para evitar costes por doble clic, dos administradores, dos agentes compartidos o
+reinicios, una claim privada por recurso precede al POST y usa bloqueo de SO,
+recibo durable y token OCI. Incertidumbre no se convierte en permiso para repetir.
+No se debilitan IAM, TLS, cookies, origen ni las sesiones existentes. Alcance:
+una instancia de Desk con volumen local persistente; varias réplicas con volúmenes
+independientes necesitarían un almacén transaccional compartido antes de habilitar
+esta acción. Los logs permiten correlación mediante HTTP/código/OPC sin registrar
+cuerpos OCI, claves o cookies. El modelo de amenazas de este cambio cubre escalada
+de miembro, CSRF, confusión de recurso, confirmación obsoleta y arranques duplicados;
+las regresiones ejercitan esas fronteras con fixtures sin efecto externo.

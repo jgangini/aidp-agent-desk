@@ -2,6 +2,7 @@ import type { RefObject } from "react";
 import { Check, LoaderCircle } from "lucide-react";
 import { SelectValue } from "../../shared/SelectValue";
 import { CredentialDrop } from "./CredentialDrop";
+import { ComputeControl } from "./ComputeControl";
 import type { CredentialKind } from "./credentialFiles";
 import type { FieldErrors } from "./configurationDraft";
 import {
@@ -10,6 +11,7 @@ import {
 } from "./ConfigurationField";
 import type {
   CredentialFiles,
+  DiscoveredAgent,
   DiscoveryItem,
   DiscoveryOptions,
   DiscoverySelection,
@@ -183,25 +185,15 @@ export function AgentFlowPanel({
             ) : options.agents.length > 0 ? (
               <>
                 {options.agents.map((agent) => (
-                  <label className="config-agent-choice" key={agent.id}>
-                    <input
-                      type="checkbox"
-                      value={agent.id}
-                      checked={selection.agent_ids.includes(agent.id)}
-                      disabled={busy || discovery.loading || !agent.available}
-                      onChange={() => onToggle(agent.id)}
-                    />
-                    <Check
-                      className="config-agent-check"
-                      size={12}
-                      aria-hidden="true"
-                    />
-                    <span className="config-agent-copy">
-                      <strong>{agent.name}</strong>
-                      {agent.description && <small>{agent.description}</small>}
-                      {!agent.available && <small>Publicación requerida</small>}
-                    </span>
-                  </label>
+                  <AgentFlowChoice
+                    key={agent.id}
+                    agent={agent}
+                    selection={selection}
+                    active={active}
+                    busy={busy}
+                    loading={discovery.loading}
+                    onToggle={onToggle}
+                  />
                 ))}
               </>
             ) : (
@@ -228,6 +220,59 @@ export function AgentFlowPanel({
           )}
         </fieldset>
       </div>
+    </div>
+  );
+}
+
+function AgentFlowChoice({
+  agent,
+  selection,
+  active,
+  busy,
+  loading,
+  onToggle,
+}: {
+  agent: DiscoveredAgent;
+  selection: DiscoverySelection;
+  active: boolean;
+  busy: boolean;
+  loading: boolean;
+  onToggle: (id: string) => void;
+}) {
+  return (
+    <div className="config-agent-row">
+      <label className="config-agent-choice">
+        <input
+          type="checkbox"
+          value={agent.id}
+          checked={selection.agent_ids.includes(agent.id)}
+          disabled={busy || loading || !agent.available}
+          onChange={() => onToggle(agent.id)}
+        />
+        <Check className="config-agent-check" size={12} aria-hidden="true" />
+        <span className="config-agent-copy">
+          <strong>{agent.name}</strong>
+          {agent.description && <small>{agent.description}</small>}
+          {!agent.available && <small>Publicación requerida</small>}
+        </span>
+      </label>
+      {active &&
+        !loading &&
+        selection.compartment_id &&
+        selection.instance_id &&
+        selection.workspace_id && (
+          <ComputeControl
+            key={`${selection.compartment_id}-${selection.instance_id}-${selection.workspace_id}-${agent.id}`}
+            context={{
+              compartment_id: selection.compartment_id,
+              instance_id: selection.instance_id,
+              workspace_id: selection.workspace_id,
+              agent_id: agent.id,
+            }}
+            agentName={agent.name}
+            disabled={busy}
+          />
+        )}
     </div>
   );
 }

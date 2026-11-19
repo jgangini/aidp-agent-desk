@@ -12,6 +12,7 @@ from urllib.parse import urlsplit
 import oci  # type: ignore[import-untyped]
 from oci._vendor import requests  # type: ignore[import-untyped]
 
+from .aidp_control import AidpControl, bounded_content
 from .credentials import ProfileStore
 from .development import Development, DevelopmentError
 from .schemas import InvokeRequest
@@ -216,7 +217,10 @@ def transport_failure(error: Exception) -> StreamFailure:
 
 def verify_stream_response(response: Any) -> None:
     if response.status_code != 200:
-        raise StreamFailure("gateway_rejected", f"AIDP rechazó la solicitud (HTTP {response.status_code}).")
+        error = AidpControl.failure('invocar el agente en AIDP', 'POST', '/agentendpoint', response,
+                                    bounded_content(response, 65536))
+        detail = f"HTTP {response.status_code}" + (f" · {error.code}" if error.code else '')
+        raise StreamFailure("gateway_rejected", f"AIDP rechazó la solicitud ({detail}).")
     if "text/event-stream" not in response.headers.get("Content-Type", "").lower():
         raise StreamFailure("unsupported_transport", "El gateway AIDP no devolvió streaming SSE.")
 

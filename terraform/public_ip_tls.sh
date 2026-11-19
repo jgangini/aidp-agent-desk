@@ -60,7 +60,7 @@ finish() {
     restore_file tls.key "$TLS/tls.key" || rollback_failed=1
     restore_file Caddyfile "$CONFIG/Caddyfile" || rollback_failed=1
     if [[ $rollback_failed -eq 0 ]]; then
-      podman exec agent-desk-proxy caddy reload --config /etc/caddy/Caddyfile || rollback_failed=1
+      podman exec agent-desk-proxy caddy reload --config /etc/caddy/Caddyfile --force || rollback_failed=1
     fi
   fi
   if [[ $rollback_failed -eq 0 ]]; then
@@ -112,5 +112,5 @@ mv -f "$WORK/tls.crt" "$TLS/tls.crt"
 mv -f "$WORK/tls.key" "$TLS/tls.key"
 mv -f "$WORK/Caddyfile" "$CONFIG/Caddyfile"
 podman exec agent-desk-proxy caddy validate --config /etc/caddy/Caddyfile
-podman exec agent-desk-proxy caddy reload --config /etc/caddy/Caddyfile
+podman exec agent-desk-proxy caddy reload --config /etc/caddy/Caddyfile --force
 activated=0

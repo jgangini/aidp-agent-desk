@@ -2,6 +2,8 @@
 
 Agent Desk includes Oracle login, role-scoped Agent Flows and TEST access, task scheduling, saved reports and an inline report-template editor.
 
+Version 0.1.10 adds administrative compute state and explicit start confirmation to Agent Flow settings. Live workspace bindings, role/origin checks, a durable per-compute claim and OCI retry tokens prevent duplicate starts. Unknown outcomes remain blocked until reconciled. Shared destinations and possible OCI charges are displayed before confirmation; cancelling does not start resources. TEST and gateway errors retain safe HTTP/OCI diagnostics. Public-IP TLS renewal forces Caddy to reload manually managed certificates even when its configuration is unchanged; activation and rollback have a regression check for stale certificates.
+
 Version 0.1.9 keeps task schedules in a single compact card, moves recovery into an icon action, and opens live task activity in the left workspace. Report deliveries allow up to 30 minutes; recovery accepts a validated final replay and safe pending continuations retain the same request in PROD and TEST. Unknown work is never restarted from a null response.
 
 Version 0.1.8 lets administrators persist report enrollment for each saved Agent Flow and surface. New tasks can enable a compatible target without restarting the VM; existing drafts are preserved. PROD and TEST remain independent, and every report still undergoes response validation.
@@ -10,6 +12,6 @@ Version 0.1.7 adds crawler-readable Open Graph and Twitter metadata for AIDP Age
 
 Version 0.1.6 completes public-IP HTTPS bootstrap corrections found on Oracle Linux: the network follows the working Starter Kits recipe, the pinned Certbot image uses its fully qualified registry name, and Caddy selects the IP certificate when a browser sends no SNI. Inbound access remains limited to HTTP/HTTPS; no SSH rule or key is installed. Application behavior is unchanged.
 
-Validation uses scripts/arch-preflight.ps1 and scripts/arch-postflight.ps1. Local functional checks pass. The historical Sentrux regression gate remains failed; its baseline is unchanged. See docs/deployment.md for prerequisites and tenant acceptance.
+Validation uses scripts/arch-preflight.ps1 and scripts/arch-postflight.ps1. Local functional checks pass. The Sentrux regression gate remains failed against its unchanged original baseline. For version 0.1.10, quality improved from 6366 to 6388 against preflight, while complex functions increased from six to seven; the additional function was not isolated by the available CLI report. This structural limitation remains open. See docs/deployment.md for prerequisites and tenant acceptance.
 
 The recipe targets OCI Resource Manager, public-IP HTTPS and encrypted one-use bootstrap. Its manifest does not register a Deploy Studio catalog entry. Real VM acceptance is tracked separately from unit checks.

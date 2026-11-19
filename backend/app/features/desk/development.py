@@ -11,6 +11,7 @@ from datetime import datetime
 from typing import Any
 from uuid import uuid4
 
+from .aidp_control import AidpControl, ControlError
 from .credentials import ProfileStore, segment
 from .schemas import AgentProfile
 
@@ -33,19 +34,15 @@ class Development:
         self.base = f"https://datalake.{metadata.region}.oci.oraclecloud.com"
         self.ws = f"/aiDataPlatforms/{segment(metadata.instance_id)}/workspaces/{segment(metadata.workspace_id)}"
         self.agent = key(metadata.flow_id)
+        self.control = AidpControl(metadata.region, metadata.instance_id, metadata.workspace_id, session, signer)
 
     def request(self, method: str, path: str, *, legacy: bool = False, **kwargs: Any) -> dict[str, Any]:
-        version = "20240831" if legacy else "20260430"
-        workspace = self.ws.replace("/aiDataPlatforms/", "/dataLakes/", 1) if legacy else self.ws
-        with self.session.request(method, f"{self.base}/{version}{workspace}{path}", auth=self.signer,
-                                  timeout=(5, 20), allow_redirects=False, **kwargs) as response:
-            if not 200 <= response.status_code < 300 or len(response.content) > 2 * 1024 * 1024:
-                raise DevelopmentError("No se pudo consultar TEST en AIDP. Revisa permisos y disponibilidad.")
-            data = response.json()
-            self.next_page = response.headers.get("opc-next-page")
-            if not isinstance(data, dict):
-                raise DevelopmentError("AIDP devolvió una respuesta TEST incompatible.")
-            return data
+        try:
+            data = self.control.request(method, path, legacy=legacy, **kwargs)
+        except ControlError as error:
+            raise DevelopmentError(str(error)) from error
+        self.next_page = self.control.headers.get("opc-next-page")
+        return data
 
     def _test_deployments(self, compute: str) -> list[dict[str, Any]]:
         rows: list[dict[str, Any]] = []

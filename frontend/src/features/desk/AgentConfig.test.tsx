@@ -53,6 +53,10 @@ const managedDraft = {
 };
 const network = vi.fn();
 function cloud(url: string, init?: RequestInit) {
+  if (url.endsWith("/compute/status"))
+    return Promise.resolve(
+      response({ computes: [], confirmation: "a".repeat(64) }),
+    );
   if (init?.method === "DELETE") return Promise.resolve(response({}));
   if (url.endsWith("/profiles"))
     return Promise.resolve(
@@ -779,7 +783,14 @@ it("restores saved stages without uploading credentials and discards unavailable
     ).checked,
   ).toBe(true);
   expect(
-    network.mock.calls.every(([, r]) => !(r.body as FormData).has("key")),
+    network.mock.calls.every(([, r]) =>
+      r.body instanceof FormData
+        ? !r.body.has("key")
+        : !(
+            typeof r.body === "string" &&
+            Object.hasOwn(JSON.parse(r.body), "key")
+          ),
+    ),
   ).toBe(true);
   tab("Audio");
   await waitFor(() =>

@@ -277,6 +277,12 @@ interactiva de registro de Podman durante el arranque. El contenedor
 solicita un certificado público de Let’s Encrypt para esa IP con el perfil
 shortlived; un timer lo renueva dos veces al día. Se comprueban cadena, SAN IP,
 vigencia y clave antes de activar; un fallo restaura la configuración anterior.
+La recarga de Caddy utiliza `--force`: renovar los archivos sin cambiar el
+Caddyfile también debe reprovisionar los certificados manuales. Una recarga
+aceptada con configuración idéntica puede conservar el certificado anterior si
+se omite esa opción. La comprobación operativa usa una conexión HTTPS nueva con
+verificación estricta, no sólo el resultado del timer.
+[Recarga de certificados manuales en Caddy](https://caddyserver.com/docs/command-line#caddy-reload).
 No se utiliza un certificado autofirmado ni se desactiva la verificación TLS.
 Antes del certificado sólo se sirve el desafío ACME por HTTP, sin acceso al backend.
 Firewalld conserva 80/443 tras reinicios. El backend publica sólo en 127.0.0.1.

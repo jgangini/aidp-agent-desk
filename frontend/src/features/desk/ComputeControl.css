@@ -1,0 +1,126 @@
+.config-agent-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding-right: 8px;
+}
+.config-fields .config-agent-row .config-agent-choice {
+  flex: 1;
+  min-width: 0;
+}
+.compute-control {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 50%;
+  font-size: 11px;
+  color: var(--chat-muted, #a4a4aa);
+}
+.compute-control-state {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.compute-control-state small {
+  font-size: inherit;
+}
+.compute-start-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 32px;
+  padding: 5px 8px;
+  border: 1px solid var(--chat-line, #404044);
+  border-radius: 6px;
+  color: var(--ink, #eeeeef);
+  background: transparent;
+  font: inherit;
+}
+.compute-start-button:hover:not(:disabled) {
+  background: var(--chat-hover, #303236);
+}
+.compute-message,
+.compute-error {
+  flex-basis: 100%;
+  overflow-wrap: anywhere;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.compute-error {
+  color: var(--danger, #f2a79e);
+}
+.compute-start-dialog {
+  text-align: left;
+}
+.compute-start-dialog > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.config-cancel-dialog.compute-start-dialog > header .icon-button {
+  padding: 0;
+  min-height: 28px;
+  min-width: 28px;
+  background: transparent;
+}
+.compute-start-dialog strong {
+  color: var(--ink, #eeeeef);
+  overflow-wrap: anywhere;
+}
+.compute-start-dialog .compute-targets-heading {
+  margin-top: 16px;
+}
+.compute-targets {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+.compute-targets li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.compute-targets span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.compute-targets small {
+  color: var(--chat-muted, #a4a4aa);
+}
+.compute-cost-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #765d25;
+  border-radius: 8px;
+  background: #2d2716;
+  color: #f5cf73;
+}
+.compute-cost-warning svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.compute-start-dialog .compute-cost-warning p {
+  color: inherit;
+}
+@container (max-width: 380px) {
+  .config-agent-row {
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  .compute-control {
+    flex-basis: 100%;
+    max-width: none;
+    padding: 0 0 8px 38px;
+    justify-content: flex-start;
+  }
+}

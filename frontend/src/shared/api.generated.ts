@@ -246,6 +246,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/desk/discovery/compute/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Status */
+        post: operations["desk_compute_status"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/desk/discovery/compute/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start */
+        post: operations["desk_compute_start"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/desk/audio/realtime-session": {
         parameters: {
             query?: never;
@@ -742,6 +776,92 @@ export interface components {
              * @enum {string}
              */
             step: "agents" | "audio";
+        };
+        /** ComputeInventory */
+        ComputeInventory: {
+            /** Computes */
+            computes: components["schemas"]["ComputeStatus"][];
+            /**
+             * Warning
+             * @default
+             */
+            warning: string;
+        };
+        /** ComputeSelection */
+        ComputeSelection: {
+            /** Compartment Id */
+            compartment_id: string;
+            /** Instance Id */
+            instance_id: string;
+            /** Workspace Id */
+            workspace_id: string;
+            /** Agent Id */
+            agent_id: string;
+        };
+        /** ComputeStart */
+        ComputeStart: {
+            /** Compartment Id */
+            compartment_id: string;
+            /** Instance Id */
+            instance_id: string;
+            /** Workspace Id */
+            workspace_id: string;
+            /** Agent Id */
+            agent_id: string;
+            /** Compute Id */
+            compute_id: string;
+            /** Compute Name */
+            compute_name: string;
+            /** Request Id */
+            request_id: string;
+            /** Confirmation */
+            confirmation: string;
+            /** Confirmed */
+            confirmed: boolean;
+        };
+        /** ComputeStatus */
+        ComputeStatus: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** State */
+            state: string;
+            /** Targets */
+            targets: components["schemas"]["ComputeTarget"][];
+            /**
+             * Can Start
+             * @default false
+             */
+            can_start: boolean;
+            /**
+             * Operation
+             * @default idle
+             * @enum {string}
+             */
+            operation: "idle" | "starting" | "uncertain";
+            /**
+             * Message
+             * @default
+             */
+            message: string;
+            /**
+             * Confirmation
+             * @default
+             */
+            confirmation: string;
+        };
+        /** ComputeTarget */
+        ComputeTarget: {
+            /** Agent Id */
+            agent_id: string;
+            /** Name */
+            name: string;
+            /**
+             * Surface
+             * @enum {string}
+             */
+            surface: "PROD" | "TEST";
         };
         /** ConnectionStatus */
         ConnectionStatus: {
@@ -1714,6 +1834,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AgentProfile"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    desk_compute_status: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComputeSelection"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComputeInventory"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    desk_compute_start: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComputeStart"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComputeInventory"];
                 };
             };
             /** @description Validation Error */

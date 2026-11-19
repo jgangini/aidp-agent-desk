@@ -2,6 +2,12 @@
 
 Interfaz oscura y compacta: base #090a0c, chat #0d0e10, composer #17181b, texto #eeeeef, texto secundario #a4a4aa y bordes #303236. Manrope variable se aloja localmente. Usar los tokens existentes de foco, espaciado y movimiento; no añadir estilos de control independientes.
 
+Agent Flow conserva filas compactas con estado del compute junto a Publicado.
+Iniciar utiliza SVG Lucide y el diálogo nativo de confirmación existente; muestra
+nombre, destinos compartidos y coste posible antes de la acción. Consultando,
+estado desconocido, inicio pendiente e inicio incierto tienen mensajes distintos.
+Actualizar sólo relee; cerrar o cancelar el diálogo no inicia recursos.
+
 Escritorio: escena 3D, resultados y chat. Resultados sólo ocupa espacio cuando hay hallazgos; puede ampliarse. En móvil prima el chat. La cabecera del panel derecho muestra el título de conversación o Configuración, Tareas y Nueva tarea. X desde Nueva tarea vuelve a Tareas.
 
 El núcleo de partículas es ilustrativo y continúa su deriva durante la ejecución remota. Blanco al escuchar y paleta de Desk al responder por voz. Las fuentes visibles corresponden a actividad recibida; no representan infraestructura interna de AIDP. Movimiento reducido conserva el estado sin deformación temporal.

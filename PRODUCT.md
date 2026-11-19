@@ -20,6 +20,15 @@ La plataforma debe admitir dominios distintos mediante capacidades declaradas y 
 
 ## Configuración y voz
 
+Agent Flow muestra el estado real del compute junto a su publicación. El
+administrador puede iniciar un compute STOPPED desde una confirmación con su
+nombre, destinos activos compartidos en el workspace y aviso de posible coste
+OCI. Cancelar no inicia nada. El servidor comprueba rol, origen, conexión y
+vínculos actuales; un error de lectura no equivale a STOPPED. Se consulta hasta
+ACTIVE o error sin repetir el inicio. Un resultado incierto queda registrado y
+bloquea otro POST hasta conciliarlo; ACTIVE describe el compute, no garantiza una
+respuesta del agente. No se inicia infraestructura al abrir Configuración.
+
 Conexión, Agent Flow, Audio y Sugerencias tienen guardado independiente. Cancelar Agent Flow o Audio limpia sólo su sección; cancelar Conexión limpia los formularios dependientes. El backend custodia config y clave PEM, comprueba su correspondencia y construye destinos OCI autorizados. No se aceptan endpoints arbitrarios del navegador para descubrimiento.
 
 Audio utiliza únicamente OCI Speech: Whisper español y Carmen Natural. El dictado del composer edita el borrador. El control central escucha, envía un turno, reproduce con TTS y reanuda escucha al terminar. Detener/cambiar chat/agente cancela captura y reproducción, e invalida callbacks tardíos. La animación responde a la señal de voz, sin atribuir actividad ficticia al agente.

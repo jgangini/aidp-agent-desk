@@ -37,6 +37,47 @@ con el compute y endpoint seleccionados. Crea y verifica su sesión nativa; no
 actualiza el despliegue. Una revisión TEST nueva requiere una conversación nueva.
 TEST está disponible en modo local y para administradores autenticados con Oracle. Los miembros sólo pueden usar PROD.
 
+## Estado e inicio del compute
+
+Configuración → Agent Flow consulta los vínculos activos de los agentes CODE en
+el workspace seleccionado. PROD utiliza `agentComputeKey` de sus publicaciones
+GA; TEST utiliza `agentFlowComputeKey` del catálogo legado y exige que coincida
+con `computeKey` del agente GA. La lectura del cluster usa
+`GET /20260430/aiDataPlatforms/{platform}/workspaces/{workspace}/clusters/{compute}`
+y su campo `state`. Un compute compartido presenta sus destinos activos de ese
+workspace; no se afirma inventario de toda la tenancy. Si una consulta falla, el
+estado queda no disponible y el inicio se bloquea, sin omitir vínculos que no se
+pudieron comprobar.
+
+Los endpoints administrativos de Desk son `POST /api/desk/discovery/compute/status`
+y `/start`. La primera operación es de lectura; ambas requieren administrador,
+sesión/origen válidos en modo Oracle y conexión guardada. El navegador envía sólo
+selección de catálogo. Nunca elige un endpoint OCI ni recibe una clave. El inicio
+exige confirmación estricta, ID/nombre de compute y revisión de sus vínculos; el
+servidor revalida todo antes de escribir. Un cambio de nombre o destinos exige
+confirmar de nuevo. Un miembro no obtiene este acceso por manipular la interfaz.
+
+La acción nativa es
+`POST /20260430/aiDataPlatforms/{platform}/workspaces/{workspace}/clusters/{compute}/actions/start`
+con `{}`, `opc-retry-token` y `if-match` cuando hay ETag. HTTP 202 sólo acredita
+aceptación; el sondeo consulta el estado real hasta ACTIVE/error, con espera de
+interfaz acotada a 15 minutos. No se envían reintentos automáticos del POST.
+[Contrato Oracle de inicio](https://docs.oracle.com/en/cloud/paas/ai-data-platform/aiwap/op-aidataplatforms-aidataplatformid-workspaces-workspacekey-clusters-clusterkey-actions-start-post.html).
+
+`compute-starts/` en el directorio privado conserva una claim por recurso y los
+recibos por solicitud. El bloqueo de SO cubre procesos y agentes que comparten
+compute. El intento/puntero se sincronizan antes del efecto externo (incluido
+directorio en Linux); los IDs usados no se reutilizan. Una desconexión, 5xx o
+respuesta incompatible conserva incertidumbre. Observar STOPPED no demuestra
+que el POST anterior no se aceptó y no libera esa claim. ACTIVE/STARTING concilian
+sin otro inicio. Una claim que nunca alcance un estado concluyente requiere que
+el operador contraste el recibo/operación asíncrona en AIDP antes de cualquier
+reparación del registro; no hay botón de forzado ni caducidad automática.
+
+Los errores de TEST/gateway registran operación, HTTP, código OCI y request ID
+válidos, sin cuerpo remoto, secretos ni tokens. El mensaje público distingue el
+fallo de consulta del estado detenido; no sustituye un rechazo por una simulación.
+
 ## Entrada del agente
 
 La investigación recibe un JSON serializado dentro de `INPUT_TEXT`:
