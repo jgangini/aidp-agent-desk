@@ -2,6 +2,8 @@
 
 Agent Desk includes Oracle login, role-scoped Agent Flows and TEST access, task scheduling, saved reports and an inline report-template editor.
 
+Version 0.1.13 preserves hosted sessions when an operation returns an ordinary HTTP 409. The server marks an actual account mismatch, preserving the existing session reload and access checks. Compute start rejection messages remain visible for authenticated administrators.
+
 Version 0.1.12 distinguishes an explicit AIDP compute-start rejection from an unknown outcome. Desk keeps the rejection visible and enables a fresh confirmation only after live status says the compute can start. The row uses brief tooltips and spins during transitions, respecting reduced motion.
 
 Version 0.1.11 shows compute state as an accessible icon in Agent Flow settings. The stopped icon opens the existing confirmation. Chat diagnoses a stopped compute only when the exact destination and its live state are verified after a gateway rejection. Functional checks passed (386 backend, 646 frontend). The workspace Sentrux gate retains the v0.1.10 result and its original baseline.

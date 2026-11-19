@@ -9,7 +9,14 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.sessions import SessionMiddleware
 
 from .directory import DIRECTORY_FAILURES
-from .identity import Identity, IdentitySettings, UserAccess, UserInvitation, identity_router
+from .identity import (
+    ACCOUNT_CHANGED_HEADERS,
+    Identity,
+    IdentitySettings,
+    UserAccess,
+    UserInvitation,
+    identity_router,
+)
 
 
 def require_profile(request: Request, profile_id: str) -> None:
@@ -65,7 +72,8 @@ def authorize_request(
         return JSONResponse({"detail": "Inicia sesión con Oracle."}, status_code=401)
     request.state.principal = user
     if request.headers.get("x-agent-desk-user") != user["id"]:
-        return JSONResponse({"detail": "La cuenta cambió. Recarga Agent Desk."}, status_code=409)
+        return JSONResponse({"detail": "La cuenta cambió. Recarga Agent Desk."}, status_code=409,
+                            headers=ACCOUNT_CHANGED_HEADERS)
     if request.method not in ("GET", "HEAD") and (
         request.headers.get("origin") != settings.origin or request.headers.get("x-agent-desk") != "configure"
     ):

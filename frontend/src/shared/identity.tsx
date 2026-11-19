@@ -37,10 +37,13 @@ export async function apiFetch(input: RequestInfo | URL, init?: RequestInit) {
   );
   if (protectedRequest && owner) headers.set("X-Agent-Desk-User", owner);
   const response = await globalThis.fetch(input, { ...init, headers });
+  const accountChanged =
+    response.status === 409 &&
+    response.headers.get("X-Agent-Desk-Session-Changed") === "1";
   if (
     protectedRequest &&
     owner &&
-    (response.status === 401 || response.status === 409 || owner !== principal)
+    (response.status === 401 || accountChanged || owner !== principal)
   ) {
     window.dispatchEvent(new Event("agent-desk-session-changed"));
     throw new Error(

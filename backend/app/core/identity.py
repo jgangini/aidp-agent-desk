@@ -20,6 +20,7 @@ from .directory import DIRECTORY_FAILURES, OracleDirectory
 from .oracle_keys import OracleOAuth2App
 
 COOKIE = "__Host-agent-desk"
+ACCOUNT_CHANGED_HEADERS = {"X-Agent-Desk-Session-Changed": "1", "Cache-Control": "no-store"}
 logger = logging.getLogger(__name__)
 
 
@@ -225,7 +226,7 @@ def identity_router(identity: Identity | None) -> APIRouter:
                 raise HTTPException(403)
             user = identity.principal(request)
             if user is not None and request.headers.get("x-agent-desk-user") != user["id"]:
-                raise HTTPException(409, "La cuenta cambió. Recarga Agent Desk.")
+                raise HTTPException(409, "La cuenta cambió. Recarga Agent Desk.", headers=ACCOUNT_CHANGED_HEADERS)
             identity.store.logout(request.cookies.get(identity.settings.cookie_name, ""))
             request.session.clear()
         response = Response(status_code=204)

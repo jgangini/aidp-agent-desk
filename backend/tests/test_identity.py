@@ -374,8 +374,11 @@ def test_stale_browser_identity_cannot_act_as_another_account(hosted):
     app, client = hosted
     sign_in(app, client)
     client.headers["X-Agent-Desk-User"] = "previous-user"
-    assert client.get("/api/desk/profiles").status_code == 409
-    assert client.post("/api/auth/logout", headers={"Origin": "https://desk.example"}).status_code == 409
+    for result in (client.get("/api/desk/profiles"),
+                   client.post("/api/auth/logout", headers={"Origin": "https://desk.example"})):
+        assert result.status_code == 409
+        assert result.headers["X-Agent-Desk-Session-Changed"] == "1"
+        assert result.headers["Cache-Control"] == "no-store"
 
 
 def test_missing_session_is_rejected_before_creating_mapping(hosted):

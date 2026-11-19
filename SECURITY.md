@@ -58,8 +58,10 @@ La revalidación al recuperar foco se realiza en segundo plano, con una única
 petición pendiente, para no ocultar el control entre pointerdown y click. La
 última vista verificada permanece visible durante esa petición; puede mostrar
 contenido ya cacheado hasta detectar un cambio de cuenta. El servidor sigue
-validando cookie y principal X-Agent-Desk-User en cada operación; una discrepancia
-409 o un cambio de identidad fuerzan recarga. Si la comprobación falla, un estado
+validando cookie y principal X-Agent-Desk-User en cada operación. Una discrepancia
+409 marcada por el servidor con `X-Agent-Desk-Session-Changed: 1`, una sesión
+inválida o un cambio de identidad fuerzan recarga. Los conflictos de una operación
+se entregan a su controlador. Si la comprobación falla, un estado
 dedicado bloquea la vista hasta que vuelva a verificarse. La carga inicial sigue
 bloqueada y los errores de logout no se usan como errores de revalidación.
 

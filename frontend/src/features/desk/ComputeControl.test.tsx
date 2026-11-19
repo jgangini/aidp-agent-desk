@@ -18,6 +18,7 @@ import type {
 import type { ConfigurationFieldState } from "./ConfigurationField";
 import type { DiscoveryOptions, DiscoverySelection } from "./discovery";
 import { createRef } from "react";
+import { setStoragePrincipal } from "../../shared/identity";
 
 const context: ComputeContext = {
   compartment_id: "compartment",
@@ -74,6 +75,7 @@ beforeAll(() => {
 });
 afterEach(() => {
   cleanup();
+  setStoragePrincipal("");
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
 });
@@ -393,8 +395,9 @@ it("keeps the popup's original shared-target revision when status changes in the
 });
 
 it.each([409, 422])(
-  "requires a fresh popup and UUID after rejection %s and an explicitly ready reread",
+  "keeps the hosted session and requires a fresh popup after rejection %s and a ready reread",
   async (rejectedStatus) => {
+    setStoragePrincipal("admin");
     const nextPoll = pollQueue();
     let reads = 0;
     let starts = 0;
@@ -464,6 +467,9 @@ it.each([409, 422])(
     expect(bodies[0].confirmation).toBe(revision);
     expect(bodies[1].confirmation).toBe("b".repeat(64));
     expect(bodies[0].request_id).not.toBe(bodies[1].request_id);
+    expect(
+      new Headers(startCalls(request)[0][1].headers).get("X-Agent-Desk-User"),
+    ).toBe("admin");
   },
 );
 

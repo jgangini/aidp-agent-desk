@@ -244,7 +244,12 @@ it("binds hosted requests to the rendered user and rejects a changed session", a
   ).toBe("u1");
   const changed = vi.fn();
   window.addEventListener("agent-desk-session-changed", changed);
-  request.mockResolvedValueOnce(new Response("{}", { status: 409 }));
+  request.mockResolvedValueOnce(
+    new Response("{}", {
+      status: 409,
+      headers: { "X-Agent-Desk-Session-Changed": "1" },
+    }),
+  );
   await expect(apiFetch("/api/desk/profiles")).rejects.toThrow(
     "La cuenta cambi\u00f3",
   );
