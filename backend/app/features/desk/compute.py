@@ -200,9 +200,13 @@ class ComputeService(AbstractContextManager["ComputeService"]):
             if self.control.status != 202:
                 raise ControlError('confirmar la aceptación del inicio', self.control.status)
         except Exception as error:
-            rejected = isinstance(error, ControlError) and error.status in {400, 401, 403, 404, 412}
+            rejected = error if isinstance(error, ControlError) and error.status in {400, 401, 403, 404, 412} else None
             record['state'] = 'rejected' if rejected else 'uncertain'
             journal.save(record)
+            if rejected:
+                message = ('AIDP alcanzó un límite de servicio y rechazó el inicio (LimitExceeded).'
+                           if rejected.code == 'LimitExceeded' else str(rejected))
+                raise ComputeConflict(message) from error
             raise
         record.update(state='accepted', opc_request_id=safe_header(self.control.headers.get('opc-request-id')))
         record['async_operation_key'] = safe_header(self.control.headers.get('aidp-async-operation-key'))

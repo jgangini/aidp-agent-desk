@@ -13,24 +13,26 @@ export interface ComputeView {
   key: string;
   status: ComputeStatus | null;
   error: string;
+  startRejection: string;
   reading: boolean;
   submitting: boolean;
-  submitted: boolean;
+  pendingCompute: string | undefined;
   timedOut: boolean;
 }
 interface StartIntent {
   requestId: string;
   computeId: string;
-  rejected: boolean;
+  rejection?: string;
   uncertain: boolean;
 }
 export const initialComputeView = (key: string): ComputeView => ({
   key,
   status: null,
   error: "",
+  startRejection: "",
   reading: true,
   submitting: false,
-  submitted: false,
+  pendingCompute: undefined,
   timedOut: false,
 });
 function intentSettled(intent: StartIntent | undefined, status: ComputeStatus) {
@@ -41,7 +43,8 @@ function intentSettled(intent: StartIntent | undefined, status: ComputeStatus) {
   );
   if (!compute) return false;
   return (
-    isComputeActive(compute) || (intent.rejected && isComputeStartable(compute))
+    isComputeActive(compute) ||
+    (!!intent.rejection && isComputeStartable(compute))
   );
 }
 const errorText = (reason: unknown, fallback: string) =>
@@ -109,6 +112,7 @@ export class ComputeSession {
     if (!this.active) return;
     this.computeIds = new Set(status.computes.map((compute) => compute.id));
     const settled = intentSettled(this.intent, status);
+    const rejection = settled ? this.intent?.rejection : undefined;
     if (settled) {
       this.intent = undefined;
       this.deadline = undefined;
@@ -117,7 +121,8 @@ export class ComputeSession {
       status,
       reading: false,
       error: "",
-      submitted: !!this.intent,
+      pendingCompute: this.intent?.computeId,
+      startRejection: rejection ?? this.view.startRejection,
       timedOut: settled ? false : this.view.timedOut,
     });
     if (computePending(status) || this.intent?.uncertain) this.schedule();
@@ -145,11 +150,15 @@ export class ComputeSession {
   private startFailed(reason: unknown) {
     if (!this.active || !this.intent) return;
     this.intent.uncertain = true;
-    this.intent.rejected =
+    const message = errorText(reason, "No se pudo confirmar el inicio.");
+    if (
       reason instanceof ComputeRequestError &&
-      [409, 422].includes(reason.status);
+      [409, 422].includes(reason.status)
+    ) {
+      this.intent.rejection = message;
+    }
     this.update({
-      error: `${errorText(reason, "No se pudo confirmar el inicio.")} Se consultará el estado sin repetir el inicio.`,
+      error: `${message} Se consultará el estado sin repetir el inicio.`,
     });
     this.schedule();
   }
@@ -167,11 +176,15 @@ export class ComputeSession {
     this.intent = {
       computeId: compute.id,
       requestId,
-      rejected: false,
       uncertain: false,
     };
     clearTimeout(this.timer);
-    this.update({ submitting: true, submitted: true, error: "" });
+    this.update({
+      submitting: true,
+      pendingCompute: compute.id,
+      error: "",
+      startRejection: "",
+    });
     try {
       this.accept(
         await computeRequest(this.context, this.controller.signal, {

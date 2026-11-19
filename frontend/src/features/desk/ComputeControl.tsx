@@ -28,6 +28,7 @@ const stateLabels: Record<string, string> = {
   STARTING: "Iniciando",
   CREATING: "Creando",
   STOPPING: "Deteniendo",
+  RESTARTING: "Reiniciando",
   FAILED: "Error",
   DELETED: "Eliminado",
   DELETING: "Eliminando",
@@ -39,6 +40,8 @@ const stateIcons = new Map([
   ["starting", LoaderCircle],
   ["creating", LoaderCircle],
   ["stopping", LoaderCircle],
+  ["restarting", LoaderCircle],
+  ["checking", LoaderCircle],
   ["failed", TriangleAlert],
 ]);
 function controlsBlocked(compute: ComputeController, disabled: boolean) {
@@ -47,7 +50,7 @@ function controlsBlocked(compute: ComputeController, disabled: boolean) {
     compute.reading ||
     !!compute.error ||
     compute.submitting ||
-    compute.submitted ||
+    !!compute.pendingCompute ||
     compute.timedOut
   );
 }
@@ -62,12 +65,21 @@ function canConfirm(
   );
   return !!current && isComputeStartable(current) && isComputeStartable(item);
 }
-function qualifier(item: AgentCompute, submitted: boolean) {
-  if (item.operation === "uncertain") return " · Por confirmar";
-  if (item.state !== "STOPPED") return "";
-  if (item.operation === "starting") return " · Inicio solicitado";
-  if (submitted && item.operation === "idle") return " · Inicio por confirmar";
-  return "";
+function indicator(item: AgentCompute, compute: ComputeController) {
+  const pending = compute.pendingCompute === item.id;
+  if (pending && compute.submitting)
+    return { state: "starting", label: "Iniciando" };
+  if (compute.error) return { state: "unknown", label: "Sin estado" };
+  if (compute.timedOut && (pending || item.operation !== "idle"))
+    return { state: "unknown", label: "Por confirmar" };
+  if (item.operation === "starting" || item.state === "STARTING")
+    return { state: "starting", label: "Iniciando" };
+  if (pending || item.operation === "uncertain")
+    return { state: "checking", label: "Por confirmar" };
+  return {
+    state: item.state.toLowerCase(),
+    label: stateLabels[item.state] ?? "Sin estado",
+  };
 }
 export function ComputeControl({
   context,
@@ -117,6 +129,8 @@ export function ComputeControl({
       {!compute.status && !compute.error && (
         <span
           className="compute-icon"
+          data-spinning="true"
+          data-tooltip="Consultando"
           role="status"
           aria-label="Consultando compute…"
         >
@@ -127,8 +141,7 @@ export function ComputeControl({
         <ComputeItem
           key={item.id}
           item={item}
-          error={!!compute.error}
-          submitted={compute.submitted}
+          indicator={indicator(item, compute)}
           canStart={canConfirm(item, compute, disabled)}
           onChoose={choose}
         />
@@ -154,21 +167,15 @@ export function ComputeControl({
 }
 function ComputeItem({
   item,
-  error,
-  submitted,
+  indicator: { state, label },
   canStart,
   onChoose,
 }: {
   item: AgentCompute;
-  error: boolean;
-  submitted: boolean;
+  indicator: { state: string; label: string };
   canStart: boolean;
   onChoose: (item: AgentCompute, button: HTMLButtonElement) => void;
 }) {
-  const label = error
-    ? "Estado no disponible"
-    : `${stateLabels[item.state] ?? item.state}${qualifier(item, submitted)}`;
-  const state = error ? "unknown" : item.state.toLowerCase();
   const Icon = stateIcons.get(state) ?? CircleHelp;
   return (
     <div className="compute-control-state">
@@ -177,7 +184,7 @@ function ComputeItem({
           type="button"
           className="icon-button compute-icon"
           data-state={state}
-          data-tooltip={`${item.name} · ${label} · Iniciar`}
+          data-tooltip="Iniciar"
           aria-label={`Iniciar compute ${item.name}`}
           onClick={(event) => onChoose(item, event.currentTarget)}
         >
@@ -187,7 +194,8 @@ function ComputeItem({
         <span
           className="compute-icon"
           data-state={state}
-          data-tooltip={`${item.name} · ${label}`}
+          data-tooltip={label}
+          data-spinning={Icon === LoaderCircle || undefined}
           role="img"
           aria-label={`Compute ${item.name}: ${label}`}
           tabIndex={0}
@@ -215,9 +223,9 @@ function ComputeFeedback({
       {compute.status?.warning && (
         <small className="compute-message">{compute.status.warning}</small>
       )}
-      {compute.error && (
+      {(compute.error || compute.startRejection) && (
         <small role="alert" className="compute-error">
-          {compute.error}
+          {compute.error || compute.startRejection}
         </small>
       )}
       {compute.timedOut && (

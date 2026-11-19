@@ -89,6 +89,7 @@ it.each(["Cancelar", "Cerrar confirmación de inicio"])(
     });
     expect(start.textContent).toBe("");
     expect(start.getAttribute("data-state")).toBe("stopped");
+    expect(start.getAttribute("data-tooltip")).toBe("Iniciar");
     fireEvent.click(start);
     const dialog = screen.getByRole("dialog", { name: "Iniciar compute" });
     expect(within(dialog).getByText("Mercado compartido")).toBeTruthy();
@@ -448,6 +449,7 @@ it.each([409, 422])(
     const restart = await screen.findByRole("button", {
       name: "Iniciar compute Mercado compartido",
     });
+    expect(screen.getByRole("alert").textContent).toContain("Confirma de nuevo");
     expect(starts).toBe(1);
     fireEvent.click(restart);
     const dialog = screen.getByRole("dialog");
@@ -551,6 +553,9 @@ it("bounds automatic waiting to 15 minutes without sending another start", async
     }),
   );
   await screen.findByRole("img", { name: "Compute Mercado compartido: Iniciando" });
+  const spinner = screen.getByRole("img", { name: "Compute Mercado compartido: Iniciando" });
+  expect(spinner.getAttribute("data-spinning")).toBe("true");
+  expect(spinner.getAttribute("data-tooltip")).toBe("Iniciando");
   clock.mockReturnValue(1000 + 15 * 60_000);
   await nextPoll();
   await screen.findByText(/agotó los 15 minutos/);
@@ -652,6 +657,7 @@ it("mounts compute status only for the active, complete and loaded Agent Flow se
   view.rerender(<AgentFlowPanel {...props} active={true} />);
   const status = await screen.findByRole("img", { name: "Compute Mercado compartido: Activo" });
   expect(status.getAttribute("data-state")).toBe("active");
+  expect(status.getAttribute("data-tooltip")).toBe("Activo");
   expect(screen.queryByText("Publicado")).toBeNull();
   expect(request).toHaveBeenCalledOnce();
 });

@@ -69,6 +69,7 @@ class Session:
         self.agents = ['flow', 'shared']
         self.state, self.name = 'STOPPED', 'Research compute'
         self.fail_get, self.fail_post = False, False
+        self.post_error = None
         self.wrong_binding = False
         self.incomplete_summary = False
         self.detail_state, self.detail_kind = 'ACTIVE', 'PROD'
@@ -97,6 +98,9 @@ class Session:
             assert self.release.wait(10)
         if self.fail_post:
             raise requests.Timeout('secret response body')
+        if self.post_error:
+            status, code = self.post_error
+            return Response({'code': code, 'message': 'secret response body'}, status)
         return Response(status=202, headers={'opc-request-id': 'receipt-1'})
 
     def get(self, path, kwargs):
@@ -184,6 +188,23 @@ def test_one_confirmed_start_survives_reload_and_waits_for_real_active(environme
     assert status(client).json()['computes'][0]['operation'] == 'idle'
     session.state = 'STOPPED'
     assert start(client, body).status_code == 409  # old confirmation ID cannot be reused after another stop
+    assert start(client, start_body(client, request_id='b' * 32)).status_code == 200
+    assert session.posts == 2
+
+
+@pytest.mark.parametrize('status_code,code', [(400, 'LimitExceeded'), (404, 'NotAuthorizedOrNotFound')])
+def test_explicit_start_rejection_allows_fresh_confirmation(environment, status_code, code):
+    client, _, session = environment
+    body = start_body(client)
+    session.post_error = (status_code, code)
+    failure = start(client, body)
+    assert failure.status_code == 409 and code in failure.text and 'secret' not in failure.text
+    if code == 'LimitExceeded':
+        assert 'límite de servicio' in failure.json()['detail']
+    current = status(client).json()['computes'][0]
+    assert current['state'] == 'STOPPED' and current['operation'] == 'idle' and current['can_start']
+    assert start(client, body).status_code == 409 and session.posts == 1
+    session.post_error = None
     assert start(client, start_body(client, request_id='b' * 32)).status_code == 200
     assert session.posts == 2
 

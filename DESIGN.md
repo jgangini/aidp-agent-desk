@@ -5,7 +5,9 @@ Interfaz oscura y compacta: base #090a0c, chat #0d0e10, composer #17181b, texto 
 Agent Flow muestra el estado del compute con un icono Lucide al final de la fila.
 El verde indica activo y el rojo detenido. El icono rojo abre la confirmación de
 inicio cuando está disponible. El nombre accesible y el tooltip describen el
-estado y la acción. Se conserva la etiqueta TEST cuando aplica. El diálogo muestra
+estado y la acción. Los tooltips usan sólo la acción o estado breve. El icono
+gira durante operaciones en curso y queda estático con movimiento reducido.
+Se conserva la etiqueta TEST cuando aplica. El diálogo muestra
 nombre, destinos compartidos y coste posible antes de la acción. Consultando,
 estado desconocido, inicio pendiente e inicio incierto tienen mensajes distintos.
 Actualizar sólo relee; cerrar o cancelar el diálogo no inicia recursos.

@@ -52,6 +52,11 @@ button.compute-icon[data-state="stopped"]:hover {
   outline: 2px solid var(--focus, #89919d);
   outline-offset: 2px;
 }
+@media (prefers-reduced-motion: no-preference) {
+  .compute-icon[data-spinning="true"] svg {
+    animation: config-spin 1s linear infinite;
+  }
+}
 .compute-message,
 .compute-error {
   flex-basis: 100%;

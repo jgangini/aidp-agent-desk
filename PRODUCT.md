@@ -28,6 +28,8 @@ vínculos actuales; un error de lectura no equivale a STOPPED. Se consulta hasta
 ACTIVE o error sin repetir el inicio. Un resultado incierto queda registrado y
 bloquea otro POST hasta conciliarlo; ACTIVE describe el compute, no garantiza una
 respuesta del agente. No se inicia infraestructura al abrir Configuración.
+Un rechazo explícito de AIDP deja el motivo visible y habilita una nueva
+confirmación sólo después de verificar que el compute sigue disponible.
 
 El chat explica que el cómputo está detenido cuando AIDP confirma el estado
 STOPPED del destino de esa solicitud. Si la comprobación no es concluyente,

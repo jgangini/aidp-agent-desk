@@ -81,6 +81,12 @@ sin otro inicio. Una claim que nunca alcance un estado concluyente requiere que
 el operador contraste el recibo/operación asíncrona en AIDP antes de cualquier
 reparación del registro; no hay botón de forzado ni caducidad automática.
 
+Un rechazo explícito del POST nativo (`400`, `401`, `403`, `404` o `412`)
+se anota como `rejected`. Desk devuelve `409` con el diagnóstico sanitizado y
+el botón sólo vuelve después de una lectura `STOPPED` con `can_start=true`.
+La siguiente confirmación requiere otro ID. `LimitExceeded` se explica como
+un límite de servicio. Un resultado incierto conserva el bloqueo de reenvío.
+
 Los errores de TEST/gateway registran operación, HTTP, código OCI y request ID
 válidos, sin cuerpo remoto, secretos ni tokens. El mensaje público distingue el
 fallo de consulta del estado detenido; no sustituye un rechazo por una simulación.
